@@ -19,7 +19,7 @@ Describe -Name $ModuleName -Fixture {
         $moduleExported = Get-Command -Module $ModuleName | Select-Object -ExpandProperty Name
 
         Context -Name 'Number of commands' -Fixture {
-            It -Name 'Exports the same number of public funtions as what is listed in the Module Manifest' -Test {
+            It -Name 'Exports the same number of public functions as what is listed in the Module Manifest' -Test {
                 $manifestExported.Count | Should -BeExactly $moduleExported.Count
             }
         }

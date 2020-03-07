@@ -71,8 +71,9 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no functions to export.
     FunctionsToExport     = @(
-        # TODO: Review this list against the export list from the example code to see which core functions need to
-        # be exported. TODO: Review the list and consolidate the Lockpath Calls into fewer functions then add
+        #TODO: Review this list against the export list from the example code to see which core functions need to
+        # be exported
+        #TODO: Review the list and consolidate the Lockpath Calls into fewer functions then add
         # "scripted" functions 'Backup-LockpathConfiguration', 'Clear-LockpathAuthentication',
         # 'Get-LockpathComponent', 'Get-LockpathComponentByAlias' 'Get-LockpathComponentLIst',
         # 'Get-LockpathConfiguration', 'Get-LockpathField', 'Get-LockpathFieldLIst', 'Get-LockpathGroup',
@@ -83,7 +84,8 @@
         # 'Get-LockpathUserCount', 'Get-LockpathWorkflow', 'Get-LockpathWorkflows', 'Import-LockpathFile',
         # 'Invoke-LockpathRestMethod', 'New-LockpathGroup', 'New-LockpathUser', 'Remove-LockpathGroup'
         # 'Remove-LockpathUser', 'Reset-LockpathConfiguration', 'Restore-LockpathConfiguration',
-        # 'Save-LockpathConfiguration', #TODO: move this to an internal helper after testing 'Send-LockpathLogin',
+        # 'Save-LockpathConfiguration',
+        #TODO: move this to an internal helper after testing 'Send-LockpathLogin',
         # 'Set-LockpathAuthentication', 'Set-LockpathConfiguration', 'Send-LockpathLogin', 'Send-LockpathLogout',
         # 'Send-LockpathPing', 'Set-LockpathGroup', 'Set-LockpathUser' 'Test-LockpathAuthenticationConfigured'
     )
@@ -113,10 +115,10 @@
 
             # A URL to the license for this module. TODO: Update URL after GitHub Account Name change and link to
             # License File
-            LicenseUri   = 'https://github.com/RjKGitHub/PowerShellForLockpath/blob/master/LICENSE'
+            LicenseUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath/blob/master/LICENSE'
 
             # A URL to the main website for this project. TODO: Update URL after GitHub Account Name change
-            ProjectUri   = 'https://github.com/RjKGitHub/PowerShellForLockpath'
+            ProjectUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath'
 
             # A URL to an icon representing this module. IconUri = ''
 

@@ -34,7 +34,7 @@ $ModuleName = (Split-Path -Path $BuildFile -Leaf).Split('.')[0]
 #Default Build
 $str = @()
 $str = 'Clean', 'ValidateRequirements'
-$str += 'FormattingCheck'
+# $str += 'FormattingCheck'
 $str += 'Analyze', 'Test'
 $str += 'CreateHelpStart'
 $str += 'Build', 'InfraTest', 'Archive'
@@ -129,8 +129,7 @@ Add-BuildTask Analyze {
     if ($scriptAnalyzerResults) {
         $scriptAnalyzerResults | Format-Table
         throw '      One or more PSScriptAnalyzer errors/warnings where found.'
-    }
-    else {
+    } else {
         Write-Build Green '      ...Module Analyze Complete!'
     }
 }#Analyze
@@ -152,36 +151,34 @@ Add-BuildTask AnalyzeTests -After Analyze {
         if ($scriptAnalyzerResults) {
             $scriptAnalyzerResults | Format-Table
             throw '      One or more PSScriptAnalyzer errors/warnings where found.'
-        }
-        else {
+        } else {
             Write-Build White Green '      ...Test Analyze Complete!'
         }
     }
 }#AnalyzeTests
 
-#Synopsis: Analyze scripts to verify if they adhere to desired coding format (Stroustrup / OTBS / Allman)
-Add-BuildTask FormattingCheck {
+# #Synopsis: Analyze scripts to verify if they adhere to desired coding format (Stroustrup / OTBS / Allman)
+# Add-BuildTask FormattingCheck{
+
+#     $scriptAnalyzerParams = @{
+#         Setting     = 'CodeFormattingOTBS'
+#         ExcludeRule = 'PSUseConsistentWhitespace'
+#         Recurse     = $true
+#         Verbose     = $false
+#     }
 
 
-    $scriptAnalyzerParams = @{
-        Setting     = 'CodeFormattingOTBS'
-        ExcludeRule = 'PSUseConsistentWhitespace'
-        Recurse     = $true
-        Verbose     = $false
-    }
+#     Write-Build White '      Performing script formatting checks...'
+#     $scriptAnalyzerResults = Get-ChildItem -Path $script:ModuleSourcePath -Exclude "*.psd1" | Invoke-ScriptAnalyzer @scriptAnalyzerParams
 
-
-    Write-Build White '      Performing script formatting checks...'
-    $scriptAnalyzerResults = Get-ChildItem -Path $script:ModuleSourcePath -Exclude "*.psd1" | Invoke-ScriptAnalyzer @scriptAnalyzerParams
-
-    if ($scriptAnalyzerResults) {
-        $scriptAnalyzerResults | Format-Table
-        throw '      PSScriptAnalyzer code formatting check did not adhere to {0} standards' -f $scriptAnalyzerParams.Setting
-    }
-    else {
-        Write-Build Green '      ...Formatting Analyze Complete!'
-    }
-}#FormattingCheck
+#     if ($scriptAnalyzerResults) {
+#         $scriptAnalyzerResults | Format-Table
+#         throw '      PSScriptAnalyzer code formatting check did not adhere to {0} standards' -f $scriptAnalyzerParams.Setting
+#     }
+#     else {
+#         Write-Build Green '      ...Formatting Analyze Complete!'
+#     }
+# }#FormattingCheck
 
 #Synopsis: Invokes all Pester Unit Tests in the Tests\Unit folder (if it exists)
 Add-BuildTask Test {
@@ -233,13 +230,11 @@ Add-BuildTask Test {
             #>
             if ([Int]$coveragePercent -lt $coverageThreshold) {
                 throw ('Failed to meet code coverage threshold of {0}% with only {1}% coverage' -f $coverageThreshold, $coveragePercent)
-            }
-            else {
+            } else {
                 Write-Build Cyan "      $('Covered {0}% of {1} analyzed commands in {2} files.' -f $coveragePercent,$testResults.CodeCoverage.NumberOfCommandsAnalyzed,$testResults.CodeCoverage.NumberOfFilesAnalyzed)"
                 Write-Build Green '      ...Pester Unit Tests Complete!'
             }
-        }
-        else {
+        } else {
             # account for new module build condition
             Write-Build Yellow '      Code coverage check skipped. No commands to execute...'
         }
@@ -372,7 +367,7 @@ Add-BuildTask Build {
     #$private = "$script:ModuleSourcePath\Private"
     $scriptContent = [System.Text.StringBuilder]::new()
     #$powerShellScripts = Get-ChildItem -Path $script:ModuleSourcePath -Filter '*.ps1' -Recurse
-    $powerShellScripts = Get-ChildItem -Path $script:ArtifactsPath -Recurse | Where-Object {$_.Name -match '^*.ps1$'}
+    $powerShellScripts = Get-ChildItem -Path $script:ArtifactsPath -Recurse | Where-Object { $_.Name -match '^*.ps1$' }
     foreach ($script in $powerShellScripts) {
         $null = $scriptContent.Append((Get-Content -Path $script.FullName -Raw))
         $null = $scriptContent.AppendLine('')
@@ -392,7 +387,7 @@ Add-BuildTask Build {
     if (Test-Path "$($script:ArtifactsPath)\Imports.ps1") {
         Remove-Item "$($script:ArtifactsPath)\Imports.ps1" -Force -ErrorAction SilentlyContinue
     }
-    # here you could move your docs up to your repos doc level if you wanted
+    # here you could move your docs up to your repository doc level if you wanted
     # Write-Build Gray '        Overwriting docs output...'
     # Move-Item "$($script:ArtifactsPath)\docs\*.md" -Destination "..\docs\" -Force
     # Remove-Item "$($script:ArtifactsPath)\docs" -Recurse -Force -ErrorAction Stop

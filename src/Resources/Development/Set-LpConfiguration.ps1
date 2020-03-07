@@ -1,35 +1,4 @@
 function Set-LpConfiguration {
-    <#
-        .SYNOPSIS
-            Setup configuration file for establishing a Lockpath session.
-
-        .DESCRIPTION
-            Takes parameters and creates a configuration file used by the other commands in the #Requires -Module
-
-        .EXAMPLE
-            Set-LpConfiguration
-
-        .INPUTS
-            None
-
-        .OUTPUTS
-            Text file holding session configuration information
-
-        .NOTES
-            Additional information about the function or script.
-
-        .LINK
-         Online Version: https://github.com/RjKGitHub/PowerShellForLockpath/
-
-        .COMPONENT
-            Lockpath
-
-        .ROLE
-            Administrator
-
-        .FUNCTIONALITY
-            Initialize, Setup, Configuration
-    #>
     [CmdletBinding()]
     [OutputType()]
 

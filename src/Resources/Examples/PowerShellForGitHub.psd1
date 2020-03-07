@@ -146,12 +146,10 @@
             Tags       = @('GitHub', 'API', 'PowerShell')
 
             # A URL to the license for this module.
-            #TODO: Update URL after GitHub Account Name change
-            LicenseUri = 'https://github.com/RjKGitHub/PowerShellForLockpath/blob/master/LICENSE'
+            LicenseUri = 'https://github.com/RobertKlohr/PowerShellForLockpath/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            #TODO: Update URL after GitHub Account Name change
-            ProjectUri = 'https://github.com/RjKGitHub/PowerShellForLockpath'
+            ProjectUri = 'https://github.com/RobertKlohr/PowerShellForLockpath'
 
             # A URL to an icon representing this module.
             # IconUri = ''

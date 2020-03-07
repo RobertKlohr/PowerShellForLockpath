@@ -22,7 +22,7 @@ can be used to authenticate additional API transactions.
             Additional information about the function or script.
 
         .LINK
-            Online Version: https://github.com/RjKGitHub/PowerShellForLockpath/
+            Online Version: https://github.com/RobertKlohr/PowerShellForLockpath/
 
         .COMPONENT
             SecurityServices
@@ -76,7 +76,6 @@ can be used to authenticate additional API transactions.
         try {
             $Response = Invoke-RestMethod @Parameters -ErrorAction Stop
         } catch {
-            #TODO: create error handling cmdlet to replace this work
             # Get the message returned from the server which will be in JSON format
             #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
             $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(

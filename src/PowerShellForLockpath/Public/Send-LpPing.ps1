@@ -1,47 +1,4 @@
 function Send-LpPing {
-
-    <#
-        .SYNOPSIS
-            Refreshes a valid Keylight Platform session.
-
-        .DESCRIPTION
-            Refreshes a valid Keylight Platform session.
-
-        .PARAMETER
-            None
-
-        .EXAMPLE
-            Test-LpConnection
-
-        .INPUTS
-            None
-
-        .OUTPUTS
-            String
-
-        .NOTES
-            Refreshes a valid Keylight Platform session.
-            URL: http://[instance-name]:[port]/SecurityService/Ping
-            Method: GET
-            Input: No input allowed
-            Permissions: The account that is used to log into the application must have access to the Keylight API.
-
-        .LINK
-            Online Version: https://github.com/RjKGitHub/PowerShellForLockpath/
-
-        .COMPONENT
-            SecurityService
-            Lockpath
-
-        .ROLE
-            The user role for the help topic.
-            This content appears when the Get-Help command includes the Role parameter of Get-Help.
-
-        .FUNCTIONALITY
-            The intended use of the function.
-            This content appears when the Get-Help command includes the Functionality parameter of Get-Help.
-    #>
-
     [CmdletBinding()]
     [OutputType([Boolean])]
 

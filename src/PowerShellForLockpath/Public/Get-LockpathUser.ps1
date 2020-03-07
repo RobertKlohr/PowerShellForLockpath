@@ -1,57 +1,4 @@
 function Get-LockpathUser {
-    <#
-    .SYNOPSIS
-        Retrieves information about the specified user on Lockpath.
-
-    .DESCRIPTION
-        Retrieves information about the specified user on Lockpath.
-        The Git repo for this module can be found here: https://github.com/RjKGitHub/PowerShellForLockpath
-
-    .PARAMETER All
-        If specified, gets all users in the Lockpath system.
-        Optional filters can be used to narrow the scope.
-        This is the default switch if no paramters passed to the function.
-
-    .PARAMETER Count
-        If specified, gets count of user in the Lockpath system.
-        Optional filters can be used to narrow the scope.
-
-    .PARAMETER FilterField
-        The field to use for filtering.
-
-    .PARAMETER FilterType
-        The type of filter to use.
-
-    .PARAMETER FilterValue
-        The value of the filter.
-
-    .PARAMETER Id
-        If specified, The Id of the user to retrieve information for.
-
-    .PARAMETER PageIndex
-        The index of the page of result to return. Must be > 0
-
-    .PARAMETER PageSize
-        The size of the page results to return. Must be >= 1
-
-    .EXAMPLE
-        Get-LockpathUser -Id 6
-        Gets information on just the user with Id '6'
-
-    .EXAMPLE
-        Get-LockpathUser
-        Gets information on every Lockpath user.
-
-    .EXAMPLE
-        Get-LockpathUser -Count
-        Gets the count of the number of Lockpath users using the default filter.
-
-    .NOTES
-        Author: Robert Klohr
-        Version: 0.1
-        Copyright (c): Robert Klohr. All rights reserved.
-        License: Licensed under the MIT License.
-    #>
     [CmdletBinding(
         SupportsShouldProcess,
         DefaultParametersetName = 'None')]
@@ -77,8 +24,8 @@ function Get-LockpathUser {
 
         [Parameter(ParameterSetName = 'All')]
         [Parameter(ParameterSetName = 'Count')]
-        #Change these to named values
-        #split this into additional parameter groups to ensure that true/false are used with 5/6 and 1/2/4 are used with 10002
+        #TODO: Change these to named values
+        #TODO: split this into additional parameter groups to ensure that true/false are used with 5/6 and 1/2/4 are used with 10002
         [ValidateSet("True", "False", "1", "2", "4")]
         [string] $FilterValue = 'True',
 
@@ -113,9 +60,9 @@ function Get-LockpathUser {
 
     if ($All) {
         if (-not $PSBoundParameters.ContainsKey('FilterField')) {
-            $body = (ConvertTo-Json -InputObject $hashBodyPage)}
-    else {
-                $body = (ConvertTo-Json -InputObject $hashBodyPage, $hashBodyFilter)
+            $body = (ConvertTo-Json -InputObject $hashBodyPage)
+        } else {
+            $body = (ConvertTo-Json -InputObject $hashBodyPage, $hashBodyFilter)
         }
         $params = @{
             'UriFragment'          = '/SecurityService/GetUserUsers'
