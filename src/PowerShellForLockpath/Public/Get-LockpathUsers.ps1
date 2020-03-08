@@ -1,30 +1,48 @@
 function Get-LockpathUsers {
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        # change AccountType to Type for input
-        [ValidateSet('Active', 'Deleted', 'AccountType')]
-        [string] $FilterField = 'Active',
+        [Parameter(ParameterSetName = 'AdvancedFilter')]
+        [switch] $AdvancedFilter,
 
-        #Change these to named values
-        [ValidateSet('5', '6', '10002')]
-        [string] $FilterType = '5',
+        [Parameter(ParameterSetName = 'AdvancedFilter')]
+        [string] $Filter = '',
 
-        #TODO: Change these to named values
-        #TODO: split this into additional parameter groups to ensure that true/false are used with 5/6 and 1/2/4 are used with 10002
-        [ValidateSet('True', 'False', '1', '2', '4')]
-        [string] $FilterValue = 'True',
+        # [Parameter(ParameterSetName = 'AccountStatusFilter')]
+        # [switch] $AccountStatusFilter,
+
+        [Parameter(ParameterSetName = 'AccountStatusFilter')]
+        [ValidateSet('Active', 'Deleted')]
+        [string] $AccountStatus = 'Active',
+
+        # [Parameter(ParameterSetName = 'FilterAccountType')]
+        # [switch] $AccountTypeFilter,
+
+        [Parameter(ParameterSetName = 'FilterAccountType')]
+        # 1 = FullUser
+        # 2 = AwarenessUser
+        # 4 = VendorUser
+        [ValidateSet('Awareness', 'Full', 'Vendor')]
+        [string] $AccountType = 'Full',
+
+        [Parameter(ParameterSetName = 'FilterAccountType')]
+        # 5 = EqualTo
+        # 6 = NotEqualTo
+        # 1002 = ContainsAny
+        [ValidateSet('EqualTo', 'NotEqualTo', 'Contains')]
+        [string] $FilterType = 'EqualTo',
+
 
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $PageIndex = 1000,
+        [int] $PageIndex = 0,
 
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize = 0
+        [int] $PageSize = 1000
     )
 
-    Write-InvocationLog
+    # Write-InvocationLog
 
     $hashBodyPage = @{ }
     $hashBodyPage = @{
@@ -33,24 +51,40 @@ function Get-LockpathUsers {
     }
 
     $hashBodyFilter = @{ }
-    if ($PSBoundParameters.ContainsKey('FilterField')) {
+    if ($PSBoundParameters.ContainsKey('AccountStatus')) {
         $hashBodyFilter = @{
-            'FilterField' = $FilterField
-            'FilterType'  = $FilterType
-            'FilterValue' = $FilterValue
+            'Filters' = @{
+                'Field'      = @{
+                    'ShortName' = $AccountStatus
+                }
+                'FilterType' = '5' #EqualsTo
+                'Value'      = 'True'
+            }
+        }
+    } elseif ($PSBoundParameters.ContainsKey('AccountType')) {
+        $hashBodyFilter = @{
+            'Filters' = @{
+                'Field'      = @{
+                    'ShortName' = 'Accounttype'
+                }
+                'FilterType' = '10002' #Contains
+                'Value'      = '1|2|4'
+            }
         }
     }
 
     $body = ''
-    $body = (ConvertTo-Json -InputObject $hashBodyPage, $hashBodyFilter)
+    $body = (ConvertTo-Json -InputObject ($hashBodyPage + $hashBodyFilter))
 
     $params = @{ }
     $params = @{
-        'UriFragment'          = '/SecurityService/GetUserUsers'
+        'UriFragment'          = '/SecurityService/GetUsers'
         'Method'               = 'Post'
         'Body'                 = $body
         'Description'          = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
         'AuthenticationCookie' = $AuthenticationCookie
     }
-    return Invoke-LockpathRestMethod @params
+    #    return Invoke-LockpathRestMethod @params
+
+    return $params
 }

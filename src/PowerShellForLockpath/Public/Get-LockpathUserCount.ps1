@@ -17,10 +17,10 @@ function Get-LockpathUserCount {
         [string] $FilterValue = 'True',
 
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $PageIndex = 1000,
+        [int] $PageIndex = 0,
 
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize = 0
+        [int] $PageSize = 1000
     )
 
     Write-InvocationLog
