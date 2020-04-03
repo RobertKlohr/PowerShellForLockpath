@@ -6,7 +6,7 @@ function Get-LockpathField {
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $Id,
+        [int] $Id
     )
 
     Write-InvocationLog

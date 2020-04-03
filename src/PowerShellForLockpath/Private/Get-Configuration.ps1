@@ -1,4 +1,4 @@
-﻿function Get-LockpathConfiguration {
+﻿function Get-Configuration {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]

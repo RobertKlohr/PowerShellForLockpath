@@ -42,7 +42,7 @@ function Get-LockpathUsers {
         [int] $PageSize = 1000
     )
 
-    # Write-InvocationLog
+    Write-InvocationLog
 
     $hashBodyPage = @{ }
     $hashBodyPage = @{
@@ -84,7 +84,5 @@ function Get-LockpathUsers {
         'Description'          = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
         'AuthenticationCookie' = $AuthenticationCookie
     }
-    #    return Invoke-LockpathRestMethod @params
-
-    return $params
+    return Invoke-LockpathRestMethod @params
 }

@@ -15,7 +15,7 @@
         [ValidateRange(1, 30)]
         [Int16] $Indent = 0,
 
-        [IO.FileInfo] $Path = (Get-LockpathConfiguration -Name LogPath),
+        [IO.FileInfo] $Path = (Get-Configuration -Name LogPath),
 
         [System.Management.Automation.ErrorRecord] $Exception
     )
@@ -46,7 +46,7 @@
         # Build the console and log-specific messages.
         $date = Get-Date
         $dateString = $date.ToString("yyyy-MM-dd HH:mm:ss")
-        if (Get-LockpathConfiguration -Name LogTimeAsUtc) {
+        if (Get-Configuration -Name LogTimeAsUtc) {
             $dateString = $date.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ssZ")
         }
 
@@ -54,7 +54,7 @@
         (" " * $Indent),
         $finalMessage
 
-        if (Get-LockpathConfiguration -Name LogProcessId) {
+        if (Get-Configuration -Name LogProcessId) {
             $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
             $pidColumnLength = $maxPidDigits + "[]".Length
             $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f
@@ -107,7 +107,7 @@
         }
 
         try {
-            if (-not (Get-LockpathConfiguration -Name DisableLogging)) {
+            if (-not (Get-Configuration -Name DisableLogging)) {
                 if ([String]::IsNullOrWhiteSpace($Path)) {
                     Write-Warning 'Logging is currently enabled, however no path has been specified for the log file.  Use "Set-GitHubConfiguration -LogPath" to set the log path, or "Set-GitHubConfiguration -DisableLogging" to disable logging.'
                 } else {

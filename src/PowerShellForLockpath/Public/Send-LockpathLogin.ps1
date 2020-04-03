@@ -1,43 +1,25 @@
 function Send-LockpathLogin {
-    [CmdletBinding()]
-    [OutputType([Boolean])]
-    param(
-        # URL to the Lockpath instance.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [uri]
-        $Url = $LpUrl,
-        # Web session with authentication cookie set.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session = $LpSession
-    )
+    [CmdletBinding(SupportsShouldProcess)]
+    [OutputType([string])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+    param()
 
-    begin {
-        $Parameters = @{
-            Method     = 'GET'
-            Uri        = $LpUrl + "/SecurityService/Logout"
-            WebSession = $Session
-        }
+    Write-InvocationLog
+
+    $credential = Get-LockpathAuthentication
+    $hashBody = @{ }
+    $hashBody = [ordered]@{
+        'username' = $credential.username
+        'password' = $credential.GetNetworkCredential().Password
     }
 
-    process {
-        try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
-        } catch {
-            # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
-            $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-                (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
-                'Invoke-RestMethod',
-                [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-                $parameters
-            )
-            $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-            $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-            $PSCmdlet.ThrowTerminatingError($ErrorRecord);
-        }
-    }
+    $params = @{ }
 
-    end {
-        Return $Response
+    $params = @{
+        'UriFragment' = '/SecurityService/Login'
+        'Method'      = 'Get'
+        'Body'        = (ConvertTo-Json -InputObject $hashBody)
+        'Description' = "Login to $($script:configuration.apiHostName) with $($credential.username)"
     }
+    Invoke-LockpathRestMethod @params
 }

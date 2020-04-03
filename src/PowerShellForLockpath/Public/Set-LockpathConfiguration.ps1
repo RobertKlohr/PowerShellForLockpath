@@ -2,26 +2,20 @@
     [CmdletBinding()]
 
     param(
-        [ValidatePattern('^(?!https?:)(?!api\.)(?!www\.).*')]
-        [string] $ApiHostName,
-
-        [string] $ApplicationInsightsKey,
-
-        [string] $AssemblyPath,
+        [ValidatePattern('^(?!https?:).*')]
 
         [switch] $DefaultNoStatus,
 
-        [string] $DefaultOwnerName,
-
-        [string] $DefaultRepositoryName,
-
         [switch] $DisableLogging,
-
-        [switch] $DisablePiiProtection,
 
         [switch] $DisableSmarterObjects,
 
-        [switch] $DisableTelemetry,
+        [string] $InstanceName,
+
+        [ValidateRange(0, 65535)]
+        [int] $InstancePort,
+
+        [string] $InstancePortocol,
 
         [string] $LogPath,
 
@@ -31,22 +25,23 @@
 
         [switch] $LogTimeAsUtc,
 
+        [int] $PageIndex,
+
+        [int] $PageSize,
+
         [int] $RetryDelaySeconds,
 
-        [switch] $SuppressNoTokenWarning,
+        [boolean] $RunAsSystem,
 
-        [switch] $SuppressTelemetryReminder,
+        [switch] $SessionOnly,
 
         [ValidateRange(0, 3600)]
-        [int] $WebRequestTimeoutSec,
-
-        [switch] $SessionOnly
+        [int] $WebRequestTimeoutSec
     )
-
 
     $persistedConfig = $null
     if (-not $SessionOnly) {
-        $persistedConfig = Read-LockpathConfiguration -Path $script:configurationFilePath
+        $persistedConfig = Read-Configuration -Path $script:configurationFilePath
     }
 
     $properties = Get-Member -InputObject $script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
@@ -65,7 +60,7 @@
     }
 
     if (-not $SessionOnly) {
-        Save-LockpathConfiguration -Configuration $persistedConfig -Path $script:configurationFilePath
+        Save-Configuration -Configuration $persistedConfig -Path $script:configurationFilePath
     }
 
 }

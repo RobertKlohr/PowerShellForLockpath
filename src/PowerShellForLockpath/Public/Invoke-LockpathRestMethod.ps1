@@ -46,8 +46,8 @@ function Invoke-LockpathRestMethod {
         $Description = "Executing: $UriFragment"
     }
 
-    $hostName = $(Get-LockpathConfiguration -Name "ApiHostName")
-    $portNumber = $(Get-LockpathConfiguration -Name "ApiHostPort")
+    $hostName = $(Get-Configuration -Name "ApiHostName")
+    $portNumber = $(Get-Configuration -Name "ApiHostPort")
 
     $url = "https://${hostName}:$portNumber/$UriFragment"
 
@@ -69,7 +69,7 @@ function Invoke-LockpathRestMethod {
 
     try {
         Write-Log -Message $Description -Level Verbose
-        Write-Log -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
+        Write-Log -Message "Accessing [$Method] $url [Timeout = $(Get-Configuration -Name WebRequestTimeoutSec))]" -Level Verbose
 
         if ($PSCmdlet.ShouldProcess($url, "Invoke-RestMethod")) {
             $params = @{ }
@@ -81,7 +81,7 @@ function Invoke-LockpathRestMethod {
                 # $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
                 $params.Add("Body", $Body)
                 Write-Log -Message "Request includes a body." -Level Verbose
-                if (Get-LockpathConfiguration -Name LogRequestBody) {
+                if (Get-Configuration -Name LogRequestBody) {
                     #TODO: Need to filter out logging the password
                     Write-Log -Message $Body -Level Verbose
                 }
@@ -101,7 +101,7 @@ function Invoke-LockpathRestMethod {
             }
         }
 
-        if (-not (Get-LockpathConfiguration -Name DisableSmarterObjects)) {
+        if (-not (Get-Configuration -Name DisableSmarterObjects)) {
             $response = ConvertTo-SmarterObject -InputObject $response
         }
 
