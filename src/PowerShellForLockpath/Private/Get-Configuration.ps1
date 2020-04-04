@@ -3,25 +3,19 @@
     param(
         [Parameter(Mandatory)]
         [ValidateSet(
-            'ApiHostName',
-            'ApplicationInsightsKey',
-            'AssemblyPath',
-            'DefaultNoStatus',
-            'DefaultOwnerName',
-            'DefaultRepositoryName',
-            'DisableLogging',
-            'DisablePiiProtection',
-            'DisableSmarterObjects',
-            'DisableTelemetry',
-            'LogPath',
-            'LogProcessId',
-            'LogRequestBody',
-            'LogTimeAsUtc',
-            'RetryDelaySeconds',
-            'SuppressNoTokenWarning',
-            'SuppressTelemetryReminder',
-            'TestConfigSettingsHash',
-            'WebRequestTimeoutSec')]
+            'defaultNoStatus',
+            'disableLogging',
+            'disableSmarterObjects',
+            'instanceName',
+            'instancePort',
+            'instanceProtocol',
+            'logPath',
+            'logProcessId',
+            'logRequestBody',
+            'logTimeAsUtc',
+            'retryDelaySeconds',
+            'runAsSystem',
+            'webRequestTimeoutSec')]
         [string] $Name
     )
 

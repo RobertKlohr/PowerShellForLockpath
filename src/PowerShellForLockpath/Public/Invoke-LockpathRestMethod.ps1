@@ -1,36 +1,23 @@
-﻿
-function Invoke-LockpathRestMethod {
+﻿function Invoke-LockpathRestMethod {
     [CmdletBinding(SupportsShouldProcess)]
-    param (
+    param(
         [Parameter(Mandatory)]
         [string] $UriFragment,
 
         [Parameter(Mandatory)]
-        [ValidateSet('Delete', 'Get', 'Post')]
+        [ValidateSet('Delete', 'Get', 'Put')]
         [string] $Method,
 
-        [string] $Description,
+        [string] $AcceptHeader = $script:defaultAcceptHeader,
 
         [string] $AuthenticationCookie = $script:AuthenticationCookie,
 
         [string] $Body = $null,
 
-        [string] $AcceptHeader = $script:DefaultAcceptHeader,
-
-        [switch] $ExtendedResult,
+        [string] $Description,
 
         [switch] $NoStatus
     )
-
-    #TODO Check about removing the next line.
-
-    @{
-        DefaultAcceptHeader               = 'application/json'
-        ValidBodyContainingRequestMethods = ("Delete", "Post")
-
-    }.GetEnumerator() | ForEach-Object {
-        Set-Variable -Scope Script -Option ReadOnly -Name $_.Key -Value $_.Value
-    }
 
     # Normalize our Uri fragment.  It might be coming from a method implemented here, or it might
     # be coming from the Location header in a previous response.  Either way, we don't want there
@@ -41,15 +28,15 @@ function Invoke-LockpathRestMethod {
     if ($UriFragment.EndsWIth('/')) {
         $UriFragment = $UriFragment.Substring(0, $UriFragment.Length - 1)
     }
-
     if ([String]::IsNullOrEmpty($Description)) {
         $Description = "Executing: $UriFragment"
     }
 
-    $hostName = $(Get-Configuration -Name "ApiHostName")
-    $portNumber = $(Get-Configuration -Name "ApiHostPort")
+    $hostName = $(Get-Configuration -Name "InstanceName")
+    $portNumber = $(Get-Configuration -Name "instancePort")
+    $protocol = $(Get-Configuration -Name "instanceProtocol")
 
-    $url = "https://${hostName}:$portNumber/$UriFragment"
+    $url = "${protocol}://${hostName}:$portNumber/$UriFragment"
 
     # It's possible that we are directly calling the "nextLink" from a previous command which
     # provides the full URI.  If that's the case, we'll just use exactly what was provided to us.
@@ -59,9 +46,13 @@ function Invoke-LockpathRestMethod {
 
     $headers = @{
         'Accept'     = $AcceptHeader
-        #TODO: move this to the configuration object and file
-        'User-Agent' = "PowerShell/$($PSVersionTable.PSVersion.ToString(2)) PowerShellForLockpath"
+        'User-Agent' = $UserAgent
     }
+
+    # $AccessToken = Get-AccessToken -AccessToken $AccessToken
+    # if (-not [String]::IsNullOrEmpty($AccessToken)) {
+    #     $headers['Authorization'] = "token $AccessToken"
+    # }
 
     if ($Method -in $ValidBodyContainingRequestMethods) {
         $headers.Add("Content-Type", "application/json")
@@ -71,41 +62,43 @@ function Invoke-LockpathRestMethod {
         Write-Log -Message $Description -Level Verbose
         Write-Log -Message "Accessing [$Method] $url [Timeout = $(Get-Configuration -Name WebRequestTimeoutSec))]" -Level Verbose
 
-        if ($PSCmdlet.ShouldProcess($url, "Invoke-RestMethod")) {
+        if ($PSCmdlet.ShouldProcess($url, "Invoke-WebRequest")) {
             $params = @{ }
             $params.Add("Uri", $url)
             $params.Add("Method", $Method)
             $params.Add("Headers", $headers)
+            $params.Add("TimeoutSec", (Get-Configuration -Name WebRequestTimeoutSec))
 
             if ($Method -in $ValidBodyContainingRequestMethods -and (-not [String]::IsNullOrEmpty($Body))) {
-                # $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
-                $params.Add("Body", $Body)
+                $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
+                $params.Add("Body", $bodyAsBytes)
                 Write-Log -Message "Request includes a body." -Level Verbose
                 if (Get-Configuration -Name LogRequestBody) {
-                    #TODO: Need to filter out logging the password
                     Write-Log -Message $Body -Level Verbose
                 }
             }
 
-            # If the call is a login capture the cookie else use the build a web session using the passed cookie
-            if ($UriFragment = 'SecurityService/Login') {
-                $params.Add('SessionVariable', 'RestSession')
-            } else {
-                $params.Add('WebSession', $WebSession)
-            }
-
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            $response = Invoke-RestMethod @params #-ErrorAction Stop
+            $result = Invoke-WebRequest @params
             if ($Method -eq 'Delete') {
                 Write-Log -Message "Successfully removed." -Level Verbose
             }
         }
 
-        if (-not (Get-Configuration -Name DisableSmarterObjects)) {
-            $response = ConvertTo-SmarterObject -InputObject $response
+        $finalResult = $result.Content
+        try {
+            $finalResult = $finalResult | ConvertFrom-Json
+        } catch [ArgumentException] {
+            # The content must not be JSON (which is a legitimate situation).  We'll return the raw content result instead.
+            # We do this unnecessary assignment to avoid PSScriptAnalyzer's PSAvoidUsingEmptyCatchBlock.
+            $finalResult = $finalResult
         }
 
-        $links = $response.Headers['Link'] -split ','
+        if (-not (Get-Configuration -Name DisableSmarterObjects)) {
+            $finalResult = ConvertTo-SmarterObject -InputObject $finalResult
+        }
+
+        $links = $result.Headers['Link'] -split ','
         $nextLink = $null
         foreach ($link in $links) {
             if ($link -match '<(.*)>; rel="next"') {
@@ -113,44 +106,103 @@ function Invoke-LockpathRestMethod {
             }
         }
 
-        if ($ExtendedResult) {
-            $responseEx = @{
-                'result'             = $response
-                'statusCode'         = $response.StatusCode
-                'requestId'          = $response.Headers['X-GitHub-Request-Id']
-                'nextLink'           = $nextLink
-                'link'               = $response.Headers['Link']
-                'lastModified'       = $response.Headers['Last-Modified']
-                'ifNoneMatch'        = $response.Headers['If-None-Match']
-                'ifModifiedSince'    = $response.Headers['If-Modified-Since']
-                'eTag'               = $response.Headers['ETag']
-                'rateLimit'          = $response.Headers['X-RateLimit-Limit']
-                'rateLimitRemaining' = $response.Headers['X-RateLimit-Remaining']
-                'rateLimitReset'     = $response.Headers['X-RateLimit-Reset']
+        $resultNotReadyStatusCode = 202
+        if ($result.StatusCode -eq $resultNotReadyStatusCode) {
+            $retryDelaySeconds = Get-Configuration -Name RetryDelaySeconds
+
+            if ($Method -ne 'Get') {
+                # We only want to do our retry logic for GET requests...
+                # We don't want to repeat PUT/PATCH/POST/DELETE.
+                Write-Log -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
+            } elseif ($retryDelaySeconds -le 0) {
+                Write-Log -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
+            } else {
+                Write-Log -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
+                Start-Sleep -Seconds ($retryDelaySeconds)
+                return (Invoke-LockpathRestMethod @PSBoundParameters)
+            }
+        }
+        return $finalResult
+    } catch {
+        # We only know how to handle WebExceptions, which will either come in "pure" when running with -NoStatus,
+        # or will come in as a RemoteException when running normally (since it's coming from the asynchronous Job).
+        $ex = $null
+        $message = $null
+        $statusCode = $null
+        $statusDescription = $null
+        $innerMessage = $null
+        $rawContent = $null
+
+        if ($_.Exception -is [System.Net.WebException]) {
+            $ex = $_.Exception
+            $message = $_.Exception.Message
+            $statusCode = $ex.Response.StatusCode.value__ # Note that value__ is not a typo.
+            $statusDescription = $ex.Response.StatusDescription
+            $innerMessage = $_.ErrorDetails.Message
+            try {
+                $rawContent = Get-HttpWebResponseContent -WebResponse $ex.Response
+            } catch {
+                Write-Log -Message "Unable to retrieve the raw HTTP Web Response:" -Exception $_ -Level Warning
             }
 
-            return ([PSCustomObject] $responseEx)
+        } elseif (($_.Exception -is [System.Management.Automation.RemoteException]) -and
+            ($_.Exception.SerializedRemoteException.PSObject.TypeNames[0] -eq 'Deserialized.System.Management.Automation.RuntimeException')) {
+            $ex = $_.Exception
+            try {
+                $deserialized = $ex.Message | ConvertFrom-Json
+                $message = $deserialized.Message
+                $statusCode = $deserialized.StatusCode
+                $statusDescription = $deserialized.StatusDescription
+                $innerMessage = $deserialized.InnerMessage
+                $rawContent = $deserialized.RawContent
+            } catch [System.ArgumentException] {
+                # Will be thrown if $ex.Message isn't JSON content
+                Write-Log -Exception $_ -Level Error
+                throw
+            }
         } else {
-            return $response
+            Write-Log -Exception $_ -Level Error
+            throw
         }
-    } catch {
-        #TODO: look to see if there are some status codes we can capture and log
-        #TODO: REGEX to parse response:
-        # ^.*(\w\r\n\s*)\K.*[^\s]
-        # Get the message returned from the server which will be in JSON format
-        #TODO: Get Lockpath to return error messages in JSON or XML and not HTML with CSS
-        #TODO: grab errordetails.message, Exception.Message, ScriptStackTrace and Exception.Response.StatusCode.value__,
-        $ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message
-        $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-            (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($ErrorMessage)")),
-            'Invoke-RestMethod',
-            [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-            $parameters
-        )
-        $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-        $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-        $PSCmdlet.ThrowTerminatingError($ErrorRecord);
-        Write-Log -Exception $_ -Level Error
-        throw
+
+        $output = @()
+        $output += $message
+
+        if (-not [string]::IsNullOrEmpty($statusCode)) {
+            $output += "$statusCode | $($statusDescription.Trim())"
+        }
+
+        if (-not [string]::IsNullOrEmpty($innerMessage)) {
+            try {
+                $innerMessageJson = ($innerMessage | ConvertFrom-Json)
+                if ($innerMessageJson -is [String]) {
+                    $output += $innerMessageJson.Trim()
+                } elseif (-not [String]::IsNullOrWhiteSpace($innerMessageJson.message)) {
+                    $output += "$($innerMessageJson.message.Trim())"
+                    if ($innerMessageJson.details) {
+                        $output += "$($innerMessageJson.details | Format-Table | Out-String)"
+                    }
+                } else {
+                    # In this case, it's probably not a normal message from the API
+                    $output += ($innerMessageJson | Out-String)
+                }
+            } catch [System.ArgumentException] {
+                # Will be thrown if $innerMessage isn't JSON content
+                $output += $innerMessage.Trim()
+            }
+        }
+
+        # It's possible that the API returned JSON content in its error response.
+        if (-not [String]::IsNullOrWhiteSpace($rawContent)) {
+            $output += $rawContent
+        }
+
+        if ($statusCode -eq 404) {
+            $output += "This typically happens when the current user isn't properly authenticated.  You may need an Access Token with additional scopes checked."
+        }
+
+        $newLineOutput = ($output -join [Environment]::NewLine)
+        Write-Log -Message $newLineOutput -Level Error
+        throw $newLineOutput
     }
 }

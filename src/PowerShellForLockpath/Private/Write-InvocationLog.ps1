@@ -1,4 +1,5 @@
-﻿function Write-InvocationLog {
+﻿#TODO check that this is working after moving to private
+function Write-InvocationLog {
     # [CmdletBinding(SupportsShouldProcess)]
     [CmdletBinding()]
     param(
