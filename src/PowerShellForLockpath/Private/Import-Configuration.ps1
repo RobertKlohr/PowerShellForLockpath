@@ -5,6 +5,8 @@
         [string] $Path
     )
 
+    # Write-InvocationLog
+
     $logPath = [String]::Empty
     $documentsFolder = [System.Environment]::GetFolderPath('MyDocuments')
     if (-not [System.String]::IsNullOrEmpty($documentsFolder)) {

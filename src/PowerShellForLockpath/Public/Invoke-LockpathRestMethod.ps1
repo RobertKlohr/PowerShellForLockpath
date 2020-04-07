@@ -5,7 +5,7 @@
         [string] $UriFragment,
 
         [Parameter(Mandatory)]
-        [ValidateSet('Delete', 'Get', 'Put')]
+        [ValidateSet('Delete', 'Get', 'Post')]
         [string] $Method,
 
         [string] $AcceptHeader = $script:defaultAcceptHeader,
@@ -18,6 +18,8 @@
 
         [switch] $NoStatus
     )
+
+    Write-InvocationLog
 
     # Normalize our Uri fragment.  It might be coming from a method implemented here, or it might
     # be coming from the Location header in a previous response.  Either way, we don't want there
@@ -68,7 +70,12 @@
             $params.Add("Method", $Method)
             $params.Add("Headers", $headers)
             $params.Add("TimeoutSec", (Get-Configuration -Name WebRequestTimeoutSec))
-
+            #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
+            if ($UriFragment -eq "SecurityService/Login") {
+                $params.Add("SessionVariable", "Session")
+            } else {
+                $params.Add("WebSession", $script:Session)
+            }
             if ($Method -in $ValidBodyContainingRequestMethods -and (-not [String]::IsNullOrEmpty($Body))) {
                 $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
                 $params.Add("Body", $bodyAsBytes)
@@ -80,6 +87,9 @@
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             $result = Invoke-WebRequest @params
+            if ($UriFragment -eq "SecurityService/Login") {
+                Set-Variable -Scope Script -Name "Session"
+            }
             if ($Method -eq 'Delete') {
                 Write-Log -Message "Successfully removed." -Level Verbose
             }
@@ -98,13 +108,14 @@
             $finalResult = ConvertTo-SmarterObject -InputObject $finalResult
         }
 
-        $links = $result.Headers['Link'] -split ','
-        $nextLink = $null
-        foreach ($link in $links) {
-            if ($link -match '<(.*)>; rel="next"') {
-                $nextLink = $matches[1]
-            }
-        }
+        #TODO check to see if Lockpath API hands back links on any call
+        # $links = $result.Headers['Link'] -split ','
+        # $nextLink = $null
+        # foreach ($link in $links) {
+        #     if ($link -match '<(.*)>; rel="next"') {
+        #         $nextLink = $matches[1]
+        #     }
+        # }
 
         $resultNotReadyStatusCode = 202
         if ($result.StatusCode -eq $resultNotReadyStatusCode) {
@@ -124,8 +135,6 @@
         }
         return $finalResult
     } catch {
-        # We only know how to handle WebExceptions, which will either come in "pure" when running with -NoStatus,
-        # or will come in as a RemoteException when running normally (since it's coming from the asynchronous Job).
         $ex = $null
         $message = $null
         $statusCode = $null
@@ -145,21 +154,6 @@
                 Write-Log -Message "Unable to retrieve the raw HTTP Web Response:" -Exception $_ -Level Warning
             }
 
-        } elseif (($_.Exception -is [System.Management.Automation.RemoteException]) -and
-            ($_.Exception.SerializedRemoteException.PSObject.TypeNames[0] -eq 'Deserialized.System.Management.Automation.RuntimeException')) {
-            $ex = $_.Exception
-            try {
-                $deserialized = $ex.Message | ConvertFrom-Json
-                $message = $deserialized.Message
-                $statusCode = $deserialized.StatusCode
-                $statusDescription = $deserialized.StatusDescription
-                $innerMessage = $deserialized.InnerMessage
-                $rawContent = $deserialized.RawContent
-            } catch [System.ArgumentException] {
-                # Will be thrown if $ex.Message isn't JSON content
-                Write-Log -Exception $_ -Level Error
-                throw
-            }
         } else {
             Write-Log -Exception $_ -Level Error
             throw

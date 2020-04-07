@@ -110,7 +110,7 @@ function Write-Log {
         try {
             if (-not (Get-Configuration -Name DisableLogging)) {
                 if ([String]::IsNullOrWhiteSpace($Path)) {
-                    Write-Warning 'Logging is currently enabled, however no path has been specified for the log file.  Use "Set-GitHubConfiguration -LogPath" to set the log path, or "Set-GitHubConfiguration -DisableLogging" to disable logging.'
+                    Write-Warning 'Logging is currently enabled, however no path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path, or "Set-Configuration -DisableLogging" to disable logging.'
                 } else {
                     $logFileMessage | Out-File -FilePath $Path -Append
                 }

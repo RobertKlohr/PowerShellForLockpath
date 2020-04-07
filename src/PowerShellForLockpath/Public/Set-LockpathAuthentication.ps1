@@ -27,6 +27,7 @@
     }
 
     $script:LockpathCredential = $Credential
+
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess("Store API Username and Password as a SecureString in a local file")) {
             $null = New-Item -Path $script:CredentialFilePath -Force

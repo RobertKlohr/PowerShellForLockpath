@@ -1,3 +1,4 @@
+#TODO normalize all UriFragment varialbes to strip starting and end "/"
 # this psm1 is for local testing and development use only
 
 # dot source the parent import for local development variables

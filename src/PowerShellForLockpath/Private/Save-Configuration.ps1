@@ -9,6 +9,8 @@
         [string] $Path
     )
 
+    Write-InvocationLog
+
     $null = New-Item -Path $Path -Force
     ConvertTo-Json -InputObject $Configuration |
     Set-Content -Path $Path -Force -ErrorAction SilentlyContinue -ErrorVariable ev
