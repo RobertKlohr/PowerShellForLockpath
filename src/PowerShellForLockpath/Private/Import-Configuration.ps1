@@ -30,6 +30,7 @@
         'retryDelaySeconds'     = 30
         'runAsSystem'           = $true
         'webRequestTimeoutSec'  = 0
+        'webSession'            = $false
     }
 
     # Update the values with any that we find in the configuration file.

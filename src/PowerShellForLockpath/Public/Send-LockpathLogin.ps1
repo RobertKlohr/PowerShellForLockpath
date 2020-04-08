@@ -22,4 +22,6 @@ function Send-LockpathLogin {
         'Description' = "Login to $($script:configuration.instanceName) with $($credential.username)"
     }
     Invoke-LockpathRestMethod @params
+
+    Write-InvocationLog
 }

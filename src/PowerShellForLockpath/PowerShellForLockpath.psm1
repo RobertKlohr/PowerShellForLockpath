@@ -1,4 +1,17 @@
-#TODO normalize all UriFragment varialbes to strip starting and end "/"
+#TODO Rework configuration settings.
+#TODO All settings are written to file and assumed to be in the file to work.
+#TODO remove all references to session only in comments and logging text.
+#TODO Remove all "session-only" code.
+#TODO Remove -disable logging code. Everything is logged.
+#TODO Rework all API call functions to only pass UriFragment (strip starting and end "/") method and description.
+#TODO add switch for each call for serialized vs. raw format for content returned json vs. PsCustomObject
+#TODO background looping job for calling Lockpath Ping API call to keep session alive. Look at Keep Alive Script
+#TODO add badges to readme.md file.  See examples from PowershellForGitHub below.
+
+# [![[GitHub version]](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub.svg)](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub)
+# [![Build status](https://dev.azure.com/ms/PowerShellForGitHub/_apis/build/status/PowerShellForGitHub-CI?branchName=master)](https://dev.azure.com/ms/PowerShellForGitHub/_build/latest?definitionId=109&branchName=master)
+
+
 # this psm1 is for local testing and development use only
 
 # dot source the parent import for local development variables
@@ -32,4 +45,7 @@ foreach ($file in @($public + $private)) {
 # export all public functions
 Export-ModuleMember -Function $public.Basename
 
+
 Initialize-Configuration
+
+Export-ModuleMember -Variable 'configuration'

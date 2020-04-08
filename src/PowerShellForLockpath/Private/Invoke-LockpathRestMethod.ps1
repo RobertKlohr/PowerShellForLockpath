@@ -14,9 +14,7 @@
 
         [string] $Body = $null,
 
-        [string] $Description,
-
-        [switch] $NoStatus
+        [string] $Description
     )
 
     Write-InvocationLog
@@ -72,9 +70,9 @@
             $params.Add("TimeoutSec", (Get-Configuration -Name WebRequestTimeoutSec))
             #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
             if ($UriFragment -eq "SecurityService/Login") {
-                $params.Add("SessionVariable", "Session")
+                $params.Add("SessionVariable", "webSession")
             } else {
-                $params.Add("WebSession", $script:Session)
+                $params.Add("WebSession", $script:configuration.webSession)
             }
             if ($Method -in $ValidBodyContainingRequestMethods -and (-not [String]::IsNullOrEmpty($Body))) {
                 $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
@@ -88,7 +86,7 @@
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             $result = Invoke-WebRequest @params
             if ($UriFragment -eq "SecurityService/Login") {
-                Set-Variable -Scope Script -Name "Session"
+                $script:configuration.webSession = $webSession
             }
             if ($Method -eq 'Delete') {
                 Write-Log -Message "Successfully removed." -Level Verbose

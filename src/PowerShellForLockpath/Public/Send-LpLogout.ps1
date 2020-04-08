@@ -1,3 +1,4 @@
+#TODO remove pipeline setup of begin process and end.
 function Send-LpLogout {
     [CmdletBinding()]
     [OutputType([Boolean])]

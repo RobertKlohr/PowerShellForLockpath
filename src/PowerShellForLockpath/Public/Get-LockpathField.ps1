@@ -9,14 +9,21 @@ function Get-LockpathField {
         [int] $Id
     )
 
-    Write-InvocationLog
-
-    $params = @{ }
-    $params = @{
-        'UriFragment'          = "/SecurityService/GetField?Id=$Id"
-        'Method'               = 'Get'
-        'Description'          = "Getting field with Id: $Id"
-        'AuthenticationCookie' = $AuthenticationCookie
+    begin {
+        Write-InvocationLog
+        $params = @{ }
+        $params = @{
+            'UriFragment' = "/SecurityService/GetField?Id=$Id"
+            'Method'      = 'Get'
+            'Description' = "Getting field with Id: $Id"
+        }
     }
-    return Invoke-LockpathRestMethod @params
+
+    process {
+        $result = Invoke-LockpathRestMethod @params
+    }
+
+    end {
+        return $result
+    }
 }

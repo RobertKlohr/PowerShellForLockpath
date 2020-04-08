@@ -7,14 +7,21 @@
         [string] $Alias
     )
 
-    Write-InvocationLog
-
-    $params = @{ }
-    $params = @{
-        'UriFragment'          = "/ComponentService/GetComponent?id=$Alias"
-        'Method'               = 'Get'
-        'Description'          = "Getting Component with Alias: $Alias"
-        'AuthenticationCookie' = $AuthenticationCookie
+    begin {
+        Write-InvocationLog
+        $params = @{ }
+        $params = @{
+            'UriFragment' = "/ComponentService/GetComponent?id=$Alias"
+            'Method'      = 'Get'
+            'Description' = "Getting Component with Alias: $Alias"
+        }
     }
-    return Invoke-LockpathRestMethod @params
+
+    process {
+        $result = Invoke-LockpathRestMethod @params
+    }
+
+    end {
+        return $result
+    }
 }

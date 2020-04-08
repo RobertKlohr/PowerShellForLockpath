@@ -1,3 +1,4 @@
+#FIXME restructure to use new wrapper
 function Get-LpRecord {
     [CmdletBinding()]
     [OutputType([int])]

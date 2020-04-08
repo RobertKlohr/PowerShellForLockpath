@@ -1,4 +1,5 @@
-﻿function Clear-LockpathAuthentication {
+﻿#TODO check me
+function Clear-LockpathAuthentication {
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [switch] $SessionOnly

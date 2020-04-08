@@ -36,7 +36,9 @@
         [switch] $SessionOnly,
 
         [ValidateRange(0, 3600)]
-        [int] $WebRequestTimeoutSec
+        [int] $WebRequestTimeoutSec,
+
+        [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )
 
     $persistedConfig = $null

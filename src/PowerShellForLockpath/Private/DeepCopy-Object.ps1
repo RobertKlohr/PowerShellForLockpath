@@ -1,4 +1,5 @@
-﻿function DeepCopy-Object {
+﻿#TODO update name to Set-DeepCopyObject
+function DeepCopy-Object {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Justification = "Intentional.  This isn't exported, and needed to be explicit relative to Copy-Object.")]
     param(

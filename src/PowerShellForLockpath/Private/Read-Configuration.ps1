@@ -5,8 +5,6 @@
         [string] $Path
     )
 
-    Write-InvocationLog
-
     $content = Get-Content -Path $Path -Encoding UTF8 -ErrorAction Ignore
     if (-not [String]::IsNullOrEmpty($content)) {
         try {

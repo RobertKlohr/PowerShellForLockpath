@@ -9,14 +9,21 @@ function Get-LockpathUser {
         [int] $Id
     )
 
-    Write-InvocationLog
-
-    $params = @{ }
-    $params = @{
-        'UriFragment'          = "/SecurityService/GetUser?Id=$Id"
-        'Method'               = 'Get'
-        'Description'          = "Getting user with Id: $Id"
-        'AuthenticationCookie' = $AuthenticationCookie
+    begin {
+        Write-InvocationLog
+        $params = @{ }
+        $params = @{
+            'UriFragment' = "/SecurityService/GetUser?Id=$Id"
+            'Method'      = 'Get'
+            'Description' = "Getting user with Id: $Id"
+        }
     }
-    return Invoke-LockpathRestMethod @params
+
+    process {
+        $result = Invoke-LockpathRestMethod @params
+    }
+
+    end {
+        return $result
+    }
 }

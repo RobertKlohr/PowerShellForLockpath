@@ -15,7 +15,8 @@
             'logTimeAsUtc',
             'retryDelaySeconds',
             'runAsSystem',
-            'webRequestTimeoutSec')]
+            'webRequestTimeoutSec',
+            'webSession')]
         [string] $Name
     )
 

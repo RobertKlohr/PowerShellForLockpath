@@ -8,14 +8,20 @@ function Get-LockpathFieldList {
         [int] $Id
     )
 
-    Write-InvocationLog
-
-    $params = @{ }
-    $params = @{
-        'UriFragment'          = "/ComponentService/GetFieldList?componentId=$Id"
-        'Method'               = 'Get'
-        'Description'          = "Getting field list with component Id: $Id"
-        'AuthenticationCookie' = $AuthenticationCookie
+    begin {
+        Write-InvocationLog
+        $params = @{ }
+        $params = @{
+            'UriFragment' = "/ComponentService/GetFieldList?componentId=$Id"
+            'Method'      = 'Get'
+            'Description' = "Getting field list with component Id: $Id"
+        }
     }
-    return Invoke-LockpathRestMethod @params
+    process {
+        $result = Invoke-LockpathRestMethod @params
+    }
+
+    end {
+        return $result
+    }
 }

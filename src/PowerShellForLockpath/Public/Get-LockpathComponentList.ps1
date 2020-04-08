@@ -8,14 +8,21 @@
         [int] $Id
     )
 
-    Write-InvocationLog
-
-    $params = @{ }
-    $params = @{
-        'UriFragment'          = '/ComponentService/GetComponentList'
-        'Method'               = 'Get'
-        'Description'          = 'Getting Component List.'
-        'AuthenticationCookie' = $AuthenticationCookie
+    begin {
+        Write-InvocationLog
+        $params = @{ }
+        $params = @{
+            'UriFragment' = '/ComponentService/GetComponentList'
+            'Method'      = 'Get'
+            'Description' = "Getting component list."
+        }
     }
-    return Invoke-LockpathRestMethod @params
+
+    process {
+        $result = Invoke-LockpathRestMethod @params
+    }
+
+    end {
+        return $result
+    }
 }
