@@ -105,7 +105,7 @@ For more example commands, please refer to [USAGE](USAGE.md#examples).
 Please see the [Contribution Guide](CONTRIBUTING.md) for information on how to develop and
 contribute.
 
-If you have any problems, please consult [GitHub Issues](https://github.com/RobertKlohr/PowerShellForPowershell/issues)
+If you have any problems, please consult [GitHub Issues](https://github.com/RobertKlohr/PowerShellForLockpath/issues)
 to see if has already been discussed.
 
 If you do not see your problem captured, please file [feedback](CONTRIBUTING.md#feedback).
