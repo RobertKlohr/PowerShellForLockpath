@@ -1,49 +1,27 @@
-function Get-LpLookupRecords {
+#TODO setup field paths
+function Get-LockpathLookupReportColumnFields {
     [CmdletBinding()]
     [OutputType([int])]
 
-    #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     #FIXME: Remove defaults after testing is complete
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session,
-        # Id of the field
+        $LookupFieldId = 605,
+        # Id of field
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         [int]
-        $FieldId = 4198,
-        # The index of the page of result to return. Must be >0.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int]
-        $PageIndex = 0,
-        # The size of the page results to return. Must be >=1.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int]
-        $PageSize = 500,
-        # Id of the record
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $RecordId = 5
+        $FieldPathId = 5042
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetAvailableLookupRecords"
-        $Method = 'POST'
-
-        $Body = @{
-            "fieldId"   = $FieldId
-            "pageIndex" = $PageIndex
-            "pageSize"  = $PageSize
-            "recordId"  = $RecordId
-        } | ConvertTo-Json
+        $ResourcePath = "/ComponentService/GetLookupReportColumnFields"
+        $Query = "?lookupFieldId=$LookupFieldId&fieldPathId=$FieldPathId"
 
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
+            Uri        = $LpUrl + $ResourcePath + $Query
             WebSession = $LpSession
-            Method     = $Method
-            Body       = $Body
+            Method     = "GET"
         }
     }
 

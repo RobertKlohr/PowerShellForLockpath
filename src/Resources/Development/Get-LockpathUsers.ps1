@@ -1,39 +1,28 @@
+#TODO setup for pipeline
+#TODO setup for filters
 function Get-LockpathUsers {
     [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(ParameterSetName = 'AdvancedFilter')]
-        [switch] $AdvancedFilter,
+        [Parameter(Mandatory = $true, ParameterSetName = 'FilterField')]
+        [ValidateSet('Active', 'Deleted', 'AccountType')]
+        [string] $FilterField,
 
-        [Parameter(ParameterSetName = 'AdvancedFilter')]
-        [string] $Filter = '',
-
-        # [Parameter(ParameterSetName = 'AccountStatusFilter')]
-        # [switch] $AccountStatusFilter,
-
-        [Parameter(ParameterSetName = 'AccountStatusFilter')]
-        [ValidateSet('Active', 'Deleted')]
-        [string] $AccountStatus = 'Active',
-
-        # [Parameter(ParameterSetName = 'FilterAccountType')]
-        # [switch] $AccountTypeFilter,
-
-        [Parameter(ParameterSetName = 'FilterAccountType')]
-        # 1 = FullUser
-        # 2 = AwarenessUser
-        # 4 = VendorUser
-        [ValidateSet('Awareness', 'Full', 'Vendor')]
-        [string] $AccountType = 'Full',
-
-        [Parameter(ParameterSetName = 'FilterAccountType')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'FilterType')]
         # 5 = EqualTo
         # 6 = NotEqualTo
         # 1002 = ContainsAny
         [ValidateSet('EqualTo', 'NotEqualTo', 'Contains')]
-        [string] $FilterType = 'EqualTo',
+        [string] $FilterType,
 
+        [Parameter(Mandatory = $true, ParameterSetName = 'FilterValue')]
+        # 1 = FullUser
+        # 2 = AwarenessUser
+        # 4 = VendorUser
+        [ValidateSet('True', 'False', 'Awareness', 'Full', 'Vendor')]
+        [string] $FilterValue,
 
         [ValidateRange(0, [int]::MaxValue)]
         [int] $PageIndex = 0,
@@ -78,11 +67,10 @@ function Get-LockpathUsers {
 
     $params = @{ }
     $params = @{
-        'UriFragment'          = '/SecurityService/GetUsers'
-        'Method'               = 'Post'
-        'Body'                 = $body
-        'Description'          = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
-        'AuthenticationCookie' = $AuthenticationCookie
+        'UriFragment' = '/SecurityService/GetUsers'
+        'Method'      = 'POST'
+        'Body'        = $body
+        'Description' = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
     }
     return Invoke-LockpathRestMethod @params
 }

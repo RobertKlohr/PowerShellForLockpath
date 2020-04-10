@@ -1,30 +1,21 @@
-function Get-LpRecordAttachments {
+function Get-LockpathWorkflows {
     [CmdletBinding()]
     [OutputType([int])]
 
-    #FIXME: Remove defaults after testing is complete
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         $Session,
-        # Id of the component
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $ComponentId = 10013,
-        # Id of the record
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $RecordId = 1,
-        # Id of the field
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $FieldId = 618
+        # Alias of the component
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]
+        $WorkflowAlias
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetRecordAttachments"
+        $ResourcePath = "/ComponentService/GetWorkflows"
         $Method = 'GET'
-        $Query = "?ComponentId=$ComponentId&recordId=$RecordId&FieldId=$FieldId"
+        $Query = '?componentAlias=' + $WorkflowAlias
 
         $Parameters = @{
             Uri        = $LpUrl + $ResourcePath + $Query
@@ -38,7 +29,7 @@ function Get-LpRecordAttachments {
             $Response = Invoke-RestMethod @parameters -ErrorAction Stop
         } catch {
             # Get the message returned from the server which will be in JSON format
-            # $ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
+            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
             $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
                 (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
                 'Invoke-RestMethod',

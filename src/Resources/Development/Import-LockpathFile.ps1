@@ -1,6 +1,7 @@
-function Get-LpRecordsDetail {
+function Import-LockpathFile {
     [CmdletBinding()]
     [OutputType([int])]
+
     #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
         # Full URi to the Lockpath instance.
@@ -8,45 +9,36 @@ function Get-LpRecordsDetail {
         $Session,
         # Id of the component
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [int]
-        $ComponentId,
+        [string]
+        $TableAlias,
         # The index of the page of result to return. Must be >0.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int]
-        $PageIndex,
-        # The size of the page results to return. Must be >=1.
+        [string]
+        $ImportTemplateName,
+        # The filter parameters the users must meet to be included.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int]
-        $PageSize,
+        [string]
+        $FileName,
+        # The filter parameters the users must meet to be included.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]
+        $FileData,
         # The filter parameters the users must meet to be included.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [ValidateSet("Active", "Deleted", "AccountType")]
-        [string]
-        $FilterField,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [ValidateSet("5", "6", "10002")]
-        [string]
-        $FilterType,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [ValidateSet("True", "False", "1", "2", "4")]
-        [string]
-        $FilterValue
+        [switch]
+        $RunAsSystem = $false
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetDetailRecords"
+        $ResourcePath = "/ComponentService/ImportFile"
         $Method = 'POST'
 
-        #TODO: Implement Filters
         $Body = [ordered]@{
-            "componentId" = $ComponentId
-            "pageIndex"   = $PageIndex
-            "pageSize"    = $PageSize
-            "filters"     = @()
+            "tableAlias"         = $TableAlias
+            "importTemplateName" = $ImportTemplateName
+            "fileName"           = $FileName
+            "fileData"           = $FileData
+            "runAsSystem"        = $RunAsSystem.ToBool()
         } | ConvertTo-Json
 
         $Parameters = @{

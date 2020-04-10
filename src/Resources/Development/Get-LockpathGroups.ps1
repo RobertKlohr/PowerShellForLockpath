@@ -1,4 +1,5 @@
 ﻿#TODO setup for pipeline
+#TODO setup for filters
 function Get-LockpathGroups {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]

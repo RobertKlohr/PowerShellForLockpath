@@ -1,4 +1,5 @@
-function Get-LpRecordCount {
+#TODO setup for filters
+function Get-LockpathRecordCount {
     [CmdletBinding()]
     [OutputType([int])]
 

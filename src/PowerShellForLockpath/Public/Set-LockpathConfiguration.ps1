@@ -1,4 +1,8 @@
-﻿function Set-LockpathConfiguration {
+﻿#TODO remove session switch and Code
+#TODO setup for pipeline
+#TODO find and remove all disable logging checks in all code
+
+function Set-LockpathConfiguration {
     [CmdletBinding()]
 
     param(

@@ -1,4 +1,4 @@
-﻿#TODO need to update from github
+﻿
 function Reset-LockpathConfiguration {
     [CmdletBinding(SupportsShouldProcess)]
     param(

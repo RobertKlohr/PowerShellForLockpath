@@ -1,4 +1,4 @@
-function Get-LpLookupReportColumnFields {
+function Get-LockpathDetailRecords {
     [CmdletBinding()]
     [OutputType([int])]
 
@@ -6,21 +6,31 @@ function Get-LpLookupReportColumnFields {
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $LookupFieldId = 605,
-        # Id of field
+        $Session,
+        # Id of the component
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         [int]
-        $FieldPathId = 5042
+        $ComponentId = 10013,
+        # Id of the record
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $RecordId = 5,
+        # Flag to extract embedded images in rich text files
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [switch]
+        $ExtractRichTextImages
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetLookupReportColumnFields"
-        $Query = "?lookupFieldId=$LookupFieldId&fieldPathId=$FieldPathId"
+        $ResourcePath = "/ComponentService/GetDetailRecord"
+        $Method = 'GET'
+        #TODO: implement extracting embedded images from rich text fields
+        $Query = '?ComponentId=' + $ComponentId + "&recordId=" + $RecordId
 
         $Parameters = @{
             Uri        = $LpUrl + $ResourcePath + $Query
             WebSession = $LpSession
-            Method     = "GET"
+            Method     = $Method
         }
     }
 

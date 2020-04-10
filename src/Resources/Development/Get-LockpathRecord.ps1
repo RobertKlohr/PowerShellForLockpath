@@ -1,5 +1,5 @@
 #FIXME restructure to use new wrapper
-function Get-LpRecord {
+function Get-LockpathRecord {
     [CmdletBinding()]
     [OutputType([int])]
 

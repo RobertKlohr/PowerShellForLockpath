@@ -1,4 +1,5 @@
-﻿#TODO check me
+﻿#TODO convert this to a switch on the set-configuration function
+
 function Clear-LockpathAuthentication {
     [CmdletBinding(SupportsShouldProcess)]
     param(

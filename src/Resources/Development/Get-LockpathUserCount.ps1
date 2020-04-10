@@ -1,3 +1,5 @@
+#TODO setup for pipeline
+#TODO setup for filters
 function Get-LockpathUserCount {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([int])]

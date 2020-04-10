@@ -1,26 +1,28 @@
-function Get-LpWorkflows {
+function Remove-LockpathUser {
     [CmdletBinding()]
     [OutputType([int])]
 
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session,
-        # Alias of the component
+        $Session = 0,
+        # Id of user
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $WorkflowAlias
+        [int]
+        $UserId
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetWorkflows"
-        $Method = 'GET'
-        $Query = '?componentAlias=' + $WorkflowAlias
+        $ResourcePath = "/SecurityService/DeleteUser"
+        $Method = 'DELETE'
+
+        $Body = $UserId | ConvertTo-Json
 
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath + $Query
+            Uri        = $LpUrl + $ResourcePath
             WebSession = $LpSession
             Method     = $Method
+            Body       = $Body
         }
     }
 

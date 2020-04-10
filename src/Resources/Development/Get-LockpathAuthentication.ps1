@@ -1,4 +1,6 @@
 ﻿#FIXME rework from set-auth to get-auth so we can get invoke-lockpathRest working with auth
+#TODO remove the session only switch and Code
+#TODO rename to Get-LockpathCredential
 function Get-LockpathAuthentication {
     [CmdletBinding(SupportsShouldProcess)]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]

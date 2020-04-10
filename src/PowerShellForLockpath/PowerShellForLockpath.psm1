@@ -7,6 +7,7 @@
 #TODO add switch for each call for serialized vs. raw format for content returned json vs. PsCustomObject
 #TODO background looping job for calling Lockpath Ping API call to keep session alive. Look at Keep Alive Script
 #TODO add badges to readme.md file.  See examples from PowershellForGitHub below.
+#TODO check quotes single (default) vs. double (only around variables)
 
 # [![[GitHub version]](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub.svg)](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub)
 # [![Build status](https://dev.azure.com/ms/PowerShellForGitHub/_apis/build/status/PowerShellForGitHub-CI?branchName=master)](https://dev.azure.com/ms/PowerShellForGitHub/_build/latest?definitionId=109&branchName=master)

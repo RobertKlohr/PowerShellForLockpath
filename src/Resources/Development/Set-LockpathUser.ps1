@@ -1,26 +1,30 @@
-function Get-LpWorkflow {
+function Set-LockpathUser {
     [CmdletBinding()]
     [OutputType([int])]
 
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session,
-        # Id of the workflow
+        $Session = 0,
+        # The fields used to populate the group configuration.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [int]
-        $WorkflowId
+        [string]
+        $Fields = 10000
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetWorkflow"
-        $Method = 'GET'
-        $Query = '?id=' + $WorkflowId
+        $ResourcePath = "/SecurityService/UpdateUser"
+        $Method = 'POST'
+
+        $Body = @{
+            "Fields" = $Fields
+        } | ConvertTo-Json
 
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath + $Query
+            Uri        = $LpUrl + $ResourcePath
             WebSession = $LpSession
             Method     = $Method
+            Body       = $Body
         }
     }
 

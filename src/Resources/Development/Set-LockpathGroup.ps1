@@ -1,44 +1,23 @@
-function Import-LpFile {
+function Set-LockpathGroup {
     [CmdletBinding()]
     [OutputType([int])]
 
-    #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session,
-        # Id of the component
+        $Session = 0,
+        # The fields used to populate the group configuration.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]
-        $TableAlias,
-        # The index of the page of result to return. Must be >0.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $ImportTemplateName,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $FileName,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $FileData,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [switch]
-        $RunAsSystem = $false
+        $Fields = 10000
     )
 
     begin {
-        $ResourcePath = "/ComponentService/ImportFile"
+        $ResourcePath = "/SecurityService/UpdateGroup"
         $Method = 'POST'
 
-        $Body = [ordered]@{
-            "tableAlias"         = $TableAlias
-            "importTemplateName" = $ImportTemplateName
-            "fileName"           = $FileName
-            "fileData"           = $FileData
-            "runAsSystem"        = $RunAsSystem.ToBool()
+        $Body = @{
+            "Fields" = $Fields
         } | ConvertTo-Json
 
         $Parameters = @{

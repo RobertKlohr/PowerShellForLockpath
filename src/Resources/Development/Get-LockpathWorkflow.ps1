@@ -1,35 +1,22 @@
-function Get-LpRecordAttachment {
+function Get-LockpathWorkflow {
     [CmdletBinding()]
     [OutputType([int])]
-
-    #FIXME: Remove defaults after testing is complete
 
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         $Session,
-        # Id of the component
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        # Id of the workflow
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [int]
-        $ComponentId = 10013,
-        # Id of the record
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $RecordId = 1,
-        # Id of the field
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $FieldId = 618,
-        # Id of the document
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $DocumentId = 26
+        $WorkflowId
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetRecordAttachment"
-        $Method = "GET"
-        $Query = "?ComponentId=$ComponentId&recordId=$RecordId&FieldId=$FieldId&DocumentId=$DocumentId"
+        $ResourcePath = "/ComponentService/GetWorkflow"
+        $Method = 'GET'
+        $Query = '?id=' + $WorkflowId
+
         $Parameters = @{
             Uri        = $LpUrl + $ResourcePath + $Query
             WebSession = $LpSession
@@ -37,9 +24,9 @@ function Get-LpRecordAttachment {
         }
     }
 
-    Process {
+    process {
         try {
-            $Response = Invoke-RestMethod @Parameters -ErrorAction Stop
+            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
         } catch {
             # Get the message returned from the server which will be in JSON format
             #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
@@ -54,6 +41,7 @@ function Get-LpRecordAttachment {
             $PSCmdlet.ThrowTerminatingError($ErrorRecord);
         }
     }
+
     end {
         Return $Response
     }

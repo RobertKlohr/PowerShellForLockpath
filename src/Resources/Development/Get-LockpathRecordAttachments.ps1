@@ -1,28 +1,35 @@
-function New-LpGroup {
+function Get-LockpathRecordAttachments {
     [CmdletBinding()]
     [OutputType([int])]
 
+    #FIXME: Remove defaults after testing is complete
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session = 0,
-        # The fields used to populate the group configuration.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $Fields = 10000
+        $Session,
+        # Id of the component
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $ComponentId = 10013,
+        # Id of the record
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $RecordId = 1,
+        # Id of the field
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $FieldId = 618
     )
 
     begin {
-        $ResourcePath = "/SecurityService/CreateGroup"
-        $Body = @{
-            "Fields" = $Fields
-        } | ConvertTo-Json
+        $ResourcePath = "/ComponentService/GetRecordAttachments"
+        $Method = 'GET'
+        $Query = "?ComponentId=$ComponentId&recordId=$RecordId&FieldId=$FieldId"
 
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
+            Uri        = $LpUrl + $ResourcePath + $Query
             WebSession = $LpSession
-            Method     = "POST"
-            Body       = $Body
+            Method     = $Method
         }
     }
 
@@ -31,7 +38,7 @@ function New-LpGroup {
             $Response = Invoke-RestMethod @parameters -ErrorAction Stop
         } catch {
             # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
+            # $ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
             $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
                 (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
                 'Invoke-RestMethod',

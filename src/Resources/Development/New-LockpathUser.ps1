@@ -1,4 +1,4 @@
-function Set-LpGroup {
+function New-LockpathUser {
     [CmdletBinding()]
     [OutputType([int])]
 
@@ -13,7 +13,7 @@ function Set-LpGroup {
     )
 
     begin {
-        $ResourcePath = "/SecurityService/UpdateGroup"
+        $ResourcePath = "/SecurityService/CreateUser"
         $Method = 'POST'
 
         $Body = @{

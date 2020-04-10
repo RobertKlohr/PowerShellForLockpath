@@ -1,34 +1,45 @@
-function Remove-LpUser {
+function Get-LockpathRecordAttachment {
     [CmdletBinding()]
     [OutputType([int])]
+
+    #FIXME: Remove defaults after testing is complete
 
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session = 0,
-        # Id of user
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        $Session,
+        # Id of the component
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         [int]
-        $UserId
+        $ComponentId = 10013,
+        # Id of the record
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $RecordId = 1,
+        # Id of the field
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $FieldId = 618,
+        # Id of the document
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [int]
+        $DocumentId = 26
     )
 
     begin {
-        $ResourcePath = "/SecurityService/DeleteUser"
-        $Method = 'DELETE'
-
-        $Body = $UserId | ConvertTo-Json
-
+        $ResourcePath = "/ComponentService/GetRecordAttachment"
+        $Method = "GET"
+        $Query = "?ComponentId=$ComponentId&recordId=$RecordId&FieldId=$FieldId&DocumentId=$DocumentId"
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
+            Uri        = $LpUrl + $ResourcePath + $Query
             WebSession = $LpSession
             Method     = $Method
-            Body       = $Body
         }
     }
 
-    process {
+    Process {
         try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
+            $Response = Invoke-RestMethod @Parameters -ErrorAction Stop
         } catch {
             # Get the message returned from the server which will be in JSON format
             #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
@@ -43,7 +54,6 @@ function Remove-LpUser {
             $PSCmdlet.ThrowTerminatingError($ErrorRecord);
         }
     }
-
     end {
         Return $Response
     }

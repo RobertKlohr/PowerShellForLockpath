@@ -1,7 +1,6 @@
-function Get-LpRecords {
+function Get-LockpathDetailRecord {
     [CmdletBinding()]
     [OutputType([int])]
-
     #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
         # Full URi to the Lockpath instance.
@@ -39,14 +38,15 @@ function Get-LpRecords {
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetRecords"
+        $ResourcePath = "/ComponentService/GetDetailRecords"
         $Method = 'POST'
 
         #TODO: Implement Filters
-        $Body = @{
+        $Body = [ordered]@{
             "componentId" = $ComponentId
             "pageIndex"   = $PageIndex
             "pageSize"    = $PageSize
+            "filters"     = @()
         } | ConvertTo-Json
 
         $Parameters = @{

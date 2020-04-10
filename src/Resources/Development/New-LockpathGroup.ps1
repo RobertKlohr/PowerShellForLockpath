@@ -1,23 +1,34 @@
-function Get-LpGroupDetails {
+function New-LockpathGroup {
     [CmdletBinding()]
     [OutputType([int])]
 
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session
+        $Session = 0,
+        # The fields used to populate the group configuration.
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]
+        $Fields = 10000
     )
 
     begin {
-        $Response = @()
-        $Groups = Get-LpGroups $SessionManager
+        $ResourcePath = "/SecurityService/CreateGroup"
+        $Body = @{
+            "Fields" = $Fields
+        } | ConvertTo-Json
+
+        $Parameters = @{
+            Uri        = $LpUrl + $ResourcePath
+            WebSession = $LpSession
+            Method     = "POST"
+            Body       = $Body
+        }
     }
 
     process {
         try {
-            for ($i = 0; $i -lt $Groups.length; $i++) {
-                $Response += (Get-LpGroup $SessionManager $Groups[$i].id)
-            }
+            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
         } catch {
             # Get the message returned from the server which will be in JSON format
             #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message

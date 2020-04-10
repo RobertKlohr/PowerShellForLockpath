@@ -1,37 +1,30 @@
-#TODO: rename
-function Get-LpRecordDetail {
+function Remove-LockpathGroup {
     [CmdletBinding()]
     [OutputType([int])]
 
-    #FIXME: Remove defaults after testing is complete
     param(
         # Full URi to the Lockpath instance.
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        $Session,
-        # Id of the component
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        $Session = 0,
+        # Id of group
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [int]
-        $ComponentId = 10013,
-        # Id of the record
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [int]
-        $RecordId = 5,
-        # Flag to extract embedded images in rich text files
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [switch]
-        $ExtractRichTextImages
+        $GroupId
     )
 
     begin {
-        $ResourcePath = "/ComponentService/GetDetailRecord"
-        $Method = 'GET'
-        #TODO: implement extracting embedded images from rich text fields
-        $Query = '?ComponentId=' + $ComponentId + "&recordId=" + $RecordId
+        $ResourcePath = "/SecurityService/DeleteGroup"
+        $Method = 'DELETE'
+
+        $Body = @{
+            "-d" = $GroupId
+        } | ConvertTo-Json
 
         $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath + $Query
+            Uri        = $LpUrl + $ResourcePath
             WebSession = $LpSession
             Method     = $Method
+            Body       = $Body
         }
     }
 
