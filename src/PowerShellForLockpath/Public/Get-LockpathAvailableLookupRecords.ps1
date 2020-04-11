@@ -1,11 +1,12 @@
-function Get-LockpathDetailRecord {
+function Get-LockpathAvailableLookupRecords {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $ComponentId,
+        [int] $FieldId,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(0, [int]::MaxValue)]
@@ -15,24 +16,25 @@ function Get-LockpathDetailRecord {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize,
 
-        #TODO Need to update this to except an array of integers
+        #TODO determine if there is ever a use case where adding the RecordId changes the results
         [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $FieldIds,
-
-        #TODO Need to update this to except a custom filter object
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [string] $Filter
+        [int] $RecordId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = 'ComponentService/GetDetailRecords'
+            'UriFragment' = 'ComponentService/GetAvailableLookupRecords'
             'Method'      = 'POST'
-            'Description' = "Getting Detail Records with Component Id: $ComponentId and Field Ids: $FieldIds"
-            'Body'        = 'test'
+            'Description' = "Get Lookup Records available for field with Field Id: $FieldId"
+            'Body'        = @{
+                'FieldId'   = $FieldId
+                'PageIndex' = $PageIndex
+                'PageSize'  = $PageSize
+                'RecordId'  = $RecordId
+            } | ConvertTo-Json
         }
     }
 

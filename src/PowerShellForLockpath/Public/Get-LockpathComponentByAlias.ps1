@@ -5,16 +5,16 @@
 
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string] $Alias
+        [string] $ComponentAlias
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "/ComponentService/GetComponent?id=$Alias"
-            'Method'      = 'Get'
-            'Description' = "Getting Component with Alias: $Alias"
+            'UriFragment' = "ComponentService/GetComponent?id=$ComponentAlias"
+            'Method'      = 'GET'
+            'Description' = "Getting Component with Alias: $ComponentAlias"
         }
     }
 

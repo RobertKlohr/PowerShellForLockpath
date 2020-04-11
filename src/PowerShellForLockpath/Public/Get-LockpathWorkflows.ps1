@@ -1,21 +1,20 @@
-function Get-LockpathUser {
+function Get-LockpathWorkflows {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $UserId
+        [string] $ComponentAlias
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "SecurityService/GetUser?Id=$UserId"
+            'UriFragment' = "ComponentService/GetWorkflows?componentalias=$ComponentAlias"
             'Method'      = 'GET'
-            'Description' = "Getting User with User Id: $UserId"
+            'Description' = "Getting Workflows with Component Alias: $ComponentAlias"
         }
     }
 

@@ -17,9 +17,9 @@ function Send-LockpathLogin {
     $params = @{ }
     $params = @{
         'UriFragment' = 'SecurityService/Login'
-        'Method'      = 'Post'
+        'Method'      = 'POST'
+        'Description' = "Sending login to $($script:configuration.instanceName) with Username $($credential.username) and Password: [redacted]"
         'Body'        = (ConvertTo-Json -InputObject $hashBody)
-        'Description' = "Login to $($script:configuration.instanceName) with $($credential.username)"
     }
 
     return Invoke-LockpathRestMethod @params

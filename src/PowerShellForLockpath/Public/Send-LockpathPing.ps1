@@ -9,9 +9,9 @@ function Send-LockpathPing {
 
     $params = @{ }
     $params = @{
-        'UriFragment' = '/SecurityService/Ping'
-        'Method'      = 'Get'
-        'Description' = "Calling Ping API endpoint at $($script:configuration.instanceName) to keep session alive."
+        'UriFragment' = 'SecurityService/Ping'
+        'Method'      = 'GET'
+        'Description' = "Sending Ping API call to $($script:configuration.instanceName) to keep session alive."
     }
 
     return Invoke-LockpathRestMethod @params

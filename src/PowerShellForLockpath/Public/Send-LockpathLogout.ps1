@@ -8,9 +8,9 @@ function Send-LockpathLogout {
 
     $params = @{ }
     $params = @{
-        'UriFragment' = '/SecurityService/Logout'
+        'UriFragment' = 'SecurityService/Logout'
         'Method'      = 'GET'
-        'Description' = "Logout form $($script:configuration.instanceName)"
+        'Description' = "Sending logout to $($script:configuration.instanceName)"
     }
 
     return Invoke-LockpathRestMethod @params

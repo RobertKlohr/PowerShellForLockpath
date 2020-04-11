@@ -5,17 +5,17 @@ function Get-LockpathField {
 
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $Id
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $FieldId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "/SecurityService/GetField?Id=$Id"
-            'Method'      = 'Get'
-            'Description' = "Getting field with Id: $Id"
+            'UriFragment' = "SecurityService/GetField?Id=$FieldId"
+            'Method'      = 'GET'
+            'Description' = "Getting Field with Field Id: $FieldId"
         }
     }
 

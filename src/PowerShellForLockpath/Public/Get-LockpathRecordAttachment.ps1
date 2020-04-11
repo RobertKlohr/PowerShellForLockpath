@@ -1,38 +1,33 @@
-function Get-LockpathDetailRecord {
+function Get-LockpathRecordAttachment {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $ComponentId,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $PageIndex,
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $RecordId,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize,
+        [int] $FieldId,
 
-        #TODO Need to update this to except an array of integers
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $FieldIds,
-
-        #TODO Need to update this to except a custom filter object
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
-        [string] $Filter
+        [int] $DocumentId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = 'ComponentService/GetDetailRecords'
-            'Method'      = 'POST'
-            'Description' = "Getting Detail Records with Component Id: $ComponentId and Field Ids: $FieldIds"
-            'Body'        = 'test'
+            'UriFragment' = "ComponentService/GetRecordAttachment?componentId=$ComponentId&recordId=$RecordId&fieldId=$FieldId&documentId=$DocumentId"
+            'Method'      = 'GET'
+            'Description' = "Get Record Attachment with Component Id: $ComponentId, Record Id: $RecordId, Field Id: $FieldId and Document Id: $DocumentId"
         }
     }
 

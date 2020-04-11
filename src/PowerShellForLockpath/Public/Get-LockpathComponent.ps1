@@ -5,17 +5,17 @@
 
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $Id
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $ComponentId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "/ComponentService/GetComponent?id=$Id"
-            'Method'      = 'Get'
-            'Description' = "Getting Component with Id: $Id"
+            'UriFragment' = "ComponentService/GetComponent?id=$ComponentId"
+            'Method'      = 'GET'
+            'Description' = "Getting Component with Id: $ComponentId"
         }
     }
 

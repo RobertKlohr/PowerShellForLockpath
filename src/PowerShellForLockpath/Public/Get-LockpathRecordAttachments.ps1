@@ -1,4 +1,4 @@
-function Get-LockpathFieldList {
+function Get-LockpathRecordAttachments {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
@@ -6,16 +6,24 @@ function Get-LockpathFieldList {
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $ComponentId
+        [int] $ComponentId,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $RecordId,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [ValidateRange(1, [int]::MaxValue)]
+        [int] $FieldId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "ComponentService/GetFieldList?componentId=$ComponentId"
+            'UriFragment' = "ComponentService/GetRecordAttachment?componentId=$ComponentId&recordId=$RecordId&fieldId=$FieldId&documentId=$DocumentId"
             'Method'      = 'GET'
-            'Description' = "Getting Field list with Component Id: $ComponentId"
+            'Description' = "Get Record Attachment list with Component Id: $ComponentId, Record Id: $RecordId and Field Id: $FieldId"
         }
     }
 

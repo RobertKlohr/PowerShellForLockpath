@@ -6,16 +6,16 @@
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $Id
+        [int] $GroupId
     )
 
     begin {
         Write-InvocationLog
         $params = @{ }
         $params = @{
-            'UriFragment' = "/SecurityService/GetGroup?Id=$Id"
-            'Method'      = 'Get'
-            'Description' = "Getting group with Id: $Id"
+            'UriFragment' = "SecurityService/GetGroup?Id=$GroupId"
+            'Method'      = 'GET'
+            'Description' = "Getting Group with Group Id: $GroupId"
         }
     }
 
