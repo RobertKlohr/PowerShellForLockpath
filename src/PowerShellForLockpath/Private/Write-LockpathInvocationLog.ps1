@@ -1,5 +1,4 @@
-﻿#TODO check that this is working after moving to private
-function Write-InvocationLog {
+﻿function Write-LockpathInvocationLog {
     # [CmdletBinding(SupportsShouldProcess)]
     [CmdletBinding()]
     param(
@@ -31,5 +30,5 @@ function Write-InvocationLog {
     }
     # Write-Host "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')"
 
-    Write-Log -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
+    Write-LockpathInvocationLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
 }

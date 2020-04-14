@@ -10,7 +10,7 @@
         try {
             return ($content | ConvertFrom-Json)
         } catch {
-            Write-Log -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to recover.' -Level Warning
+            Write-LockpathInvocationLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to recover.' -Level Warning
         }
     }
     return [PSCustomObject]@{ }

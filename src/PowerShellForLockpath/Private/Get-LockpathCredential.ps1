@@ -11,7 +11,7 @@
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = "The password was not provided in the password field."
-        Write-Log -Message $message -Level Error
+        Write-LockpathInvocationLog -Message $message -Level Error
         throw $message
     }
 

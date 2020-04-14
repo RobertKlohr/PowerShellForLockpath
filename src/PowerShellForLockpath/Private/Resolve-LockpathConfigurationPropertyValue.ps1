@@ -1,4 +1,4 @@
-﻿function Resolve-PropertyValue {
+﻿function Resolve-LockpathConfigurationPropertyValue {
     [CmdletBinding()]
     param(
         [PSCustomObject] $InputObject,
@@ -18,6 +18,9 @@
     }
 
     $typeType = [String]
+    if ($Type -eq 'Array') {
+        $typeType = [Array]
+    }
     if ($Type -eq 'Boolean') {
         $typeType = [Boolean]
     }
@@ -28,11 +31,11 @@
         $typeType = [Int64]
     }
 
-    if (Test-PropertyExists -InputObject $InputObject -Name $Name) {
+    if (Test-LockpathConfigurationPropertyExists -InputObject $InputObject -Name $Name) {
         if ($InputObject.$Name -is $typeType) {
             return $InputObject.$Name
         } else {
-            Write-Log "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
+            Write-LockpathInvocationLog "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
             return $DefaultValue
         }
     } else {

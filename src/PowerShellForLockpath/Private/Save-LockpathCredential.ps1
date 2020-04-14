@@ -16,6 +16,6 @@
     Export-Clixml -Path $Path -Force -ErrorAction SilentlyContinue -ErrorVariable ev
 
     if (($null -ne $ev) -and ($ev.Count -gt 0)) {
-        Write-Log -Message "Failed to persist credentials disk.  They will remain for this PowerShell session only." -Level Warning -Exception $ev[0]
+        Write-LockpathInvocationLog -Message "Failed to persist credentials disk.  They will remain for this PowerShell session only." -Level Warning -Exception $ev[0]
     }
 }

@@ -16,7 +16,7 @@
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = "The API Password was not provided in the password field."
-        Write-Log -Message $message -Level Error
+        Write-LockpathInvocationLog -Message $message -Level Error
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 

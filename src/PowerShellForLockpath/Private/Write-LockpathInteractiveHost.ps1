@@ -1,4 +1,4 @@
-﻿function Write-InteractiveHost {
+﻿function Write-LockpathInteractiveHost {
     <#
     .SYNOPSIS
         Forwards to Write-Host only if the host is interactive, else does nothing.
@@ -11,8 +11,8 @@
         The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
 
     .EXAMPLE
-        Write-InteractiveHost "Test"
-        Write-InteractiveHost "Test" -NoNewline -f Yellow
+        Write-LockpathInteractiveHost "Test"
+        Write-LockpathInteractiveHost "Test" -NoNewline -f Yellow
 
     .NOTES
         Boilerplate is generated using these commands:

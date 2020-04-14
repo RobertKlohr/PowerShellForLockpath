@@ -40,7 +40,7 @@
     ForEach-Object {
         $name = $_.Name
         $type = $config.$name.GetType().Name
-        $config.$name = Resolve-PropertyValue -InputObject $jsonObject -Name $name -Type $type -DefaultValue $config.$name
+        $config.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $jsonObject -Name $name -Type $type -DefaultValue $config.$name
     }
 
     return $config

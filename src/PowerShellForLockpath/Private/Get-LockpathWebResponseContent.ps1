@@ -1,4 +1,4 @@
-﻿function Get-HttpWebResponseContent {
+﻿function Get-LockpathWebResponseContent {
     [CmdletBinding()]
     [OutputType([String])]
     param(

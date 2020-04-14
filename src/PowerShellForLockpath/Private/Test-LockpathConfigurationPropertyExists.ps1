@@ -1,4 +1,4 @@
-﻿function Test-PropertyExists {
+﻿function Test-LockpathConfigurationPropertyExists {
     [CmdletBinding()]
     [OutputType([bool])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Justification = "Exists isn't a noun and isn't violating the intention of this rule.")]
