@@ -25,7 +25,7 @@
         [string] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     # Normalize our Uri fragment to remove leading "/" or trailing '/'
     if ($UriFragment.StartsWith('/')) {
@@ -48,8 +48,8 @@
     }
 
     try {
-        Write-LockpathInvocationLog -Message $Description -Level Verbose
-        Write-LockpathInvocationLog -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
+        Write-LockpathLog -Message $Description -Level Verbose
+        Write-LockpathLog -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
 
         if ($PSCmdlet.ShouldProcess($url, 'Invoke-WebRequest')) {
             $params = @{ }
@@ -66,9 +66,9 @@
             if ($Method -in $methodContainsBody -and (-not [String]::IsNullOrEmpty($Body))) {
                 $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
                 $params.Add('Body', $bodyAsBytes)
-                Write-LockpathInvocationLog -Message 'Request includes a body.' -Level Verbose
+                Write-LockpathLog -Message 'Request includes a body.' -Level Verbose
                 if (Get-LockpathConfiguration -Name LogRequestBody) {
-                    Write-LockpathInvocationLog -Message $Body -Level Verbose
+                    Write-LockpathLog -Message $Body -Level Verbose
                 }
             }
 
@@ -78,7 +78,7 @@
                 $script:configuration.webSession = $webSession
             }
             if ($Method -eq 'Delete') {
-                Write-LockpathInvocationLog -Message 'Successfully removed.' -Level Verbose
+                Write-LockpathLog -Message 'Successfully removed.' -Level Verbose
             }
         }
 
@@ -98,11 +98,11 @@
             if ($Method -ne 'Get') {
                 # We only want to do our retry logic for GET requests...
                 # We don't want to repeat PUT/PATCH/POST/DELETE.
-                Write-LockpathInvocationLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
+                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
             } elseif ($retryDelaySeconds -le 0) {
-                Write-LockpathInvocationLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
+                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
             } else {
-                Write-LockpathInvocationLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
+                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
                 Start-Sleep -Seconds ($retryDelaySeconds)
                 return (Invoke-LockpathRestMethod @PSBoundParameters)
             }
@@ -125,7 +125,7 @@
             try {
                 $rawContent = Get-LockpathWebResponseContent -WebResponse $ex.Response
             } catch {
-                Write-LockpathInvocationLog -Message 'Unable to retrieve the raw HTTP Web Response:' -Exception $_ -Level Warning
+                Write-LockpathLog -Message 'Unable to retrieve the raw HTTP Web Response:' -Exception $_ -Level Warning
             }
 
         } else {
@@ -170,7 +170,7 @@
         }
 
         $newLineOutput = ($output -join [Environment]::NewLine)
-        Write-LockpathInvocationLog -Message $newLineOutput -Level Error
+        Write-LockpathLog -Message $newLineOutput -Level Error
         throw $newLineOutput
     }
 }

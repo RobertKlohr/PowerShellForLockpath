@@ -11,7 +11,7 @@ function Remove-LockpathGroup {
 
     begin {
         #TODO call get group to add group name to log
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = 'SecurityService/DeleteGroup'

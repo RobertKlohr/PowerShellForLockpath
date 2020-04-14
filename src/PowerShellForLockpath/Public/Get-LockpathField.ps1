@@ -10,7 +10,7 @@ function Get-LockpathField {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "SecurityService/GetField?Id=$FieldId"

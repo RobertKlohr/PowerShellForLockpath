@@ -5,7 +5,7 @@
         [System.Net.HttpWebResponse] $WebResponse
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $streamReader = $null
 

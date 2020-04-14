@@ -10,7 +10,7 @@
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "SecurityService/GetGroup?Id=$GroupId"

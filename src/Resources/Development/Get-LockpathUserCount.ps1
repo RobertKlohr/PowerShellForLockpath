@@ -25,7 +25,7 @@ function Get-LockpathUserCount {
         [int] $PageSize = 1000
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $hashBodyPage = @{ }
     $hashBodyPage = @{

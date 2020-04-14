@@ -5,7 +5,7 @@ function Send-LockpathPing {
 
     param()
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $params = @{ }
     $params = @{

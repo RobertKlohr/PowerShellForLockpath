@@ -11,7 +11,7 @@ function Remove-LockpathUser {
 
     begin {
         #TODO call get record attachment to add the attachment name into the log.
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = 'SecurityService/DeleteUser'

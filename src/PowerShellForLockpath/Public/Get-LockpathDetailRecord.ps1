@@ -18,7 +18,7 @@ function Get-LockpathDetailRecords {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "ComponentService/GetDetailRecord?componentId=$ComponentId&recordId=$RecordId&embedRichTextImages=$EmbedRichTextImages"

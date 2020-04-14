@@ -5,7 +5,7 @@
         [string] $Path
     )
 
-    # Write-InvocationLog
+    # Write-LockpathInvocationLog
 
     $logPath = [String]::Empty
     $documentsFolder = [System.Environment]::GetFolderPath('MyDocuments')

@@ -23,7 +23,7 @@ function Get-LockpathAvailableLookupRecords {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = 'ComponentService/GetAvailableLookupRecords'

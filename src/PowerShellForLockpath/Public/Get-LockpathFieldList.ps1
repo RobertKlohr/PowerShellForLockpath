@@ -10,7 +10,7 @@ function Get-LockpathFieldList {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "ComponentService/GetFieldList?componentId=$ComponentId"

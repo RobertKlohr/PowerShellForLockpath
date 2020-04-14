@@ -9,7 +9,7 @@ function Get-LockpathWorkflows {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "ComponentService/GetWorkflows?componentalias=$ComponentAlias"

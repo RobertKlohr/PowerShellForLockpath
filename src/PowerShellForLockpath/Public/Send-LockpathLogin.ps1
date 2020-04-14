@@ -5,7 +5,7 @@ function Send-LockpathLogin {
 
     param()
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $credential = Get-LockpathCredential
     $hashBody = @{ }

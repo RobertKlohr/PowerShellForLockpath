@@ -5,7 +5,7 @@ function Reset-LockpathConfiguration {
         [switch] $SessionOnly
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess($script:configurationFilePath, "Delete configuration file")) {
@@ -13,11 +13,11 @@ function Reset-LockpathConfiguration {
         }
 
         if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-            Write-LockpathInvocationLog -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$script:configurationFilePath]." -Level Warning -Exception $ev[0]
+            Write-LockpathLog -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$script:configurationFilePath]." -Level Warning -Exception $ev[0]
         }
     }
 
     Initialize-LockpathConfiguration
 
-    Write-LockpathInvocationLog -Message "This has not cleared your authentication token.  Call Clear-LockpathAuthentication to accomplish that." -Level Verbose
+    Write-LockpathLog -Message "This has not cleared your authentication token.  Call Clear-LockpathAuthentication to accomplish that." -Level Verbose
 }

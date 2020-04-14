@@ -8,7 +8,7 @@
         [switch] $SessionOnly
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     if (-not $PSBoundParameters.ContainsKey('Credential')) {
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
@@ -16,7 +16,7 @@
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = "The API Password was not provided in the password field."
-        Write-LockpathInvocationLog -Message $message -Level Error
+        Write-LockpathLog -Message $message -Level Error
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 

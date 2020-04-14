@@ -15,7 +15,7 @@ function Remove-LockpathRecord {
 
     begin {
         #TODO call get record attachment to add attachment name to log
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "ComponentService/DeleteRecord?componentId=$ComponentId&recordId=$RecordId"

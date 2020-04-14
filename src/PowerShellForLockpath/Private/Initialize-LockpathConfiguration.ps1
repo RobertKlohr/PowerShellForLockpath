@@ -43,5 +43,5 @@ function Initialize-LockpathConfiguration {
     }
 
     $script:configuration = Import-LockpathConfiguration -Path $script:configurationFilePath
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 }

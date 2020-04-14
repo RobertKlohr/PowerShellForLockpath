@@ -26,7 +26,7 @@ function Get-LockpathGroups {
         [int] $PageSize = 1000
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $hashBodyPage = @{ }
     $hashBodyPage = @{

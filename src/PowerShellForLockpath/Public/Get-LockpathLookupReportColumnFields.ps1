@@ -14,7 +14,7 @@ function Get-LockpathLookupReportColumnFields {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "ComponentService/GetLookupReportColumnFields?lookupFieldId=$LookupFieldId&fieldPathId=$FieldPathId"

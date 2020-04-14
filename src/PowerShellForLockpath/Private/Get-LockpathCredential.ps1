@@ -5,13 +5,13 @@
         [string] $Path = $(Get-LockpathConfiguration -Name "credentialFilePath")
     )
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $Credential = Read-LockpathCredential -Path $Path
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = "The password was not provided in the password field."
-        Write-LockpathInvocationLog -Message $message -Level Error
+        Write-LockpathLog -Message $message -Level Error
         throw $message
     }
 

@@ -4,7 +4,7 @@ function Send-LockpathLogout {
 
     param()
 
-    Write-InvocationLog
+    Write-LockpathInvocationLog
 
     $params = @{ }
     $params = @{

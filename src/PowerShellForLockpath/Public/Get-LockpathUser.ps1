@@ -10,7 +10,7 @@ function Get-LockpathUser {
     )
 
     begin {
-        Write-InvocationLog
+        Write-LockpathInvocationLog
         $params = @{ }
         $params = @{
             'UriFragment' = "SecurityService/GetUser?Id=$UserId"

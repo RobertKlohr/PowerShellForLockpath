@@ -1,4 +1,5 @@
-﻿function Write-LockpathInvocationLog {
+﻿#FIX add redact and exclude parameters to configuration
+function Write-LockpathInvocationLog {
     # [CmdletBinding(SupportsShouldProcess)]
     [CmdletBinding()]
     param(
@@ -30,5 +31,5 @@
     }
     # Write-Host "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')"
 
-    Write-LockpathInvocationLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
+    Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
 }
