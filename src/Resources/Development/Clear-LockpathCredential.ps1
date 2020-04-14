@@ -1,6 +1,6 @@
 ﻿#TODO convert this to a switch on the set-configuration function
 
-function Clear-LockpathAuthentication {
+function Clear-LockpathCredential {
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [switch] $SessionOnly
