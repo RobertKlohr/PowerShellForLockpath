@@ -8,20 +8,26 @@
         [ValidateSet('Delete', 'Get', 'Post')]
         [string] $Method,
 
-        [string] $AcceptHeader = $script:defaultAcceptHeader,
-
-        [string] $AuthenticationCookie = $script:AuthenticationCookie,
+        [string] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),
 
         [string] $Body = $null,
 
-        [string] $Description
+        [string] $Description = $null,
+
+        [string] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
+
+        [int] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
+
+        [string] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
+
+        [array] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
+
+        [string] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
 
     Write-InvocationLog
 
-    # Normalize our Uri fragment.  It might be coming from a method implemented here, or it might
-    # be coming from the Location header in a previous response.  Either way, we don't want there
-    # to be a leading "/" or trailing '/'
+    # Normalize our Uri fragment to remove leading "/" or trailing '/'
     if ($UriFragment.StartsWith('/')) {
         $UriFragment = $UriFragment.Substring(1)
     }
@@ -31,65 +37,48 @@
     if ([String]::IsNullOrEmpty($Description)) {
         $Description = "Executing: $UriFragment"
     }
-
-    $hostName = $(Get-Configuration -Name "InstanceName")
-    $portNumber = $(Get-Configuration -Name "instancePort")
-    $protocol = $(Get-Configuration -Name "instanceProtocol")
-
-    $url = "${protocol}://${hostName}:$portNumber/$UriFragment"
-
-    # It's possible that we are directly calling the "nextLink" from a previous command which
-    # provides the full URI.  If that's the case, we'll just use exactly what was provided to us.
-    if ($UriFragment.StartsWith('http')) {
-        $url = $UriFragment
-    }
-
+    $url = "${Protocol}://${HostName}:$PortNumber/$UriFragment"
     $headers = @{
         'Accept'     = $AcceptHeader
         'User-Agent' = $UserAgent
     }
 
-    # $AccessToken = Get-AccessToken -AccessToken $AccessToken
-    # if (-not [String]::IsNullOrEmpty($AccessToken)) {
-    #     $headers['Authorization'] = "token $AccessToken"
-    # }
-
-    if ($Method -in $ValidBodyContainingRequestMethods) {
-        $headers.Add("Content-Type", "application/json")
+    if ($Method -in $MethodContainsBody) {
+        $headers.Add('Content-Type', 'application/json')
     }
 
     try {
         Write-Log -Message $Description -Level Verbose
-        Write-Log -Message "Accessing [$Method] $url [Timeout = $(Get-Configuration -Name WebRequestTimeoutSec))]" -Level Verbose
+        Write-Log -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
 
-        if ($PSCmdlet.ShouldProcess($url, "Invoke-WebRequest")) {
+        if ($PSCmdlet.ShouldProcess($url, 'Invoke-WebRequest')) {
             $params = @{ }
-            $params.Add("Uri", $url)
-            $params.Add("Method", $Method)
-            $params.Add("Headers", $headers)
-            $params.Add("TimeoutSec", (Get-Configuration -Name WebRequestTimeoutSec))
+            $params.Add('Uri', $url)
+            $params.Add('Method', $Method)
+            $params.Add('Headers', $headers)
+            $params.Add('TimeoutSec', (Get-LockpathConfiguration -Name WebRequestTimeoutSec))
             #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
-            if ($UriFragment -eq "SecurityService/Login") {
-                $params.Add("SessionVariable", "webSession")
+            if ($UriFragment -eq 'SecurityService/Login') {
+                $params.Add('SessionVariable', 'webSession')
             } else {
-                $params.Add("WebSession", $script:configuration.webSession)
+                $params.Add('WebSession', $script:configuration.webSession)
             }
-            if ($Method -in $ValidBodyContainingRequestMethods -and (-not [String]::IsNullOrEmpty($Body))) {
+            if ($Method -in $methodContainsBody -and (-not [String]::IsNullOrEmpty($Body))) {
                 $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
-                $params.Add("Body", $bodyAsBytes)
-                Write-Log -Message "Request includes a body." -Level Verbose
-                if (Get-Configuration -Name LogRequestBody) {
+                $params.Add('Body', $bodyAsBytes)
+                Write-Log -Message 'Request includes a body.' -Level Verbose
+                if (Get-LockpathConfiguration -Name LogRequestBody) {
                     Write-Log -Message $Body -Level Verbose
                 }
             }
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             $result = Invoke-WebRequest @params
-            if ($UriFragment -eq "SecurityService/Login") {
+            if ($UriFragment -eq 'SecurityService/Login') {
                 $script:configuration.webSession = $webSession
             }
             if ($Method -eq 'Delete') {
-                Write-Log -Message "Successfully removed." -Level Verbose
+                Write-Log -Message 'Successfully removed.' -Level Verbose
             }
         }
 
@@ -102,22 +91,9 @@
             $finalResult = $finalResult
         }
 
-        if (-not (Get-Configuration -Name DisableSmarterObjects)) {
-            $finalResult = ConvertTo-SmarterObject -InputObject $finalResult
-        }
-
-        #TODO check to see if Lockpath API hands back links on any call
-        # $links = $result.Headers['Link'] -split ','
-        # $nextLink = $null
-        # foreach ($link in $links) {
-        #     if ($link -match '<(.*)>; rel="next"') {
-        #         $nextLink = $matches[1]
-        #     }
-        # }
-
         $resultNotReadyStatusCode = 202
         if ($result.StatusCode -eq $resultNotReadyStatusCode) {
-            $retryDelaySeconds = Get-Configuration -Name RetryDelaySeconds
+            $retryDelaySeconds = Get-LockpathConfiguration -Name RetryDelaySeconds
 
             if ($Method -ne 'Get') {
                 # We only want to do our retry logic for GET requests...
@@ -149,7 +125,7 @@
             try {
                 $rawContent = Get-HttpWebResponseContent -WebResponse $ex.Response
             } catch {
-                Write-Log -Message "Unable to retrieve the raw HTTP Web Response:" -Exception $_ -Level Warning
+                Write-Log -Message 'Unable to retrieve the raw HTTP Web Response:' -Exception $_ -Level Warning
             }
 
         } else {
@@ -190,7 +166,7 @@
         }
 
         if ($statusCode -eq 404) {
-            $output += "This typically happens when the current user isn't properly authenticated.  You may need an Access Token with additional scopes checked."
+            $output += 'This typically happens when the current user is not properly authenticated.'
         }
 
         $newLineOutput = ($output -join [Environment]::NewLine)

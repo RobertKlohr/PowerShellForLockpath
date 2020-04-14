@@ -1,4 +1,3 @@
-#FIXME restructure to use new wrapper
 function Get-LockpathRecord {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]

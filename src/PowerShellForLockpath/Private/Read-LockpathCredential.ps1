@@ -1,4 +1,4 @@
-﻿function Read-Credential {
+﻿function Read-LockpathCredential {
     [CmdletBinding(SupportsShouldProcess)]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
     param(
@@ -8,7 +8,7 @@
     Write-InvocationLog
 
     $content = $null
-    $content = Import-Clixml -Path $script:CredentialFilePath -ErrorAction Ignore
+    $content = Import-Clixml -Path $Path -ErrorAction Ignore
 
     if (-not [String]::IsNullOrEmpty($content)) {
         try {

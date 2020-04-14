@@ -7,7 +7,7 @@ function Send-LockpathLogin {
 
     Write-InvocationLog
 
-    $credential = Get-LockpathAuthentication
+    $credential = Get-LockpathCredential
     $hashBody = @{ }
     $hashBody = [ordered]@{
         'username' = $credential.username

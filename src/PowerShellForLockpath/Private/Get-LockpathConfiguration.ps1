@@ -1,20 +1,23 @@
-﻿function Get-Configuration {
+﻿function Get-LockpathConfiguration {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateSet(
-            'defaultNoStatus',
-            'disableLogging',
-            'disableSmarterObjects',
+            'acceptHeader',
+            'configurationFilePath',
+            'credentialFilePath',
             'instanceName',
             'instancePort',
             'instanceProtocol',
             'logPath',
-            'logProcessId',
             'logRequestBody',
             'logTimeAsUtc',
+            'MethodContainsBody',
+            'pageIndex',
+            'pageSize',
             'retryDelaySeconds',
             'runAsSystem',
+            'UserAgent',
             'webRequestTimeoutSec',
             'webSession')]
         [string] $Name

@@ -47,6 +47,6 @@ foreach ($file in @($public + $private)) {
 Export-ModuleMember -Function $public.Basename
 
 
-Initialize-Configuration
+Initialize-LockpathConfiguration
 
 Export-ModuleMember -Variable 'configuration'

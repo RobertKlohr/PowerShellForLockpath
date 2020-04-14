@@ -1,18 +1,8 @@
-﻿#TODO remove session switch and Code
-#TODO setup for pipeline
-#TODO find and remove all disable logging checks in all code
-
-function Set-LockpathConfiguration {
+﻿function Set-LockpathConfiguration {
     [CmdletBinding()]
 
     param(
         [ValidatePattern('^(?!https?:).*')]
-
-        [switch] $DefaultNoStatus,
-
-        [switch] $DisableLogging,
-
-        [switch] $DisableSmarterObjects,
 
         [string] $InstanceName,
 
@@ -22,8 +12,6 @@ function Set-LockpathConfiguration {
         [string] $InstancePortocol,
 
         [string] $LogPath,
-
-        [switch] $LogProcessId,
 
         [switch] $LogRequestBody,
 
@@ -39,6 +27,8 @@ function Set-LockpathConfiguration {
 
         [switch] $SessionOnly,
 
+        [string] $UserAgent,
+
         [ValidateRange(0, 3600)]
         [int] $WebRequestTimeoutSec,
 
@@ -47,7 +37,7 @@ function Set-LockpathConfiguration {
 
     $persistedConfig = $null
     if (-not $SessionOnly) {
-        $persistedConfig = Read-Configuration -Path $script:configurationFilePath
+        $persistedConfig = Read-LockpathConfiguration -Path $script:configurationFilePath
     }
 
     $properties = Get-Member -InputObject $script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
@@ -66,7 +56,7 @@ function Set-LockpathConfiguration {
     }
 
     if (-not $SessionOnly) {
-        Save-Configuration -Configuration $persistedConfig -Path $script:configurationFilePath
+        Save-LockpathConfiguration -Configuration $persistedConfig -Path $script:ConfigurationFilePath
     }
 
 }

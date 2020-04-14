@@ -1,4 +1,4 @@
-﻿function Import-Configuration {
+﻿function Import-LockpathConfiguration {
     [CmdletBinding(SupportsShouldProcess)]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
     param(
@@ -15,26 +15,27 @@
 
     # Create a configuration object with all the default values.
     $config = [PSCustomObject]@{
-        'defaultNoStatus'       = $false
-        'disableLogging'        = ([String]::IsNullOrEmpty($logPath))
-        'disableSmarterObjects' = $false
+        'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
+        'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
+        'acceptHeader'          = 'application/json'
         'instanceName'          = [String]::Empty
         'instancePort'          = 4443
         'instanceProtocol'      = 'https'
         'logPath'               = $logPath
-        'logProcessId'          = $false
         'logRequestBody'        = $false
         'logTimeAsUtc'          = $false
+        'MethodContainsBody'    = ("Delete", "Post")
         'pageIndex'             = 0
         'pageSize'              = 1000
         'retryDelaySeconds'     = 30
         'runAsSystem'           = $true
+        'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString(2)) PowerShellForLockpath"
         'webRequestTimeoutSec'  = 0
         'webSession'            = $false
     }
 
     # Update the values with any that we find in the configuration file.
-    $jsonObject = Read-Configuration -Path $Path
+    $jsonObject = Read-LockpathConfiguration -Path $Path
     Get-Member -InputObject $config -MemberType NoteProperty |
     ForEach-Object {
         $name = $_.Name

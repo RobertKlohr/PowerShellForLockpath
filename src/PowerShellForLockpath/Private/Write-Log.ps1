@@ -16,7 +16,7 @@ function Write-Log {
         [ValidateRange(1, 30)]
         [Int16] $Indent = 0,
 
-        [IO.FileInfo] $Path = (Get-Configuration -Name LogPath),
+        [IO.FileInfo] $Path = (Get-LockpathConfiguration -Name LogPath),
 
         [System.Management.Automation.ErrorRecord] $Exception
     )
@@ -47,7 +47,7 @@ function Write-Log {
         # Build the console and log-specific messages.
         $date = Get-Date
         $dateString = $date.ToString("yyyy-MM-dd HH:mm:ss")
-        if (Get-Configuration -Name LogTimeAsUtc) {
+        if (Get-LockpathConfiguration -Name LogTimeAsUtc) {
             $dateString = $date.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ssZ")
         }
 
@@ -55,24 +55,12 @@ function Write-Log {
         (" " * $Indent),
         $finalMessage
 
-        if (Get-Configuration -Name LogProcessId) {
-            $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
-            $pidColumnLength = $maxPidDigits + "[]".Length
-            $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f
-            (" " * $Indent),
-            $dateString,
-            "[$global:PID]",
-            $env:username,
-            $Level.ToUpper(),
-            $finalMessage
-        } else {
-            $logFileMessage = '{0}{1} : {2} : {3} : {4}' -f
-            (" " * $Indent),
-            $dateString,
-            $env:username,
-            $Level.ToUpper(),
-            $finalMessage
-        }
+        $logFileMessage = '{0}{1} : {2} : {3} : {4}' -f
+        (" " * $Indent),
+        $dateString,
+        $env:username,
+        $Level.ToUpper(),
+        $finalMessage
 
         # Write the message to screen/log.
         # Note that the below logic could easily be moved to a separate helper function, but a conscious
@@ -108,12 +96,10 @@ function Write-Log {
         }
 
         try {
-            if (-not (Get-Configuration -Name DisableLogging)) {
-                if ([String]::IsNullOrWhiteSpace($Path)) {
-                    Write-Warning 'Logging is currently enabled, however no path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path, or "Set-Configuration -DisableLogging" to disable logging.'
-                } else {
-                    $logFileMessage | Out-File -FilePath $Path -Append
-                }
+            if ([String]::IsNullOrWhiteSpace($Path)) {
+                Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
+            } else {
+                $logFileMessage | Out-File -FilePath $Path -Append
             }
         } catch {
             $output = @()

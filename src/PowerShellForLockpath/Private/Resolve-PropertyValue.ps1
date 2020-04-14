@@ -7,7 +7,7 @@
         [string] $Name,
 
         [Parameter(Mandatory)]
-        [ValidateSet('String', 'Boolean', 'Int32', 'Int64')]
+        # [ValidateSet('Array', 'Boolean', 'Int32', 'Int64', 'String')]
         [String] $Type,
 
         $DefaultValue
