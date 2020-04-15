@@ -1,4 +1,4 @@
-function Get-LockpathDetailRecords {
+function Get-LockpathDetailRecord {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
@@ -12,7 +12,7 @@ function Get-LockpathDetailRecords {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $RecordId,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [ValidateSet($false, $true)]
         [boolean] $EmbedRichTextImages = $false
     )

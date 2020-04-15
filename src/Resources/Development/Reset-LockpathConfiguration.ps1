@@ -19,5 +19,5 @@ function Reset-LockpathConfiguration {
 
     Initialize-LockpathConfiguration
 
-    Write-LockpathLog -Message "This has not cleared your authentication token.  Call Clear-LockpathAuthentication to accomplish that." -Level Verbose
+    Write-LockpathLog -Message 'This has not cleared your authentication token.  Call Remove-LockpathCredential to accomplish that. You must at least call Set-LockpathConfiguration -InstaneName "instancename" to use the module.' -Level Verbose
 }

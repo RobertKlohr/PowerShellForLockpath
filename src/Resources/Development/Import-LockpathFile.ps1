@@ -5,7 +5,7 @@ function Import-LockpathFile {
     #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
         # Full URi to the Lockpath instance.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         $Session,
         # Id of the component
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -24,7 +24,7 @@ function Import-LockpathFile {
         [string]
         $FileData,
         # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [switch]
         $RunAsSystem = $false
     )

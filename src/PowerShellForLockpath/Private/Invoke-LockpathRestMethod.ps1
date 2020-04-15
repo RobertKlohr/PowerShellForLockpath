@@ -20,7 +20,7 @@
 
         [string] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
 
-        [array] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
+        [String[]] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
 
         [string] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
@@ -64,8 +64,10 @@
                 $params.Add('WebSession', $script:configuration.webSession)
             }
             if ($Method -in $methodContainsBody -and (-not [String]::IsNullOrEmpty($Body))) {
-                $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
-                $params.Add('Body', $bodyAsBytes)
+                #FIXME why encode as bytes, works with login but not get detail records
+                # $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
+                # $params.Add('Body', $bodyAsBytes)
+                $params.Add('Body', $Body)
                 Write-LockpathLog -Message 'Request includes a body.' -Level Verbose
                 if (Get-LockpathConfiguration -Name LogRequestBody) {
                     Write-LockpathLog -Message $Body -Level Verbose
@@ -85,7 +87,7 @@
         $finalResult = $result.Content
         try {
             $finalResult = $finalResult | ConvertFrom-Json
-        } catch [ArgumentException] {
+        } catch [System.ArgumentException] {
             # The content must not be JSON (which is a legitimate situation).  We'll return the raw content result instead.
             # We do this unnecessary assignment to avoid PSScriptAnalyzer's PSAvoidUsingEmptyCatchBlock.
             $finalResult = $finalResult
@@ -129,7 +131,7 @@
             }
 
         } else {
-            Write-LockpathInvocationLog -Exception $_ -Level Error
+            Write-LockpathLog -Exception $_ -Level Error
             throw
         }
 

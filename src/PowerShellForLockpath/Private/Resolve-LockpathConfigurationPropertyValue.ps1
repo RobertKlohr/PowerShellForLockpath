@@ -18,8 +18,8 @@
     }
 
     $typeType = [String]
-    if ($Type -eq 'Array') {
-        $typeType = [Array]
+    if ($Type -eq 'String[]') {
+        $typeType = [String[]]
     }
     if ($Type -eq 'Boolean') {
         $typeType = [Boolean]
@@ -27,9 +27,10 @@
     if ($Type -eq 'Int32') {
         $typeType = [Int32]
     }
-    if ($Type -eq 'Int64') {
-        $typeType = [Int64]
-    }
+    #TODO check to see if int64 is needed
+    # if ($Type -eq 'Int64') {
+    #     $typeType = [Int64]
+    # }
 
     if (Test-LockpathConfigurationPropertyExists -InputObject $InputObject -Name $Name) {
         if ($InputObject.$Name -is $typeType) {

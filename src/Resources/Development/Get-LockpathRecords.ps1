@@ -6,7 +6,7 @@ function Get-LockpathRecords {
     #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
         # Full URi to the Lockpath instance.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         $Session,
         # Id of the component
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -23,17 +23,17 @@ function Get-LockpathRecords {
         [int]
         $PageSize,
         # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [ValidateSet("Active", "Deleted", "AccountType")]
         [string]
         $FilterField,
         # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [ValidateSet("5", "6", "10002")]
         [string]
         $FilterType,
         # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [ValidateSet("True", "False", "1", "2", "4")]
         [string]
         $FilterValue

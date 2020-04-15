@@ -4,7 +4,7 @@ function New-LockpathGroup {
 
     param(
         # Full URi to the Lockpath instance.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         $Session = 0,
         # The fields used to populate the group configuration.
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]

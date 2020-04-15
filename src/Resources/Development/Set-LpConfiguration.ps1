@@ -4,11 +4,11 @@ function Set-LpConfiguration {
 
     param(
         # Absolute path to configuration file.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [string]
         $Path = "$env:USERPROFILE\PowerShellForLockpath.config",
         # Flag to bypass loading configuration file
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [switch]
         $SkipConfigFileLoad = $false
     )

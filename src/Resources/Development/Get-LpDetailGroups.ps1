@@ -4,7 +4,7 @@ function Get-LpDetailGroups {
 
     param(
         # Full URi to the Lockpath instance.
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         $Session
     )
 

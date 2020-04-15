@@ -16,8 +16,7 @@ function Get-LockpathAvailableLookupRecords {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize,
 
-        #TODO determine if there is ever a use case where adding the RecordId changes the results
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true)]
         [ValidateRange(1, [int]::MaxValue)]
         [int] $RecordId
     )
