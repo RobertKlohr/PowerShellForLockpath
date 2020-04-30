@@ -13,15 +13,17 @@ function Get-LockpathDetailRecords {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [array] $FieldIds = (2500, 2502),
+        #TODO Need to update the next three parameters to except all filter objects
+        #TODO maybe a simple filter via parameters and advanced where a JSON object is passed
+        [array] $FieldIds = $null,
 
-        #TODO Need to update this to except a custom filter object
-        [int] $Filter = 3881,
+        [int] $Filter = $null,
 
-        [int] $SortOrder = 4991
+        [int] $SortOrder = $null
     )
 
     Write-LockpathInvocationLog
+
     $params = @{ }
     $params = @{
         'UriFragment' = 'ComponentService/GetDetailRecords'

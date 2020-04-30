@@ -1,23 +1,23 @@
 #TODO setup for pipeline
 #TODO setup for filters
 function Get-LockpathUsers {
-    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')] #TODO check parameter sets
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'FilterField')]
+        [Parameter(ParameterSetName = 'FilterField')]
         [ValidateSet('Active', 'Deleted', 'AccountType')]
         [string] $FilterField,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'FilterType')]
+        [Parameter(ParameterSetName = 'FilterType')]
         # 5 = EqualTo
         # 6 = NotEqualTo
         # 1002 = ContainsAny
         [ValidateSet('EqualTo', 'NotEqualTo', 'Contains')]
         [string] $FilterType,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'FilterValue')]
+        [Parameter(ParameterSetName = 'FilterValue')]
         # 1 = FullUser
         # 2 = AwarenessUser
         # 4 = VendorUser
@@ -25,18 +25,52 @@ function Get-LockpathUsers {
         [string] $FilterValue,
 
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $PageIndex = 0,
+        [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize = 1000
+        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
 
     Write-LockpathInvocationLog
 
-    $hashBodyPage = @{ }
-    $hashBodyPage = @{
-        'pageIndex' = $PageIndex
-        'pageSize'  = $PageSize
+    $params = @{ }
+    $params = @{
+        'UriFragment' = 'SecurityService/GetUsers'
+        'Method'      = 'POST'
+        'Description' = "Getting User Records with Filter: $Filter"
+        'Body'        = [ordered]@{
+            'componentId' = $ComponentId
+            'pageIndex'   = $PageIndex
+            'pageSize'    = $PageSize
+            'filters'     = @(
+            )
+        } | ConvertTo-Json -Depth 10
+
+        # 'Body'        = [ordered]@{
+        #     'ComponentId' = $ComponentId
+        #     'PageIndex'   = $PageIndex
+        #     'PageSize'    = $PageSize
+        #     'Filters'     = @(
+        #         [ordered]@{
+        #             'FieldPath'  = @(
+        #                 $Filter
+        #             )
+        #             'FilterType' = 3
+        #             'Value'      = 'Blue'
+        #         }
+        #     )
+        #     'SortOrder'   = @(
+        #         [ordered]@{
+        #             'FieldPath' = @(
+        #                 $SortOrder
+        #             )
+        #             'Ascending' = $true
+        #         }
+        #     )
+        #     'FieldIds'    = @(
+        #         $FieldIds
+        #     )
+        # } | ConvertTo-Json
     }
 
     $hashBodyFilter = @{ }
@@ -72,5 +106,8 @@ function Get-LockpathUsers {
         'Body'        = $body
         'Description' = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
     }
-    return Invoke-LockpathRestMethod @params
+
+    $result = Invoke-LockpathRestMethod @params
+
+    return $result
 }
