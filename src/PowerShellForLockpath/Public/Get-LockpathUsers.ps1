@@ -1,28 +1,13 @@
-#TODO setup for pipeline
-#TODO setup for filters
+#TODO setup for filters - Maybe not, just get filter in this function and build the filter in the calling function
+#TODO check parameter sets
 function Get-LockpathUsers {
-    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')] #TODO check parameter sets
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = '__AllParameterSets')]
     [OutputType([string])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(ParameterSetName = 'FilterField')]
-        [ValidateSet('Active', 'Deleted', 'AccountType')]
-        [string] $FilterField,
-
-        [Parameter(ParameterSetName = 'FilterType')]
-        # 5 = EqualTo
-        # 6 = NotEqualTo
-        # 1002 = ContainsAny
-        [ValidateSet('EqualTo', 'NotEqualTo', 'Contains')]
-        [string] $FilterType,
-
-        [Parameter(ParameterSetName = 'FilterValue')]
-        # 1 = FullUser
-        # 2 = AwarenessUser
-        # 4 = VendorUser
-        [ValidateSet('True', 'False', 'Awareness', 'Full', 'Vendor')]
-        [string] $FilterValue,
+        #TODO is string the correct type or should this be a PSCustomObject type?
+        [array] $Filter = '',
 
         [ValidateRange(0, [int]::MaxValue)]
         [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
@@ -39,40 +24,48 @@ function Get-LockpathUsers {
         'Method'      = 'POST'
         'Description' = "Getting User Records with Filter: $Filter"
         'Body'        = [ordered]@{
-            'componentId' = $ComponentId
-            'pageIndex'   = $PageIndex
-            'pageSize'    = $PageSize
-            'filters'     = @(
-            )
+            'pageIndex' = $PageIndex
+            'pageSize'  = $PageSize
+            'filters'   = $Filter
+            # 'filters'   = @(
+            #     [ordered]@{
+            #         'Field'      = [ordered]@{
+            #             'ShortName' = 'AccountType'
+            #         }
+            #         'FilterType' = '10002'
+            #         'Value'      = '1|2|4'
+            #     }
+            # )
         } | ConvertTo-Json -Depth 10
-
-        # 'Body'        = [ordered]@{
-        #     'ComponentId' = $ComponentId
-        #     'PageIndex'   = $PageIndex
-        #     'PageSize'    = $PageSize
-        #     'Filters'     = @(
-        #         [ordered]@{
-        #             'FieldPath'  = @(
-        #                 $Filter
-        #             )
-        #             'FilterType' = 3
-        #             'Value'      = 'Blue'
-        #         }
-        #     )
-        #     'SortOrder'   = @(
-        #         [ordered]@{
-        #             'FieldPath' = @(
-        #                 $SortOrder
-        #             )
-        #             'Ascending' = $true
-        #         }
-        #     )
-        #     'FieldIds'    = @(
-        #         $FieldIds
-        #     )
-        # } | ConvertTo-Json
     }
 
+    # 'Body'        = [ordered]@{
+    #     'ComponentId' = $ComponentId
+    #     'PageIndex'   = $PageIndex
+    #     'PageSize'    = $PageSize
+    #     'Filters'     = @(
+    #         [ordered]@{
+    #             'FieldPath'  = @(
+    #                 $Filter
+    #             )
+    #             'FilterType' = 3
+    #             'Value'      = 'Blue'
+    #         }
+    #     )
+    #     'SortOrder'   = @(
+    #         [ordered]@{
+    #             'FieldPath' = @(
+    #                 $SortOrder
+    #             )
+    #             'Ascending' = $true
+    #         }
+    #     )
+    #     'FieldIds'    = @(
+    #         $FieldIds
+    #     )
+    # } | ConvertTo-Json
+
+    <# possible code for convert individual parameters to filter
     $hashBodyFilter = @{ }
     if ($PSBoundParameters.ContainsKey('AccountStatus')) {
         $hashBodyFilter = @{
@@ -106,6 +99,7 @@ function Get-LockpathUsers {
         'Body'        = $body
         'Description' = "Getting users with FilterField: $FilterField, FilterType: $FilterType and FilterValue: $FilterValue."
     }
+ #>
 
     $result = Invoke-LockpathRestMethod @params
 

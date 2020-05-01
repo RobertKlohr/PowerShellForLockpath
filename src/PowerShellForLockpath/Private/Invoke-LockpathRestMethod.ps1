@@ -171,8 +171,13 @@
             $output += 'This typically happens when the current user is not properly authenticated.'
         }
 
+        if ($statusCode -eq 405) {
+            $output += 'This typically happens when the API call is using the wrong method.'
+        }
+
         $newLineOutput = ($output -join [Environment]::NewLine)
         Write-LockpathLog -Message $newLineOutput -Level Error
-        throw $newLineOutput
+        throw $newLineOutput #TODO does this need to be a terminating error or non-terminating
+        Write-Error $newLineOutput
     }
 }

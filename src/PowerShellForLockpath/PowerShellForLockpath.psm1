@@ -9,10 +9,10 @@
 #TODO add badges to readme.md file.  See examples from PowershellForGitHub below.
 #TODO check quotes single (default) vs. double (only around variables)
 #TODO check and set cmdlet binding output settings on each function
+#TODO set $result variable in each function to an empty variable of the correct type at the beginning of the function
 
 # [![[GitHub version]](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub.svg)](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub)
 # [![Build status](https://dev.azure.com/ms/PowerShellForGitHub/_apis/build/status/PowerShellForGitHub-CI?branchName=master)](https://dev.azure.com/ms/PowerShellForGitHub/_build/latest?definitionId=109&branchName=master)
-
 
 # this psm1 is for local testing and development use only
 
