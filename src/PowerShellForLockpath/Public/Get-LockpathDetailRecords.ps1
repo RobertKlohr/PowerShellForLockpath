@@ -13,13 +13,11 @@ function Get-LockpathDetailRecords {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        #TODO Need to update the next three parameters to except all filter objects
-        #TODO maybe a simple filter via parameters and advanced where a JSON object is passed
         [array] $FieldIds = $null,
 
-        [int] $Filter = $null,
+        [array] $Filter = $null,
 
-        [int] $SortOrder = $null
+        [array] $SortOrder = $null
     )
 
     Write-LockpathInvocationLog
@@ -33,35 +31,8 @@ function Get-LockpathDetailRecords {
             'componentId' = $ComponentId
             'pageIndex'   = $PageIndex
             'pageSize'    = $PageSize
-            'filters'     = @(
-            )
+            'filters'     = $Filter
         } | ConvertTo-Json -Depth 10
-
-        # 'Body'        = [ordered]@{
-        #     'ComponentId' = $ComponentId
-        #     'PageIndex'   = $PageIndex
-        #     'PageSize'    = $PageSize
-        #     'Filters'     = @(
-        #         [ordered]@{
-        #             'FieldPath'  = @(
-        #                 $Filter
-        #             )
-        #             'FilterType' = 3
-        #             'Value'      = 'Blue'
-        #         }
-        #     )
-        #     'SortOrder'   = @(
-        #         [ordered]@{
-        #             'FieldPath' = @(
-        #                 $SortOrder
-        #             )
-        #             'Ascending' = $true
-        #         }
-        #     )
-        #     'FieldIds'    = @(
-        #         $FieldIds
-        #     )
-        # } | ConvertTo-Json
     }
 
     $result = Invoke-LockpathRestMethod @params

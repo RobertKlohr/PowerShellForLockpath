@@ -14,7 +14,7 @@ function Remove-LockpathRecord {
     )
 
     begin {
-        #TODO call get record attachment to add attachment name to log
+        #TODO call get record to add record name to log
         Write-LockpathInvocationLog
         $params = @{ }
         $params = @{

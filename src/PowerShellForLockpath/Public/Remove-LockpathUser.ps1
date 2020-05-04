@@ -10,7 +10,7 @@ function Remove-LockpathUser {
     )
 
     begin {
-        #TODO call get record attachment to add the attachment name into the log.
+        #TODO call get record attachment to user's name into the log.
         Write-LockpathInvocationLog
         $params = @{ }
         $params = @{

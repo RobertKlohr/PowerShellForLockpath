@@ -4,8 +4,7 @@ function Get-LockpathUserCount {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        #TODO is string the correct type or should this be a PSCustomObject type?
-        [string] $Filter = ''
+        [array] $Filter = $null
     )
 
     Write-LockpathInvocationLog
@@ -15,7 +14,7 @@ function Get-LockpathUserCount {
         'UriFragment' = 'SecurityService/GetUserCount'
         'Method'      = 'POST'
         'Description' = "Getting User Count with Filter: $Filter"
-        'Body'        = $Filter
+        'Body'        = '' #$Filter | ConvertTo-Json
     }
 
     $result = Invoke-LockpathRestMethod @params

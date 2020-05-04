@@ -1,12 +1,8 @@
-﻿#TODO setup for filters
-#TODO check parameter sets
-#TODO Implement status feedback on job (look at PS-F-GH module, need to add -status parameter to all functions)
-function Get-LockpathUsersDetails {
+﻿function Get-LockpathUsersDetails {
     [CmdletBinding()]
     [OutputType([int])]
 
     param(
-        #TODO is string the correct type or should this be a PSCustomObject type?
         [array] $Filter = @(
             [ordered]@{
                 'Field'      = [ordered]@{
@@ -21,17 +17,17 @@ function Get-LockpathUsersDetails {
         [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
-
-        [switch] $All
+        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
 
     $result = @()
     $users = @()
-    if ($All) {
-        $PageSize = $(Get-LockpathUserCount) + 1000 #TODO is this really 15 or should we just add 1000?
+    if (-not $PSBoundParameters.ContainsKey('PageSize')) {
+        #There is some inconsistency in the results (always low) of the UserCount API call so we are padding the count to ensure that we are capturing all records
+        $PageSize = $(Get-LockpathUserCount -Filter $Filter) + 100
     }
 
+    #TODO Implement status feedback on job (look at PS-F-GH module, need to add -status parameter to all functions)
     $i = 0
     $users = $(Get-LockpathUsers -PageIndex $PageIndex -PageSize $PageSize -Filter $Filter)
     foreach ($user in $users) {
@@ -43,7 +39,6 @@ function Get-LockpathUsersDetails {
             $userDetails = Get-LockpathUser -UserId $user.id
             $result += $userDetails
         } catch {
-            # $PSCmdlet.ThrowTerminatingError($PSItem)
             $result += $user
         }
 

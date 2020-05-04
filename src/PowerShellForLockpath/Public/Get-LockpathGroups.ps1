@@ -1,4 +1,4 @@
-function Get-LockpathUsers {
+﻿function Get-LockpathGroups {
     [CmdletBinding(SupportsShouldProcess)]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
@@ -16,9 +16,9 @@ function Get-LockpathUsers {
 
     $params = @{ }
     $params = @{
-        'UriFragment' = 'SecurityService/GetUsers'
+        'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting Users with Filter: $Filter"
+        'Description' = "Getting Groups with Filter: $Filter"
         'Body'        = [ordered]@{
             'pageIndex' = $PageIndex
             'pageSize'  = $PageSize

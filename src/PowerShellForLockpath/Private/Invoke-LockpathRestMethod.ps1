@@ -167,8 +167,10 @@
             $output += $rawContent
         }
 
+        #TODO Add some logic here for capturing details from all the generic 400 errors that should be 401 or 403 errors
+
         if ($statusCode -eq 404) {
-            $output += 'This typically happens when the current user is not properly authenticated.'
+            $output += 'This typically happens when the API call has an error in the URL.'
         }
 
         if ($statusCode -eq 405) {
@@ -177,7 +179,7 @@
 
         $newLineOutput = ($output -join [Environment]::NewLine)
         Write-LockpathLog -Message $newLineOutput -Level Error
-        throw $newLineOutput #TODO does this need to be a terminating error or non-terminating
+        throw $newLineOutput
         Write-Error $newLineOutput
     }
 }
