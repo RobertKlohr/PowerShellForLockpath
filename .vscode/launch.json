@@ -1,5 +1,5 @@
 {
-    "version": "0.2.0",
+    "version": "0.3.0",
     "configurations": [
         {
             "type": "PowerShell",
@@ -32,7 +32,7 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Launch DebugTest.ps1",
-            "script": "${workspaceRoot}/DebugTest.ps1",
+            "script": "${workspaceFolder}/DebugTest.ps1",
             "args": [
                 "-Count 55 -DelayMilliseconds 250"
             ],
@@ -42,7 +42,7 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Interactive Session",
-            "cwd": "${workspaceRoot}/src/${workspaceRootFolderName}",
+            "cwd": "${workspaceFolder}/src/${workspaceFolderBasename}",
             "script": "Import-Module",
             "args": [
                 ".\\PowerShellForLockpath.psm1 -Force"
@@ -54,7 +54,7 @@
             "name": "PowerShell Pester Tests",
             "script": "Invoke-Pester",
             "args": [],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceFolder}"
         },
         {
             "type": "PowerShell",
