@@ -1,4 +1,4 @@
-#TODO Need to update to new configuration file
+#TODO Ensure $Update arrary is converted into correctly formatted JSON
 function Set-LockpathUser {
     [CmdletBinding(SupportsShouldProcess)]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
@@ -8,7 +8,7 @@ function Set-LockpathUser {
         [ValidateRange(0, [int]::MaxValue)]
         [int] $UserId,
 
-        [array] $Filter = ''
+        [array] $Update = ''
     )
 
     begin {
@@ -20,7 +20,7 @@ function Set-LockpathUser {
             'Description' = "Updating User with User Id: $UserId"
             'Body'        = [ordered]@{
                 'Id' = $UserId
-                'filters' = $Filter
+                'filters' = $Update
             } | ConvertTo-Json -Depth 10
         }
     }
