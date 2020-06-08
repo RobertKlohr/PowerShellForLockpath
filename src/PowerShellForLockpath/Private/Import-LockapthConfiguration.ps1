@@ -29,7 +29,7 @@
         'pageSize'              = 1000
         'retryDelaySeconds'     = 30
         'runAsSystem'           = $true
-        'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString(2)) PowerShellForLockpath"
+        'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
         'webRequestTimeoutSec'  = 0
         'webSession'            = $false
     }

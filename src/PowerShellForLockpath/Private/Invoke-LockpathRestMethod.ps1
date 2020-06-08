@@ -59,6 +59,7 @@
             $params.Add('TimeoutSec', (Get-LockpathConfiguration -Name WebRequestTimeoutSec))
             #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
             if ($UriFragment -eq 'SecurityService/Login') {
+                $params.Add('Body', $Body)
                 $params.Add('SessionVariable', 'webSession')
             } else {
                 $params.Add('WebSession', $script:configuration.webSession)
