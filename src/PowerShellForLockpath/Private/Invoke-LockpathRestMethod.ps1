@@ -65,9 +65,6 @@
                 $params.Add('WebSession', $script:configuration.webSession)
             }
             if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
-                #FIXME why encode as bytes, works with login but not get detail records
-                # $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
-                # $params.Add('Body', $bodyAsBytes)
                 $params.Add('Body', $Body)
                 Write-LockpathLog -Message 'Request includes a body.' -Level Verbose
                 if (Get-LockpathConfiguration -Name LogRequestBody) {
