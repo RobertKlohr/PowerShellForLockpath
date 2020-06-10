@@ -1,6 +1,6 @@
 # PowerShellForLockpath
 
-[![Build status](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath?svg=true)](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/RobertKlohr/PowerShellForLockpath?branch=master&svg=true)](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath)
 
 
 #### Table of Contents
