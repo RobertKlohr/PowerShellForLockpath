@@ -9,7 +9,7 @@ function Get-LockpathUsers {
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [array] $Filter = ''
+        [array] $Filter = $null
     )
 
     Write-LockpathInvocationLog

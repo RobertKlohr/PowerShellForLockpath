@@ -44,10 +44,21 @@ foreach ($file in @($public + $private)) {
     }
 }
 
+function Get-PD {
+    [CmdletBinding()]
+    Param()
+    $MyInvocation.MyCommand.Module.PrivateData
+}
+
+$MyPD = Get-PD
+if ($MyPD.Count -eq 0) {
+    Export-ModuleMember
+}
+
 # export all public functions
-Export-ModuleMember -Function $public.Basename
+#Export-ModuleMember -Function $public.Basename
 
 
 Initialize-LockpathConfiguration
 
-Export-ModuleMember -Variable 'configuration'
+# Export-ModuleMember -Variable 'configuration'

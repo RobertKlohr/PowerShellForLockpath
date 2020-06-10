@@ -1,5 +1,8 @@
 # PowerShellForLockpath
 
+[![Build status](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath?svg=true)](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath)
+
+
 #### Table of Contents
 
 *   [Overview](#overview)

@@ -14,5 +14,6 @@ function Send-LockpathPing {
         'Description' = "Sending Ping API call to $($script:configuration.instanceName) to keep session alive."
     }
 
-    $null = Invoke-LockpathRestMethod @params
+    #$null =
+    Invoke-LockpathRestMethod @params
 }

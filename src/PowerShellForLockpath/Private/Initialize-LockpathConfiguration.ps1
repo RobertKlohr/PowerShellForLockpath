@@ -4,6 +4,11 @@
 
     param()
 
+    $MyPD = Get-PD
+    if ($MyPD.Count -eq 0) {
+        Export-ModuleMember
+    }
+
     @{
         ConfigurationFilePath = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
         CredentialFilePath    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')

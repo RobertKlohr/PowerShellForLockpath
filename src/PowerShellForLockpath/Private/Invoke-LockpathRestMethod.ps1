@@ -65,7 +65,10 @@
                 $params.Add('WebSession', $script:configuration.webSession)
             }
             if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
-                $params.Add('Body', $Body)
+                #FIXME why encode as bytes, works with login but not get detail records
+                $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
+                $params.Add('Body', $bodyAsBytes)
+                #$params.Add('Body', $Body)
                 Write-LockpathLog -Message 'Request includes a body.' -Level Verbose
                 if (Get-LockpathConfiguration -Name LogRequestBody) {
                     Write-LockpathLog -Message $Body -Level Verbose
@@ -73,6 +76,8 @@
             }
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            # FIX if the username or password is wrong it throws an error about JSON deserialization,  Need to
+            # setup logic to catch this use case until the API is fixed (it currently returns HTML).
             $result = Invoke-WebRequest @params
             if ($UriFragment -eq 'SecurityService/Login') {
                 $script:configuration.webSession = $webSession

@@ -22,5 +22,6 @@ function Send-LockpathLogin {
         'Body'        = (ConvertTo-Json -InputObject $hashBody)
     }
 
-    $null = Invoke-LockpathRestMethod @params
+    #$null =
+    Invoke-LockpathRestMethod @params
 }
