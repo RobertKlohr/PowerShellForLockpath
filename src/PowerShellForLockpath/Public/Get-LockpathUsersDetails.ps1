@@ -6,10 +6,10 @@
         [array] $Filter = @(
             [ordered]@{
                 'Field'      = [ordered]@{
-                    'ShortName' = 'AccountType'
+                    'ShortName' = 'Active'
                 }
-                'FilterType' = '10002'
-                'Value'      = '1|2|4'
+                'FilterType' = '5'
+                'Value'      = 'true'
             }
         ),
 
@@ -19,6 +19,22 @@
         [ValidateRange(1, [int]::MaxValue)]
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
+
+    # Filter Syntax an array of hashtables
+    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value = "true" })
+
+    if (${Filter}) {
+        $fieldCount = 0
+        $filterString = '"filters":['
+        foreach ($filterField in $Filter) {
+            $fieldCount++
+            $filterString = $filterString + '{"Field":{"ShortName":"' + $filterField.ShortName + '"},' + '"FilterType":"' + $filterField.FilterType + '",' + '"Value":"' + $filterField.Value + '"}'
+            if ($fieldCount -ne $Filter.Count) {
+                $filterString = $filterString + ','
+            }
+        }
+        $filterString = $filterString + "]"
+    }
 
     $result = @()
     $users = @()

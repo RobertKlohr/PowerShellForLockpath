@@ -1,0 +1,18 @@
+﻿//filter for Get-LockpathUser, Get-LockpathUsers and Get-LockpathUserCount
+[
+    {
+        "Field": {
+            "ShortName": "Active"
+        },
+        "FilterType": "5",
+        "Value": "true"
+    },
+    {
+        "Field": {
+            "ShortName": "AccountType"
+        },
+        "FilterType": "5",
+        "Value": "1"
+    }
+]
+// [{"Field":{"ShortName":"Active"},"FilterType":"5","Value":"true"},{"Field":{"ShortName":"AccountType"},"FilterType":"5","Value":"1"}]

@@ -19,21 +19,7 @@ InModuleScope 'PowerShellForLockpath' {
     $WarningPreference = "SilentlyContinue"
     #-------------------------------------------------------------------------
     Describe 'PowerShellForLockpath Private Function Tests' -Tag Unit {
-        Context 'Get-LockpathConfiguration' {
-            <#
-            It 'should ...' {
-
-            }#it
-            #>
-        }#context_FunctionName
-        Context 'Get-LockpathCredential' {
-            <#
-            It 'should ...' {
-
-            }#it
-            #>
-        }#context_FunctionName
-        Context 'Get-LockpathWebResponseContent' {
+        Context 'FunctionName' {
             <#
             It 'should ...' {
 
