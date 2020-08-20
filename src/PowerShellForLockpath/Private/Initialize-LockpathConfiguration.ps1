@@ -1,5 +1,6 @@
 ﻿function Initialize-LockpathConfiguration {
     [CmdletBinding(SupportsShouldProcess)]
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
 
     param()
@@ -17,5 +18,8 @@
     }
 
     $script:configuration = Import-LockpathConfiguration -Path $script:configurationFilePath
+
+    # Normally Write-LockpathInvocationLog is the first call in a function except here since the location of the
+    # log file is only set in the previous line.
     Write-LockpathInvocationLog
 }

@@ -1,5 +1,8 @@
 ﻿function Resolve-LockpathConfigurationPropertyValue {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     param(
         [PSCustomObject] $InputObject,
 

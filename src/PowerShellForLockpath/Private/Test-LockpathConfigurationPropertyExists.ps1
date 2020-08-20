@@ -1,7 +1,8 @@
 ﻿function Test-LockpathConfigurationPropertyExists {
-    [CmdletBinding()]
-    [OutputType([bool])]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Justification = "Exists isn't a noun and isn't violating the intention of this rule.")]
+    [CmdletBinding(SupportsShouldProcess)]
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     param(
         [Parameter(Mandatory)]
         [AllowNull()]

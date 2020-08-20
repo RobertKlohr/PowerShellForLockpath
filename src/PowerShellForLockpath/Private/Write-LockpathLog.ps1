@@ -1,7 +1,10 @@
 ﻿function Write-LockpathLog {
     [CmdletBinding(SupportsShouldProcess)]
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidGlobalVars", "", Justification = "We need to be able to access the PID for logging purposes, and it is accessed via a global variable.")]
+
     param(
         [Parameter(ValueFromPipeline)]
         [AllowEmptyCollection()]
@@ -83,14 +86,7 @@
                 Write-Debug $consoleMessage
             }
             'Informational' {
-                # We'd prefer to use Write-Information to enable users to redirect that pipe if
-                # they want, unfortunately it's only available on v5 and above.  We'll fallback to
-                # using Write-Host for earlier versions (since we still need to support v4).
-                if ($PSVersionTable.PSVersion.Major -ge 5) {
-                    Write-Information $consoleMessage -InformationAction Continue
-                } else {
-                    Write-LockpathInteractiveHost $consoleMessage
-                }
+                Write-Information $consoleMessage -InformationAction Continue
             }
         }
 
@@ -98,6 +94,9 @@
             if ([String]::IsNullOrWhiteSpace($Path)) {
                 Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
             } else {
+                if (-not (Test-Path $Path)) {
+                    New-Item -Path $Path -ItemType File -Force
+                }
                 $logFileMessage | Out-File -FilePath $Path -Append
             }
         } catch {

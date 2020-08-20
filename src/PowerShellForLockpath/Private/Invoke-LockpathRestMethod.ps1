@@ -1,5 +1,8 @@
 ﻿function Invoke-LockpathRestMethod {
     [CmdletBinding(SupportsShouldProcess)]
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     param(
         [Parameter(Mandatory)]
         [string] $UriFragment,
@@ -76,9 +79,9 @@
             }
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            # FIX if the username or password is wrong it throws an error about JSON deserialization,  Need to
-            # setup logic to catch this use case until the API is fixed (it currently returns HTML).
+            $ProgressPreference = 'SilentlyContinue'
             $result = Invoke-WebRequest @params
+            $ProgressPreference = 'Continue'
             if ($UriFragment -eq 'SecurityService/Login') {
                 $script:configuration.webSession = $webSession
             }

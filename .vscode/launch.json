@@ -1,5 +1,5 @@
 {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "configurations": [
         {
             "type": "PowerShell",
@@ -45,8 +45,8 @@
             "cwd": "${workspaceFolder}/src/${workspaceFolderBasename}",
             "script": "Import-Module",
             "args": [
-                ".\\PowerShellForLockpath.psm1 -Force"
-            ],
+                ".\\PowerShellForLockpath.psd1 -Force"
+            ]
         },
         {
             "type": "PowerShell",

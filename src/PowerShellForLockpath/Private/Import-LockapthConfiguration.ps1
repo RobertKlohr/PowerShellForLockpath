@@ -1,17 +1,14 @@
 ﻿function Import-LockpathConfiguration {
     [CmdletBinding(SupportsShouldProcess)]
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     param(
+        [Parameter(Mandatory)]
         [string] $Path
     )
 
     # Write-LockpathInvocationLog
-
-    $logPath = [String]::Empty
-    $documentsFolder = [System.Environment]::GetFolderPath('MyDocuments')
-    if (-not [System.String]::IsNullOrEmpty($documentsFolder)) {
-        $logPath = Join-Path -Path $documentsFolder -ChildPath 'PowerShellForLockpath.log'
-    }
 
     # Create a configuration object with all the default values.
     $config = [PSCustomObject]@{
@@ -21,12 +18,12 @@
         'instanceName'          = [String]::Empty
         'instancePort'          = 4443
         'instanceProtocol'      = 'https'
-        'logPath'               = $logPath
+        'logPath'               = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
         'logRequestBody'        = $false
         'logTimeAsUtc'          = $false
         'MethodContainsBody'    = ("Delete", "Post")
         'pageIndex'             = 0
-        'pageSize'              = 1000
+        'pageSize'              = 100
         'retryDelaySeconds'     = 30
         'runAsSystem'           = $true
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"

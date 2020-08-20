@@ -1,7 +1,9 @@
 ﻿#FIX add redact and exclude parameters to configuration
 function Write-LockpathInvocationLog {
-    # [CmdletBinding(SupportsShouldProcess)]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
     param(
         [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
 

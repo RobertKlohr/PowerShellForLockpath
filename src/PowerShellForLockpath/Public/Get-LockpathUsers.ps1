@@ -31,16 +31,16 @@ function Get-LockpathUsers {
     # )
 
 
-    if ($Filter) {
-        $filterHash = @{ }
+    # if ($Filter) {
+    #     $filterHash = @{ }
 
-        foreach ($filterField in $Filter) {
-            $fieldCount++
-            $filterHash.Add("Value", $filterField.Value)
-            $filterHash.Add("FilterType", $filterField.FilterType)
-            $filterHash.Add("Field", @{"ShortName" = $filterField.Shortname })
-        }
-    }
+    #     foreach ($filterField in $Filter) {
+    #         $fieldCount++
+    #         $filterHash.Add("Value", $filterField.Value)
+    #         $filterHash.Add("FilterType", $filterField.FilterType)
+    #         $filterHash.Add("Field", @{"ShortName" = $filterField.Shortname })
+    #     }
+    # }
 
     Write-LockpathInvocationLog
 
@@ -48,11 +48,11 @@ function Get-LockpathUsers {
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting Users with Filter: $filterHash"
+        'Description' = "Getting Users with Filter: $Filter"
         'Body'        = [ordered]@{
             'pageIndex' = $PageIndex
             'pageSize'  = $PageSize
-            'filters'   = $filterHash
+            'filters'   = $Filter
         } | ConvertTo-Json -Depth 10 #TODO remove this conversion and create the JSON separately
     }
 
