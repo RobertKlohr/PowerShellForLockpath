@@ -1,45 +1,61 @@
 function Get-LockpathUserCount {
+    <#
+.SYNOPSIS
+    Returns a count of Lockpath users.
+.DESCRIPTION
+    Returns a count of Lockpath users. The count does not include Deleted users and can include non-Lockpath user
+    accounts, such as Vendor Contacts.
+.PARAMETER Filters
+    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
+.EXAMPLE
+    Get-LockpathUserCount
+.EXAMPLE
+    Get-LockpathUserCount -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+.INPUTS
+    System.Array.
+.OUTPUTS
+    System.Int32.
+.NOTES
+    The authentication account must have Read Administrative Access permissions to administer users.
+.LINK
+    https://github.com/RobertKlohr/PowerShellForLockpath
+#>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.Int32')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [array] $Filter = $null
+        [Alias("Filter")]
+        [array]$Filters
     )
 
-    # Filter Syntax an array of hashtables
-    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value = "true" })
+    #TODO Document in examples a filter with two sets of criteria
+    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value =
+    # "true" })
 
-    $filterString = $null
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    #FIXME do I need the {} below around the $FILTER variable?
-    if (${$Filter}) {
-        $fieldCount = 0
-        $filterString = '['
-        foreach ($filterField in $Filter) {
-            $fieldCount++
-            $filterString = $filterString + '{"Field":{"ShortName":"' + $filterField.ShortName + '"},' + '"FilterType":"' + $filterField.FilterType + '",' + '"Value":"' + $filterField.Value + '"}'
-            if ($fieldCount -ne $Filter.Count) {
-                $filterString = $filterString + ','
-            }
-            $filterString = $filterString + "]"
-        }
+    $Body = @{
     }
 
-    Write-LockpathInvocationLog
+    If ($Filters.Count -gt 0) {
+        $Body.Add('filters', $Filters)
+    }
 
-    $params = @{ }
     $params = @{
         'UriFragment' = 'SecurityService/GetUserCount'
         'Method'      = 'POST'
-        'Description' = "Getting User Count with Filter: $filterString"
-        'Body'        = $filterString
+        'Description' = "Getting User Count with Filter: $($Filters | ConvertTo-Json -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth 10
     }
 
-    $result = Invoke-LockpathRestMethod @params
-
-    return $result
+    if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        return $result
+    } else {
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+    }
 }

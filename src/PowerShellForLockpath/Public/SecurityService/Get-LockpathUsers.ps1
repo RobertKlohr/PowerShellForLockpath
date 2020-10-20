@@ -1,66 +1,77 @@
 function Get-LockpathUsers {
+    <#
+.SYNOPSIS
+    Returns a list of users and supporting fields.
+.DESCRIPTION
+    Returns a list of users and supporting fields. The list does not include Deleted users and can include
+    non-Lockpath user accounts. Use filters to return only the users meeting the selected criteria. Remove all
+    filters to return a list of all users including deleted non-Lockpath user accounts.
+.PARAMETER PageIndex
+    The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set in the configuration.
+.PARAMETER PageSize
+    The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in the configuration.
+.PARAMETER Filters
+    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
+.EXAMPLE
+    Get-LockpathUsers
+.EXAMPLE
+    Get-LockpathUsers -PageIndex 1 -PageSize 100
+.EXAMPLE
+    Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+.EXAMPLE
+    Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+.INPUTS
+    System.Array.
+    System.Uint32.
+.OUTPUTS
+    System.String.
+.NOTES
+    The authentication account must have Read Administrative Access permissions to administer users.
+.LINK
+    https://github.com/RobertKlohr/PowerShellForLockpath
+#>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [ValidateRange(0, [int]::MaxValue)]
+        [Alias("index")]
+        [ValidateRange("NonNegative")]
         [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [ValidateRange(1, [int]::MaxValue)]
+        [Alias("size")]
+        [ValidateRange("Positive")]
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [array] $Filter = $null
+        [Alias("Filter")]
+        [array]$Filters
     )
 
-    #TODO instead of code in the module could the parsing code go in a parameter scriptblock?
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    # Filter Syntax an array of hashtables
-    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value = "true" })
+    $Body = @{
+        'pageIndex' = $PageIndex
+        'pageSize'  = $PageSize
+    }
 
-    # TODO look at making this a private function that parses the filter and returns a hashtable that can be converted
-    # to JSON
+    If ($Filters.Count -gt 0) {
+        $Body.Add('filters', $Filters)
+    }
 
-    # [array] $Filter = @(
-    #     [ordered]@{
-    #         'Field'      = [ordered]@{
-    #             'ShortName' = 'Active'
-    #         }
-    #         'FilterType' = '5'
-    #         'Value'      = 'true'
-    #     }
-    # )
-
-
-    # if ($Filter) {
-    #     $filterHash = @{ }
-
-    #     foreach ($filterField in $Filter) {
-    #         $fieldCount++
-    #         $filterHash.Add("Value", $filterField.Value)
-    #         $filterHash.Add("FilterType", $filterField.FilterType)
-    #         $filterHash.Add("Field", @{"ShortName" = $filterField.Shortname })
-    #     }
-    # }
-
-    Write-LockpathInvocationLog
-
-    $params = @{ }
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting Users with Filter: $Filter"
-        'Body'        = [ordered]@{
-            'pageIndex' = $PageIndex
-            'pageSize'  = $PageSize
-            'filters'   = $Filter
-        } | ConvertTo-Json -Depth 10 #TODO remove this conversion and create the JSON separately
+        'Description' = "Getting Users with Filter: $($Filters | ConvertTo-Json -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth 10
     }
 
-    $result = Invoke-LockpathRestMethod @params
-
-    return $result
+    if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        return $result
+    } else {
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+    }
 }

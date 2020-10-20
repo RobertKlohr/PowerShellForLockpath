@@ -1,42 +1,29 @@
 ﻿function Get-LockpathGroup {
     <#
 .SYNOPSIS
-    Gets the group record from the Lockpath platform.
+    Returns all fields for a given group.
 .DESCRIPTION
-    Gets the group record based on the Id parameter and returns it as a JSON string.
+    Returns all fields for a given group.
 .PARAMETER GroupId
     Specifies the Id number of the group as a positive integer.
 .EXAMPLE
-    C:\PS>
     Get-LockpathGroup -GroupId 2
 .EXAMPLE
-    C:\PS>
     Get-LockpathGroup 2
 .EXAMPLE
-    C:\PS>
     2 | Get-LockpathGroup
 .EXAMPLE
-    C:\PS>
     2,8,9 | Get-LockpathGroup
 .EXAMPLE
-    C:\PS>
     $userObject | Get-LockpathGroup
     If $userObject has an property called GroupId that value is automatically passed as a parameter.
 .INPUTS
     System.Uint32.
-    Unsigned 32-bit integer.
-    Object that has a property named GroupId or Id that is an unsigned 32-bit integer.
 .OUTPUTS
     System.String.
     Get-LockpathGroup returns a user record formatted as a JSON string.
 .NOTES
-    General notes
-.COMPONENT
-    Lockpath
-.ROLE
-    Administrator
-.FUNCTIONALITY
-    The functionality that best describes this cmdlet
+    The authentication account must have Read Administrative Access permissions to administer users.
 .LINK
     https://github.com/RobertKlohr/PowerShellForLockpath
 #>
@@ -52,7 +39,7 @@
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true)]
-        [Alias("id")]
+        [Alias("Id")]
         [ValidateRange("NonNegative")]
         [int] $GroupId
     )
@@ -71,7 +58,7 @@
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
-            Write-LockpathLog -Message "ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
         }
     }
 
