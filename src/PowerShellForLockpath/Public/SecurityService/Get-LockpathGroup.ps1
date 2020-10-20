@@ -1,34 +1,34 @@
-function Get-LockpathUser {
+﻿function Get-LockpathGroup {
     <#
 .SYNOPSIS
-    Gets the user record from the Lockpath platform.
+    Gets the group record from the Lockpath platform.
 .DESCRIPTION
-    Gets the user record based on the Id parameter and returns it as a JSON string.
-.PARAMETER UserId
-    Specifies the Id number of the user as a positive integer.
+    Gets the group record based on the Id parameter and returns it as a JSON string.
+.PARAMETER GroupId
+    Specifies the Id number of the group as a positive integer.
 .EXAMPLE
     C:\PS>
-    Get-LockpathUser -UserId 6
+    Get-LockpathGroup -GroupId 6
 .EXAMPLE
     C:\PS>
-    Get-LockpathUser 6
+    Get-LockpathGroup 6
 .EXAMPLE
     C:\PS>
-    6 | Get-LockpathUser
+    6 | Get-LockpathGroup
 .EXAMPLE
     C:\PS>
-    6,12,15 | Get-LockpathUser
+    6,12,15 | Get-LockpathGroup
 .EXAMPLE
     C:\PS>
-    $userObject | Get-LockpathUser
-    If $userObject has an property called userid that value is automatically passed as a parameter.
+    $userObject | Get-LockpathGroup
+    If $userObject has an property called GroupId that value is automatically passed as a parameter.
 .INPUTS
     System.Uint32.
     Unsigned 32-bit integer.
-    Object that has a property named UserId or Id that is an unsigned 32-bit integer.
+    Object that has a property named GroupId or Id that is an unsigned 32-bit integer.
 .OUTPUTS
     System.String.
-    Get-LockpathUser returns a user record formatted as a JSON string.
+    Get-LockpathGroup returns a user record formatted as a JSON string.
 .NOTES
     General notes
 .COMPONENT
@@ -54,7 +54,7 @@ function Get-LockpathUser {
             ValueFromPipeline = $true)]
         [Alias("id")]
         [ValidateRange("NonNegative")]
-        [int] $UserId
+        [int] $GroupId
     )
 
     begin {
@@ -63,11 +63,11 @@ function Get-LockpathUser {
 
     process {
         $params = @{
-            'UriFragment' = "SecurityService/GetUser?Id=$UserId"
+            'UriFragment' = "SecurityService/GetUser?Id=$GroupId"
             'Method'      = 'GET'
-            'Description' = "Getting user record with Id: $UserId"
+            'Description' = "Getting user record with Id: $GroupId"
         }
-        if ($PSCmdlet.ShouldProcess($UserId)) {
+        if ($PSCmdlet.ShouldProcess($GroupId)) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
