@@ -1,9 +1,9 @@
 ﻿function Get-LockpathGroup {
     <#
 .SYNOPSIS
-    Returns all fields for a given group.
+    Returns available fields for a given group.
 .DESCRIPTION
-    Returns all fields for a given group.
+    Returns available fields for a given group. The group Id may be found by using Get-LockpathGroups.
 .PARAMETER GroupId
     Specifies the Id number of the group as a positive integer.
 .EXAMPLE
@@ -54,7 +54,7 @@
             'Method'      = 'GET'
             'Description' = "Getting group record with Id: $GroupId"
         }
-        if ($PSCmdlet.ShouldProcess($GroupId)) {
+        if ($PSCmdlet.ShouldProcess("Getting group with Id: $([environment]::NewLine) $GroupId", $GroupId, 'Getting group with Id:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

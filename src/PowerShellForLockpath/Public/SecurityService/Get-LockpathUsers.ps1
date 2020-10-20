@@ -1,9 +1,9 @@
 function Get-LockpathUsers {
     <#
 .SYNOPSIS
-    Returns a list of users and supporting fields.
+    Returns a list of users and available fields.
 .DESCRIPTION
-    Returns a list of users and supporting fields. The list does not include Deleted users and can include
+    Returns a list of users and available fields. The list does not include Deleted users and can include
     non-Lockpath user accounts. Use filters to return only the users meeting the selected criteria. Remove all
     filters to return a list of all users including deleted non-Lockpath user accounts.
 .PARAMETER PageIndex

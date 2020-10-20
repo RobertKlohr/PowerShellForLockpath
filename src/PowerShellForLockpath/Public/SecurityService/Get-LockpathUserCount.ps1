@@ -1,9 +1,9 @@
 function Get-LockpathUserCount {
     <#
 .SYNOPSIS
-    Returns a count of Lockpath users.
+    Returns a count of users.
 .DESCRIPTION
-    Returns a count of Lockpath users. The count does not include Deleted users and can include non-Lockpath user
+    Returns a count of users. The count does not include Deleted users and can include non-Lockpath user
     accounts, such as Vendor Contacts.
 .PARAMETER Filters
     The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
@@ -52,7 +52,7 @@ function Get-LockpathUserCount {
         'Body'        = $Body | ConvertTo-Json -Depth 10
     }
 
-    if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
         $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {

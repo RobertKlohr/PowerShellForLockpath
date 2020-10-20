@@ -1,9 +1,9 @@
 ﻿function Get-LockpathGroups {
     <#
 .SYNOPSIS
-    Returns the ID and name for groups.
+    Returns a list of groups and available fields.
 .DESCRIPTION
-    Returns a list of groups and supporting fields.
+    Returns a list of groups and available fields.
 .PARAMETER PageIndex
     The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set in the configuration.
 .PARAMETER PageSize

@@ -1,9 +1,9 @@
 function Get-LockpathUser {
     <#
 .SYNOPSIS
-    Returns all fields for a given user.
+    Returns available fields for a given user.
 .DESCRIPTION
-    Returns all fields for a given user.
+    Returns available fields for a given user. The user Id may be found by using Get-LockpathUsers.
 .PARAMETER UserId
     Specifies the Id number of the user as a positive integer.
 .EXAMPLE
@@ -16,7 +16,7 @@ function Get-LockpathUser {
     6,12,15 | Get-LockpathUser
 .EXAMPLE
     $userObject | Get-LockpathUser
-    If $userObject has an property called userid that value is automatically passed as a parameter.
+    If $userObject has an property called UserId that value is automatically passed as a parameter.
 .INPUTS
     System.Uint32.
 .OUTPUTS
@@ -53,7 +53,7 @@ function Get-LockpathUser {
             'Method'      = 'GET'
             'Description' = "Getting user record with Id: $UserId"
         }
-        if ($PSCmdlet.ShouldProcess($UserId)) {
+        if ($PSCmdlet.ShouldProcess("Getting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Getting user with Id:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
