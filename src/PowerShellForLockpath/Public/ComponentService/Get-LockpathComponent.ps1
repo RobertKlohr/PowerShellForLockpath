@@ -3,8 +3,8 @@
 .SYNOPSIS
     Returns available fields for a given component.
 .DESCRIPTION
-    Returns available fields for a given component. A component is a user-defined data object such as a custom content
-table. The component Id may be found by using Get-LockpathComponentList.
+    Returns available fields for a given component. A component is a user-defined data object such as a
+    custom content table. The component Id may be found by using Get-LockpathComponentList.
 .PARAMETER ComponentId
     Specifies the Id number of the component as a positive integer.
 .EXAMPLE

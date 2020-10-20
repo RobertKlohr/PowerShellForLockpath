@@ -1,28 +1,49 @@
 ﻿function Get-LockpathComponentList {
+    <#
+.SYNOPSIS
+    Returns a complete list of all components.
+.DESCRIPTION
+    Returns a complete list of all components available to the user based on account permissions. No input
+    elements are used. The list will be ordered in ascending alphabetical order of the component name.
+.EXAMPLE
+    Get-LockpathComponentList
+.INPUTS
+    None.
+.OUTPUTS
+    System.String.
+.NOTES
+    The authentication account must have Read General Access permissions for the specific component.
+.LINK
+    https://github.com/RobertKlohr/PowerShellForLockpath
+#>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param()
 
     begin {
-        Write-LockpathInvocationLog
-        $params = @{ }
-        $params = @{
-            'UriFragment' = 'ComponentService/GetComponentList'
-            'Method'      = 'GET'
-            'Description' = "Getting Component list."
-        }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
-        $result = Invoke-LockpathRestMethod @params
+        $params = @{
+            'UriFragment' = 'ComponentService/GetComponentList'
+            'Method'      = 'GET'
+            'Description' = "Getting component list."
+        }
+
+        if ($PSCmdlet.ShouldProcess("Getting component list.", '', 'Getting component list.')) {
+            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        }
     }
 
     end {
-        return $result
     }
 }
