@@ -3,15 +3,7 @@
     [OutputType([int])]
 
     param(
-        [array] $Filter = @(
-            [ordered]@{
-                'Field'      = [ordered]@{
-                    'ShortName' = 'Active'
-                }
-                'FilterType' = '5'
-                'Value'      = 'false'
-            }
-        ),
+        [array] $Filter = $null,
 
         [ValidateRange(0, [int]::MaxValue)]
         [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
@@ -20,46 +12,47 @@
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
 
-    # Filter Syntax an array of hashtables
-    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value = "true" })
+    #TODO add stopwatch to this cmdlet
 
-    # if (${Filter}) {
-    #     $fieldCount = 0
-    #     $filterString = '"filters":['
-    #     foreach ($filterField in $Filter) {
-    #         $fieldCount++
-    #         $filterString = $filterString + '{"Field":{"ShortName":"' + $filterField.ShortName + '"},' + '"FilterType":"' + $filterField.FilterType + '",' + '"Value":"' + $filterField.Value + '"}'
-    #         if ($fieldCount -ne $Filter.Count) {
-    #             $filterString = $filterString + ','
-    #         }
-    #     }
-    #     $filterString = $filterString + "]"
-    # }
-
-    $result = @()
-    $users = @()
-    $userCount = Get-LockpathUserCount -Filter $Filter
-    if (-not $PSBoundParameters.ContainsKey('PageSize')) {
-        # There is some inconsistency in the results (always low) of the UserCount API call so we are padding the
-        # count to ensure that we are capturing all records unless the PageSize is explicitly set.
-        $PageSize = $userCount + 100
-    }
-
-    $i = 0
-    $users = $(Get-LockpathUsers -PageIndex $PageIndex -PageSize $PageSize -Filter $Filter)
-    $userProgress = $users.count
-    foreach ($user in $users) {
-        $i += 1
-        if ($i % 100 -eq 0) {
-            Send-LockpathPing
+    # %%%%%%%%%%
+    # Hard coded filter for testing
+    [array] $Filter = @(
+        [ordered]@{
+            'Field'      = [ordered]@{
+                'ShortName' = 'Active'
+            }
+            'FilterType' = '5'
+            'Value'      = 'true'
         }
+        [ordered]@{
+            'Field'      = [ordered]@{
+                'ShortName' = 'AccountType'
+            }
+            'FilterType' = '5'
+            'Value'      = '1'
+        }
+    )
+    # %%%%%%%%%%
+
+    # [System.Collections.Hashtable]$result = @{}
+    $result = @()
+    $i = 0
+    $users = $(Get-LockpathUsers -PageIndex $PageIndex -PageSize $PageSize -Filter $Filter) | ConvertFrom-Json -Depth 10 -NoEnumerate
+    $usersProgress = $users.count
+    foreach ($user In $users) {
         try {
-            $userDetails = Get-LockpathUser -UserId $user.id
+            $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json # -AsHashtable
+            # The next line is needed so the the hashtable key is automatically recognized as a string so dot
+            # notation will work when accessing the hashtable
+            # $userId = 'Id' + $user.Id
+            # $result.Add($userId, $userDetails)
             $result += $userDetails
         } catch {
-            $result += $user
+            # This unnecessary assignment is to avoid PSScriptAnalyzer's PSAvoidUsingEmptyCatchBlock
+            $result = $result
         }
-        Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
+        Write-Progress -Id 0 -Activity "Get details for $usersProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
+        $i += 1
     }
 
     return $result

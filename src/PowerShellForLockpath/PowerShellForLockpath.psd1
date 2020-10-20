@@ -46,10 +46,8 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules        = @(
         # Ideally this list would be kept completely alphabetical, but other scripts (like GitHubConfiguration.ps1)
-        # depend on some of the code in Helpers being around at load time. 'Helpers.ps1',
-        # 'LockpathConfiguration.ps1', #TODO: See if helpers needs to be loaded first and edit the comments and
-        # order as necessary. 'LockpathComponents.ps1', 'LockpathCore.ps1', 'LockpathFields.ps1',
-        # 'LockpathGroups.ps1', 'LockpathRecords.ps1', 'LockpathUsers.ps1' 'LockpathWorkflows.ps1'
+        # depend on some of the code in Helpers being around at load time.
+        #TODO: See if helpers needs to be loaded first and edit the comments and order as necessary.
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,
@@ -85,7 +83,8 @@
         'Send-LockpathPing',
         'Set-LockpathConfiguration',
         'Set-LockpathCredential',
-        'Set-LockpathUser'
+        'Set-LockpathUser',
+        'Show-LockpathConfiguration'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry,

@@ -92,7 +92,7 @@
 
         $finalResult = $result.Content
         try {
-            $finalResult = $finalResult | ConvertFrom-Json
+            $finalResult = $finalResult | ConvertFrom-Json -AsHashtable -NoEnumerate
         } catch [System.ArgumentException] {
             # The content must not be JSON (which is a legitimate situation).  We'll return the raw content result instead.
             # We do this unnecessary assignment to avoid PSScriptAnalyzer's PSAvoidUsingEmptyCatchBlock.
@@ -115,7 +115,8 @@
                 return (Invoke-LockpathRestMethod @PSBoundParameters)
             }
         }
-        return $finalResult
+        return $result.Content
+        # return $finalResult
     } catch {
         $ex = $null
         $message = $null
