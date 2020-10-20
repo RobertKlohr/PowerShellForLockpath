@@ -1,6 +1,6 @@
 ﻿function Get-LockpathUsersDetails {
     [CmdletBinding()]
-    [OutputType([int])]
+    [OutputType('System.Int32')]
 
     param(
         [array] $Filter = $null,
