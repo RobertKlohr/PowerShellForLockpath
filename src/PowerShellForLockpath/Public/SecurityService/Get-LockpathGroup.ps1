@@ -8,16 +8,16 @@
     Specifies the Id number of the group as a positive integer.
 .EXAMPLE
     C:\PS>
-    Get-LockpathGroup -GroupId 6
+    Get-LockpathGroup -GroupId 2
 .EXAMPLE
     C:\PS>
-    Get-LockpathGroup 6
+    Get-LockpathGroup 2
 .EXAMPLE
     C:\PS>
-    6 | Get-LockpathGroup
+    2 | Get-LockpathGroup
 .EXAMPLE
     C:\PS>
-    6,12,15 | Get-LockpathGroup
+    2,8,9 | Get-LockpathGroup
 .EXAMPLE
     C:\PS>
     $userObject | Get-LockpathGroup
@@ -63,9 +63,9 @@
 
     process {
         $params = @{
-            'UriFragment' = "SecurityService/GetUser?Id=$GroupId"
+            'UriFragment' = "SecurityService/GetGroup?Id=$GroupId"
             'Method'      = 'GET'
-            'Description' = "Getting user record with Id: $GroupId"
+            'Description' = "Getting group record with Id: $GroupId"
         }
         if ($PSCmdlet.ShouldProcess($GroupId)) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
