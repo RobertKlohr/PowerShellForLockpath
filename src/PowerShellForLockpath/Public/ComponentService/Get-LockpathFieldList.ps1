@@ -52,7 +52,7 @@ function Get-LockpathFieldList {
         $params = @{
             'UriFragment' = "ComponentService/GetFieldList?id=$ComponentId"
             'Method'      = 'GET'
-            'Description' = "Getting component with Id: $ComponentId"
+            'Description' = "Getting fields from component with Id: $ComponentId"
         }
         if ($PSCmdlet.ShouldProcess("Getting field list for component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting field list for component with Id:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false

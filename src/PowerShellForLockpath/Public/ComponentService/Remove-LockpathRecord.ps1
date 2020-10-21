@@ -1,4 +1,6 @@
 function Remove-LockpathRecord {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'High',
         PositionalBinding = $false,

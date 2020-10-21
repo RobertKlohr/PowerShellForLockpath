@@ -1,4 +1,6 @@
-function Find-LpField {
+function Find-LockpathField {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

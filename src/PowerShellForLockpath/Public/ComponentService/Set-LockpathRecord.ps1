@@ -1,4 +1,6 @@
-function verb-noun {
+function Set-LockpathRecord {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

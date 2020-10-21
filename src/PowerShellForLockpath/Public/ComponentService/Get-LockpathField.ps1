@@ -37,7 +37,8 @@ function Get-LockpathField {
         [Parameter(
             Mandatory = $true,
             Position = 0,
-            ValueFromPipeline = $true)]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
         [int] $FieldId

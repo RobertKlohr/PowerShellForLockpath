@@ -38,9 +38,10 @@
         [Parameter(
             Mandatory = $true,
             Position = 0,
-            ValueFromPipeline = $true)]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("Alias")]
-        [ValidateRange("Positive")]
+        [ValidateLength(1, 256)]
         [string] $ComponentAlias
     )
 

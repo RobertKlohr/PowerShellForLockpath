@@ -1,5 +1,8 @@
-﻿#FIX add redact and exclude parameters to configuration
-function Write-LockpathInvocationLog {
+﻿function Write-LockpathInvocationLog {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
+    #FIXME add redact and exclude parameters to configuration
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,

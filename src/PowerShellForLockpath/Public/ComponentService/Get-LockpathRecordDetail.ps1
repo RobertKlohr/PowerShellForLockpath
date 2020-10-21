@@ -37,14 +37,16 @@ function Get-LockpathRecordDetail {
     param(
         [Parameter(
             Mandatory = $true,
-            ValueFromPipeline = $true)]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
         [int] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
-            ValueFromPipeline = $true)]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
         [int] $RecordId,

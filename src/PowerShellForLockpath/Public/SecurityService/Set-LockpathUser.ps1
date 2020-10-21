@@ -1,5 +1,7 @@
 #TODO Ensure $Update array is converted into correctly formatted JSON
 function Set-LockpathUser {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,

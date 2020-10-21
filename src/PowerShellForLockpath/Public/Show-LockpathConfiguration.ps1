@@ -1,4 +1,6 @@
 ﻿function Show-LockpathConfiguration {
+    #TODO Create Help Section
+    #TODO Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
