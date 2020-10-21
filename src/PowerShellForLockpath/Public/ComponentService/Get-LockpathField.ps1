@@ -1,32 +1,66 @@
 function Get-LockpathField {
+    <#
+.SYNOPSIS
+    Returns details for a fields specified by it's Id.
+.DESCRIPTION
+    Returns available fields for a given component. The field Id may be found by using Get-LockpathFieldList.
+.PARAMETER FieldId
+    Specifies the Id number of the field as a positive integer.
+.EXAMPLE
+    Get-LockpathField -FieldId 7
+.EXAMPLE
+    Get-LockpathField 7
+.EXAMPLE
+    7 | Get-LockpathField
+.EXAMPLE
+    7,8,9 | Get-LockpathField
+.EXAMPLE
+    $fieldObject | Get-LockpathField
+    If $fieldObject has an property called FieldId that value is automatically passed as a parameter.
+.INPUTS
+    System.Uint32.
+.OUTPUTS
+    System.String.
+.NOTES
+    The authentication account must have Read General Access permissions for the specific component and field.
+.LINK
+    https://github.com/RobertKlohr/PowerShellForLockpath
+#>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(1, [int]::MaxValue)]
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true)]
+        [Alias("Id")]
+        [ValidateRange("Positive")]
         [int] $FieldId
     )
 
     begin {
-        Write-LockpathInvocationLog
-        $params = @{ }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    }
+
+    process {
         $params = @{
             'UriFragment' = "SecurityService/GetField?Id=$FieldId"
             'Method'      = 'GET'
             'Description' = "Getting Field with Field Id: $FieldId"
         }
-    }
-
-    process {
-        $result = Invoke-LockpathRestMethod @params
+        if ($PSCmdlet.ShouldProcess("Getting field with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting field with Id:')) {
+            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        }
     }
 
     end {
-        return $result
     }
 }

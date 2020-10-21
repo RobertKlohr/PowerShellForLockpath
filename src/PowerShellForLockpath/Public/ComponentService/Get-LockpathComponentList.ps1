@@ -25,25 +25,18 @@
 
     param()
 
-    begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
+    $params = @{
+        'UriFragment' = 'ComponentService/GetComponentList'
+        'Method'      = 'GET'
+        'Description' = "Getting component list."
     }
 
-    process {
-        $params = @{
-            'UriFragment' = 'ComponentService/GetComponentList'
-            'Method'      = 'GET'
-            'Description' = "Getting component list."
-        }
-
-        if ($PSCmdlet.ShouldProcess("Getting component list.", '', 'Getting component list.')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
-        }
-    }
-
-    end {
+    if ($PSCmdlet.ShouldProcess("Getting component list.", '', 'Getting component list.')) {
+        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        return $result
+    } else {
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
     }
 }
