@@ -1,79 +1,68 @@
-#TODO setup for filters
 function Get-LockpathRecordCount {
-    [CmdletBinding()]
+    <#
+.SYNOPSIS
+    Return the number of records in a given component.
+.DESCRIPTION
+    Return the number of records in a given component. TFilters may be applied to return the count of records
+    meeting a given criteria. This function may be used to help determine the amount of records before retrieving
+    the records themselves.
+.PARAMETER ComponentId
+    Specifies the Id number of the component as a positive integer.
+.PARAMETER Filters
+    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+    groups meeting the selected criteria. Remove all filters to return a list of all groups.
+.EXAMPLE
+    Get-LockpathRecordCount -ComponentId 3
+.EXAMPLE
+    Get-LockpathRecordCount 3
+.EXAMPLE
+    Get-LockpathRecordCount -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
+.INPUTS
+    System.Array.
+.OUTPUTS
+    System.Int32.
+.NOTES
+    The authentication account must have Read Administrative Access permissions to administer users.
+.LINK
+    https://github.com/RobertKlohr/PowerShellForLockpath
+#>
+
+    [CmdletBinding(
+        ConfirmImpact = 'Low',
+        PositionalBinding = $false,
+        SupportsShouldProcess = $true)]
     [OutputType('System.Int32')]
 
-    #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
     param(
-        # Full URi to the Lockpath instance.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        $Session,
-        # Id of the component
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [int]
-        $ComponentId,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [int]
-        $FieldPath,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateSet(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 10001, 10002, 10003, 10004, 10005)]
-        [int]
-        $FilterType,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $Value
+        [Parameter(
+            Mandatory = $true,
+            Position = 0)]
+        [Alias("Id")]
+        [ValidateRange("Positive")]
+        [int] $ComponentId,
+
+        [Alias("Filter")]
+        [array]$Filters = @()
     )
 
-    begin {
-        $ResourcePath = "/ComponentService/GetRecordCount"
-        $Method = 'POST'
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-        #TODO: Implement Filters
-        #TODO: Exclude value tags from filter types 13, 14, 15, 16
-
-        $Body = [ordered]@{
-            "componentId" = $ComponentId
-            "filters"     = @(
-                [ordered]@{
-                    "FieldPath"  = @(
-                        $FieldPath
-                    )
-                    "FilterType" = $FilterType
-                    "Value"      = $Value
-                }
-            )
-        } | ConvertTo-Json -Depth 99
-
-        $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
-            WebSession = $LpSession
-            Method     = $Method
-            Body       = $Body
-        }
+    $Body = @{
+        'componentId' = $ComponentId
+        'filters'     = $Filters
     }
 
-    process {
-        try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
-        } catch {
-            # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
-            $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-                (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
-                'Invoke-RestMethod',
-                [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-                $parameters
-            )
-            $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-            $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-            $PSCmdlet.ThrowTerminatingError($ErrorRecord);
-        }
+    $params = @{
+        'UriFragment' = 'ComponentService/GetRecordCount'
+        'Method'      = 'POST'
+        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth 10
     }
 
-    end {
-        Return $Response
+    if ($PSCmdlet.ShouldProcess("Getting record count for: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", "component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", 'Getting record count for:')) {
+        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        return $result
+    } else {
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
     }
 }

@@ -51,9 +51,9 @@ function Get-LockpathRecord {
         $params = @{
             'UriFragment' = "ComponentService/GetRecord?componentId=$ComponentId&recordId=$RecordId"
             'Method'      = 'GET'
-            'Description' = "Getting fields for record with component Id: $ComponentId & record Id: $RecordId"
+            'Description' = "Getting record with component Id: $ComponentId & record Id: $RecordId"
         }
-        if ($PSCmdlet.ShouldProcess("Getting fields for record with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId", "component Id $ComponentId & record Id: $RecordId", 'Getting fields for record with:')) {
+        if ($PSCmdlet.ShouldProcess("Getting record with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId", "component Id $ComponentId & record Id: $RecordId", 'Getting record with:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

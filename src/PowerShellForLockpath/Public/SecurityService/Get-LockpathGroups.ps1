@@ -45,7 +45,7 @@
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
-        [array]$Filters
+        [array]$Filters = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false

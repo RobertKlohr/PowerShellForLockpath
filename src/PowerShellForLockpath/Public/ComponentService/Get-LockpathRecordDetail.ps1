@@ -14,9 +14,9 @@ function Get-LockpathRecordDetail {
 .PARAMETER RecordId
     Specifies the Id number of the record as a positive integer.
 .EXAMPLE
-    Get-LockpathRecordDetail -ComponentId 2 RecordId -1
+    Get-LockpathRecordDetail -ComponentId 2 -RecordId 1
 .EXAMPLE
-    Get-LockpathRecordDetail -ComponentId 2 RecordId -1 -ExtractRichTextImages True
+    Get-LockpathRecordDetail -ComponentId 2 -RecordId 1 -ExtractRichTextImages True
 .INPUTS
     System.Uint32.
 .OUTPUTS
@@ -63,7 +63,7 @@ function Get-LockpathRecordDetail {
             'Method'      = 'GET'
             'Description' = "Getting Detail Record with component Id: $ComponentId, record Id: $RecordId and extract rich text images: $ExtractRichTextImages"
         }
-        if ($PSCmdlet.ShouldProcess("Getting record details for record with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", "component Id $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", 'Getting record details for record with:')) {
+        if ($PSCmdlet.ShouldProcess("Getting record details for record with: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", "component Id: $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", 'Getting record details for record with:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

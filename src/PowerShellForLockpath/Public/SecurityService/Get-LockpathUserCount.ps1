@@ -1,9 +1,9 @@
 function Get-LockpathUserCount {
     <#
 .SYNOPSIS
-    Returns a count of users.
+    Returns the number of users.
 .DESCRIPTION
-    Returns a count of users. The count does not include Deleted users and can include non-Lockpath user
+    Returns the number of users. The count does not include Deleted users and can include non-Lockpath user
     accounts, such as Vendor Contacts.
 .PARAMETER Filters
     The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
@@ -29,28 +29,28 @@ function Get-LockpathUserCount {
 
     param(
         [Alias("Filter")]
-        [array]$Filters
+        [array]$Filters = @()
     )
-
-    #TODO Document in examples a filter with two sets of criteria
-    # (@{Shortname = "AccountType"; FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value =
-    # "true" })
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $Body = @{
-    }
-
     If ($Filters.Count -gt 0) {
+        $Body = @{}
         $Body.Add('filters', $Filters)
     }
 
     $params = @{
         'UriFragment' = 'SecurityService/GetUserCount'
         'Method'      = 'POST'
-        'Description' = "Getting User Count with Filter: $($Filters | ConvertTo-Json -Compress)"
+        'Description' = "Getting user count with filter: $($Filters | ConvertTo-Json -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth 10
     }
+
+    #TODO There is a bug in the Lockpath GetUserCount API (NAVEX Global ticket 01817531)
+    # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
+    # and to then wrap it in a set of brackets.
+    # When the bug is fixed we can delete the next line.
+    $params.Body = "[$($Filters | ConvertTo-Json -Depth 10)]"
 
     if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
         $result = Invoke-LockpathRestMethod @params -Confirm:$false

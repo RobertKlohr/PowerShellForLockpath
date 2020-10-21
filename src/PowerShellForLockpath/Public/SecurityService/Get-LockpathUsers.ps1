@@ -15,7 +15,7 @@ function Get-LockpathUsers {
 .EXAMPLE
     Get-LockpathUsers
 .EXAMPLE
-    Get-LockpathUsers -PageIndex 1 -PageSize 100
+    Get-LockpathUsers -PageIndex 0 -PageSize 100
 .EXAMPLE
     Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 .EXAMPLE
@@ -47,7 +47,7 @@ function Get-LockpathUsers {
         [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
-        [array]$Filters
+        [array]$Filters = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
