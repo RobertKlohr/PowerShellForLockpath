@@ -1,6 +1,5 @@
-function Get-LockpathLookupReportColumnFields {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Get-LockpathLookupReportColumnFields {
+    #FIXME Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,

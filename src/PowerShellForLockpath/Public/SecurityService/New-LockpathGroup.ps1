@@ -1,6 +1,5 @@
-function New-LockpathGroup {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function New-LockpathGroup {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

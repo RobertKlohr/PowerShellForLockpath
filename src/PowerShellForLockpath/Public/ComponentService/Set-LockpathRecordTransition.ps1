@@ -1,6 +1,5 @@
-function Set-LockpathRecordTransition {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Set-LockpathRecordTransition {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

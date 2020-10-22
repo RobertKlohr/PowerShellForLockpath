@@ -1,6 +1,5 @@
-function Get-LockpathGroupsDetails {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Get-LockpathGroupsDetails {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

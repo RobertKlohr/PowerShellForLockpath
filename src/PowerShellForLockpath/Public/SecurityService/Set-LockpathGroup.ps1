@@ -1,6 +1,5 @@
-function Set-LockpathGroup {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Set-LockpathGroup {
+    #FIXME Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,

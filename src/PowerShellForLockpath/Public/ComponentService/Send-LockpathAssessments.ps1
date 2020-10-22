@@ -1,6 +1,5 @@
-function Send-LockpathAssessments {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Send-LockpathAssessments {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

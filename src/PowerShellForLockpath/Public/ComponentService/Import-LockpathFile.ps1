@@ -1,6 +1,5 @@
-function Import-LockpathFile {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Import-LockpathFile {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 

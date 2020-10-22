@@ -1,6 +1,5 @@
-function Send-LockpathLogin {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Send-LockpathLogin {
+    #FIXME Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,

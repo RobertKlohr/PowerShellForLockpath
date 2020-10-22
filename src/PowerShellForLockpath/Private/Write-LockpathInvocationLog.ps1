@@ -1,6 +1,5 @@
 ﻿function Write-LockpathInvocationLog {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+    #FIXME Update to new coding standards
     #FIXME add redact and exclude parameters to configuration
 
     [CmdletBinding(

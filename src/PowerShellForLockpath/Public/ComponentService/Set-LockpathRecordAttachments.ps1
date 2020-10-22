@@ -1,6 +1,5 @@
-function Set-LockpathRecordAttachments {
-    #TODO Create Help Section
-    #TODO Update to new coding standards
+﻿function Set-LockpathRecordAttachments {
+    #FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 
