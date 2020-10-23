@@ -50,7 +50,7 @@ function Get-LockpathField {
 
     process {
         $params = @{
-            'UriFragment' = "SecurityService/GetField?Id=$FieldId"
+            'UriFragment' = "ComponentService/GetField?Id=$FieldId"
             'Method'      = 'GET'
             'Description' = "Getting Field with Field Id: $FieldId"
         }

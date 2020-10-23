@@ -10,7 +10,7 @@ function Get-LockpathRecord {
 .PARAMETER RecordId
     Specifies the Id number of the record as a positive integer.
 .EXAMPLE
-    Get-LockpathRecord -ComponentId 2 RecordId -1
+    Get-LockpathRecord -ComponentId 2 -RecordId 1
 .INPUTS
     System.Uint32.
 .OUTPUTS
