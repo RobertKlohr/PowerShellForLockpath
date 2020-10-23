@@ -38,7 +38,8 @@ function Get-LockpathFieldList {
         [Parameter(
             Mandatory = $true,
             Position = 0,
-            ValueFromPipeline = $true)]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
         [int] $ComponentId
@@ -54,7 +55,7 @@ function Get-LockpathFieldList {
             'Method'      = 'GET'
             'Description' = "Getting fields from component with Id: $ComponentId"
         }
-        if ($PSCmdlet.ShouldProcess("Getting field list for component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting field list for component with Id:')) {
+        if ($PSCmdlet.ShouldProcess("Getting field list from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting field list from component with Id:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
