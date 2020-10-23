@@ -21,7 +21,6 @@
     System.Uint32.
 .OUTPUTS
     System.String.
-    Get-LockpathGroup returns a user record formatted as a JSON string.
 .NOTES
     The authentication account must have Read Administrative Access permissions to administer users.
 .LINK

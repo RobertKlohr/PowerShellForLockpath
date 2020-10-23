@@ -54,7 +54,6 @@
     # use an empty array if there are no functions to export.
     FunctionsToExport    = @(
         'Find-LockpathField',
-        'Get-LockpathAvailableLookupRecords',
         'Get-LockpathComponent',
         'Get-LockpathComponentByAlias',
         'Get-LockpathComponentList',
@@ -70,6 +69,7 @@
         'Get-LockpathRecordCount',
         'Get-LockpathRecordDetail',
         'Get-LockpathRecords',
+        'Get-LockpathRecordsAvailableForLookup',
         'Get-LockpathRecordsDetails',
         'Get-LockpathUser',
         'Get-LockpathUserCount',

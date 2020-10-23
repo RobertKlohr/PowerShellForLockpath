@@ -19,6 +19,7 @@ function Get-LockpathRecords {
 .EXAMPLE
     Get-LockpathRecords -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
 .INPUTS
+    System.Array.
     System.Uint32.
 .OUTPUTS
     System.String.

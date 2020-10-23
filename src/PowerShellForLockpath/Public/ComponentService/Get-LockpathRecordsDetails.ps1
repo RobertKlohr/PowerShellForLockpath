@@ -18,9 +18,9 @@ function Get-LockpathRecordsDetails {
     The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
     records meeting the selected criteria. Remove all filters to return a list of all records.
 .PARAMETER FieldIds
-    Specifies the Id number of the component as a positive integer.
+    Specifies the Id numbers of the field as a an array of positive integers.
 .PARAMETER SortOrder
-    Specifies the Id number of the component as a positive integer.
+    Specifies the field path Id and sort order as an array.
 .EXAMPLE
     Get-LockpathRecordsDetails -ComponentId 3
 .EXAMPLE
@@ -34,8 +34,8 @@ function Get-LockpathRecordsDetails {
 .EXAMPLE
     Get-LockpathRecordsDetails -ComponentId 3 -FieldIds @(1,2,3) -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'} -SortOrder @{'FieldPath'= @(84); 'Ascending'='true'}
 .INPUTS
+    System.Array.
     System.Uint32.
-    System.String.
 .OUTPUTS
     System.String.
 .NOTES
