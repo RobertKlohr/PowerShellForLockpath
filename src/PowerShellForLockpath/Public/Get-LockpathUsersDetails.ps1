@@ -4,20 +4,23 @@
     [OutputType('System.Int32')]
 
     param(
-        [array] $Filter = $null,
+        [Alias("Index")]
+        [ValidateRange("NonNegative")]
+        [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Alias("Size")]
+        [ValidateRange("Positive")]
+        [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [ValidateRange(1, [int]::MaxValue)]
-        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
+        [Alias("Filter")]
+        [array]$Filters = @()
     )
 
     #TODO add stopwatch to this cmdlet
 
     # %%%%%%%%%%
     # Hard coded filter for testing
-    [array] $Filter = @(
+    [array] $Filters = @(
         [ordered]@{
             'Field'      = [ordered]@{
                 'ShortName' = 'Active'

@@ -1,40 +1,73 @@
-﻿#TODO Ensure $Update array is converted into correctly formatted JSON
-function Set-LockpathUser {
-    #FIXME Update to new coding standards
+﻿function Set-LockpathUser {
+    <#
+    .SYNOPSIS
+        Updates a user account.
+
+    .DESCRIPTION
+        Updates a user account.  All attributes that are updated are overwritten with the new value.
+
+    .PARAMETER Attributes
+        The list of fields and values to change as an array. The list of attributes must include the Id field and
+        the user Id as the value for the user being updated. The field names in the array are case sensitive.
+
+    .EXAMPLE
+        Set-LockpathUser -Attributes @{'Id' = '6'; 'Manager' = @{'Id'= '10'}}
+
+    .EXAMPLE
+        Set-LockpathUser -Attributes @{'Id' = '6'; 'Groups' = @(@{'Id'= '7'}@{'Id'= '8'})}
+
+    .INPUTS
+        System.Array
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read and Update Administrative Access permissions to administer users.
+        For vendor contacts, the authentication account must also have the Read and Update General Access to Vendor
+        Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
     [CmdletBinding(
-        ConfirmImpact = 'Medium',
+        ConfirmImpact = 'High',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int] $UserId,
-
-        [array] $Update = ''
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [array] $Attributes
     )
 
     begin {
-        Write-LockpathInvocationLog
-        $params = @{ }
-        $params = @{
-            'UriFragment' = "SecurityService/UpdateUser"
-            'Method'      = 'POST'
-            'Description' = "Updating User with User Id: $UserId"
-            'Body'        = [ordered]@{
-                'Id'      = $UserId
-                'filters' = $Update
-            } | ConvertTo-Json -Depth 10
-        }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
-        $result = Invoke-LockpathRestMethod @params
+
+        $UserId = $Attributes.Id
+
+        $params = @{
+            'UriFragment' = "SecurityService/UpdateUser"
+            'Method'      = 'POST'
+            'Description' = "Updating user with Id: $UserId and values $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth 10
+        }
+        if ($PSCmdlet.ShouldProcess("Updating user with user with Id $($UserId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating user with user with Id $($UserId) and settings:")) {
+            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        }
     }
 
     end {
-        return $result
     }
 }

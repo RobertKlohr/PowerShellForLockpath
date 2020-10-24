@@ -8,13 +8,21 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int] $ComponentId,
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Component")]
+        [ValidateRange("Positive")]
+        [uint]      $ComponentId,
 
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int] $RecordId
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Record")]
+        [ValidateRange("Positive")]
+        [uint]      $RecordId
     )
 
     begin {

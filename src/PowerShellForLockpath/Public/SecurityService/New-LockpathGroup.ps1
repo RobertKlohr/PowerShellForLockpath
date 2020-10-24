@@ -1,51 +1,65 @@
 ﻿function New-LockpathGroup {
-    #FIXME Update to new coding standards
-    [CmdletBinding()]
-    [OutputType('System.Int32')]
+    <#
+    .SYNOPSIS
+        Creates a group.
+
+    .DESCRIPTION
+        Creates a group. The Name attribute is required when creating a group.
+
+    .PARAMETER Attributes
+        The list of fields and values to change as an array. The field names in the array are case sensitive.
+
+    .EXAMPLE
+        New-LockpathGroup -Attributes @{'Name' = 'API New Group'}
+
+    .INPUTS
+        System.Array
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read and Update Administrative Access permissions to administer groups.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
+    [CmdletBinding(
+        ConfirmImpact = 'High',
+        PositionalBinding = $false,
+        SupportsShouldProcess = $true)]
+    [OutputType('System.String')]
 
     param(
-        # Full URi to the Lockpath instance.
-        [Parameter(ValueFromPipeline = $true)]
-        $Session = 0,
-        # The fields used to populate the group configuration.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $Fields = 10000
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [array] $Attributes
     )
 
     begin {
-        $ResourcePath = "/SecurityService/CreateGroup"
-        $Body = @{
-            "Fields" = $Fields
-        } | ConvertTo-Json
-
-        $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
-            WebSession = $LpSession
-            Method     = "POST"
-            Body       = $Body
-        }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
-        try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
-        } catch {
-            # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
-            $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-                (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
-                'Invoke-RestMethod',
-                [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-                $parameters
-            )
-            $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-            $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-            $PSCmdlet.ThrowTerminatingError($ErrorRecord);
+
+        $params = @{
+            'UriFragment' = "SecurityService/CreateGroup"
+            'Method'      = 'POST'
+            'Description' = "Creating group with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth 10
+        }
+        if ($PSCmdlet.ShouldProcess("Creating group with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Creating group with attributes:")) {
+            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
         }
     }
 
     end {
-        Return $Response
     }
 }

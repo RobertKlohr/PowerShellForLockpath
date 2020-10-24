@@ -1,33 +1,49 @@
 function Get-LockpathRecords {
     <#
-.SYNOPSIS
-    Return the title/default field for a set of records within a chosen component.
-.DESCRIPTION
-    Return the title/default field for a set of records within a chosen component. Filters may be applied to return only the records meeting selected criteria.
-.PARAMETER PageIndex
-    The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set in the configuration.
-.PARAMETER PageSize
-    The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in the configuration.
-.PARAMETER ComponentId
-    Specifies the Id number of the component as a positive integer.
-.PARAMETER Filters
-    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the records meeting the selected criteria. Remove all filters to return a list of all records.
-.EXAMPLE
-    Get-LockpathRecords -ComponentId 3
-.EXAMPLE
-    Get-LockpathRecords 3
-.EXAMPLE
-    Get-LockpathRecords -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
-.INPUTS
-    System.Array.
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read General Access permissions for the specific component, record and field.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Return the title/default field for a set of records within a chosen component.
+
+    .DESCRIPTION
+        Return the title/default field for a set of records within a chosen component. Filters may be applied to
+        return only the records meeting selected criteria.
+
+    .PARAMETER PageIndex
+        The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
+        in the configuration.
+
+    .PARAMETER PageSize
+        The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in
+        the configuration.
+
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER Filters
+        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+        records meeting the selected criteria. Remove all filters to return a list of all records.
+
+    .EXAMPLE
+        Get-LockpathRecords -ComponentId 3
+
+    .EXAMPLE
+        Get-LockpathRecords 3
+
+    .EXAMPLE
+        Get-LockpathRecords -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
+
+    .INPUTS
+        System.Array System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read General Access permissions for the specific component, record and
+        field.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -41,15 +57,15 @@ function Get-LockpathRecords {
             Position = 0)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [int] $ComponentId,
+        [uint]      $ComponentId,
 
         [Alias("index")]
         [ValidateRange("NonNegative")]
-        [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [uint]      $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias("size")]
         [ValidateRange("Positive")]
-        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [uint]      $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
         [array]$Filters = @()

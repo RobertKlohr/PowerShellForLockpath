@@ -1,5 +1,27 @@
 ﻿function Get-LockpathCredential {
-    #FIXME Update to new coding standards
+    <#
+    .SYNOPSIS
+        Retrieves the API credentials for use in the rest of the module.
+
+    .DESCRIPTION
+        Retrieves the API credentials for use in the rest of the module.
+
+    .PARAMETER Path
+        Path to the file storing the API credentials. If not provided defaults to the path in the configuration file.
+
+    .INPUTS
+        System.String
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        Private function.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
@@ -11,13 +33,13 @@
         [string] $Path = $(Get-LockpathConfiguration -Name "credentialFilePath")
     )
 
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $Credential = Read-LockpathCredential -Path $Path
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = "The password was not provided in the password field."
-        Write-LockpathLog -Message $message -Level Error
+        Write-LockpathLog -Message $message -Level Error -Confirm:$false -WhatIf:$false
         throw $message
     }
 

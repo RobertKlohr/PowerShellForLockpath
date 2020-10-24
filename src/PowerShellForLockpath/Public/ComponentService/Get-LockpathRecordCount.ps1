@@ -1,31 +1,41 @@
 function Get-LockpathRecordCount {
     <#
-.SYNOPSIS
-    Return the number of records in a given component.
-.DESCRIPTION
-    Return the number of records in a given component. TFilters may be applied to return the count of records
-    meeting a given criteria. This function may be used to help determine the amount of records before retrieving
-    the records themselves.
-.PARAMETER ComponentId
-    Specifies the Id number of the component as a positive integer.
-.PARAMETER Filters
-    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-    groups meeting the selected criteria. Remove all filters to return a list of all groups.
-.EXAMPLE
-    Get-LockpathRecordCount -ComponentId 3
-.EXAMPLE
-    Get-LockpathRecordCount 3
-.EXAMPLE
-    Get-LockpathRecordCount -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
-.INPUTS
-    System.Array.
-.OUTPUTS
-    System.Int32.
-.NOTES
-    The authentication account must have Read Administrative Access permissions to administer users.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Return the number of records in a given component.
+
+    .DESCRIPTION
+        Return the number of records in a given component. TFilters may be applied to return the count of records
+        meeting a given criteria. This function may be used to help determine the amount of records before
+        retrieving the records themselves.
+
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER Filters
+        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+
+    .EXAMPLE
+        Get-LockpathRecordCount -ComponentId 3
+
+    .EXAMPLE
+        Get-LockpathRecordCount 3
+
+    .EXAMPLE
+        Get-LockpathRecordCount -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
+
+    .INPUTS
+        System.Array
+
+    .OUTPUTS
+        System.Int32.
+
+    .NOTES
+        The authentication account must have Read Administrative Access permissions to administer users.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -39,7 +49,7 @@ function Get-LockpathRecordCount {
             Position = 0)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [int] $ComponentId,
+        [uint]      $ComponentId,
 
         [Alias("Filter")]
         [array]$Filters = @()

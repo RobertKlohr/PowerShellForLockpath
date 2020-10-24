@@ -1,5 +1,5 @@
 ﻿function Set-LockpathConfiguration {
-        #FIXME Update to new coding standards
+    #FIXME Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
@@ -13,7 +13,7 @@
         [string] $InstanceName,
 
         [ValidateRange(0, 65535)]
-        [int] $InstancePort,
+        [uint]      $InstancePort,
 
         [string] $InstancePortocol,
 
@@ -23,11 +23,11 @@
 
         [switch] $LogTimeAsUtc,
 
-        [int] $PageIndex,
+        [uint]      $PageIndex,
 
-        [int] $PageSize,
+        [uint]      $PageSize,
 
-        [int] $RetryDelaySeconds,
+        [uint]      $RetryDelaySeconds,
 
         [boolean] $RunAsSystem,
 
@@ -36,7 +36,7 @@
         [string] $UserAgent,
 
         [ValidateRange(0, 3600)]
-        [int] $WebRequestTimeoutSec,
+        [uint]      $WebRequestTimeoutSec,
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )

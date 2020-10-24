@@ -1,33 +1,47 @@
 ﻿function Get-LockpathGroups {
     <#
-.SYNOPSIS
-    Returns a list of groups and available fields.
-.DESCRIPTION
-    Returns a list of groups and available fields.
-.PARAMETER PageIndex
-    The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set in the configuration.
-.PARAMETER PageSize
-    The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in the configuration.
-.PARAMETER Filters
-    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
-.EXAMPLE
-    Get-LockpathGroups
-.EXAMPLE
-    Get-LockpathGroups -PageIndex 0 -PageSize 100
-.EXAMPLE
-    Get-LockpathGroups -Filter @{'Field'= @{'ShortName'='BusinessUnit'}; 'FilterType'='5'; 'Value'='False'}
-.EXAMPLE
-    Get-LockpathGroups -PageIndex 0 -PageSize 100 -Filter @{'Field'= @{'ShortName'='BusinessUnit'}; 'FilterType'='5'; 'Value'='False'}
-.INPUTS
-    System.Array.
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read Administrative Access permissions to administer groups.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns a list of groups and available fields.
+
+    .DESCRIPTION
+        Returns a list of groups and available fields.
+
+    .PARAMETER PageIndex
+        The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
+        in the configuration.
+
+    .PARAMETER PageSize
+        The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in
+        the configuration.
+
+    .PARAMETER Filters
+        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+
+    .EXAMPLE
+        Get-LockpathGroups
+
+    .EXAMPLE
+        Get-LockpathGroups -PageIndex 0 -PageSize 100
+
+    .EXAMPLE
+        Get-LockpathGroups -Filter @{'Field'= @{'ShortName'='BusinessUnit'}; 'FilterType'='5'; 'Value'='False'}
+
+    .EXAMPLE
+        Get-LockpathGroups -PageIndex 0 -PageSize 100 -Filter @{'Field'= @{'ShortName'='BusinessUnit'}; FilterType'='5'; 'Value'='False'}
+
+    .INPUTS
+        System.Array, System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read Administrative Access permissions to administer groups.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -38,11 +52,11 @@
     param(
         [Alias("Index")]
         [ValidateRange("NonNegative")]
-        [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias("Size")]
         [ValidateRange("Positive")]
-        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
         [array]$Filters = @()

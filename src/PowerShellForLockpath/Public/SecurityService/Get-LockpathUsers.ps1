@@ -1,35 +1,49 @@
 function Get-LockpathUsers {
     <#
-.SYNOPSIS
-    Returns a list of users and available fields.
-.DESCRIPTION
-    Returns a list of users and available fields. The list does not include Deleted users and can include
-    non-Lockpath user accounts. Use filters to return only the users meeting the selected criteria. Remove all
-    filters to return a list of all users including deleted non-Lockpath user accounts.
-.PARAMETER PageIndex
-    The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set in the configuration.
-.PARAMETER PageSize
-    The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in the configuration.
-.PARAMETER Filters
-    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
-.EXAMPLE
-    Get-LockpathUsers
-.EXAMPLE
-    Get-LockpathUsers -PageIndex 0 -PageSize 100
-.EXAMPLE
-    Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
-.EXAMPLE
-    Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
-.INPUTS
-    System.Array.
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read Administrative Access permissions to administer users.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns a list of users and available fields.
+
+    .DESCRIPTION
+        Returns a list of users and available fields. The list does not include Deleted users and can include
+        non-Lockpath user accounts. Use filters to return only the users meeting the selected criteria. Remove all
+        filters to return a list of all users including deleted non-Lockpath user accounts.
+
+    .PARAMETER PageIndex
+        The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
+        in the configuration.
+
+    .PARAMETER PageSize
+        The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in
+        the configuration.
+
+    .PARAMETER Filters
+        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+
+    .EXAMPLE
+        Get-LockpathUsers
+
+    .EXAMPLE
+        Get-LockpathUsers -PageIndex 0 -PageSize 100
+
+    .EXAMPLE
+        Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+
+    .EXAMPLE
+        Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+
+    .INPUTS
+        System.Array System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read Administrative Access permissions to administer users.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -40,11 +54,11 @@ function Get-LockpathUsers {
     param(
         [Alias("index")]
         [ValidateRange("NonNegative")]
-        [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [uint]      $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias("size")]
         [ValidateRange("Positive")]
-        [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [uint]      $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
         [array]$Filters = @()

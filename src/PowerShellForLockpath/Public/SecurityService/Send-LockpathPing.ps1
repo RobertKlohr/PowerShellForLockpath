@@ -1,20 +1,20 @@
 function Send-LockpathPing {
     <#
-.SYNOPSIS
-    Refreshes a valid session.
-.DESCRIPTION
-    Refreshes a valid session.
-.EXAMPLE
-    Send-LockpathPing
-.INPUTS
-    None.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have access to the API.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Refreshes a valid session.
+    .DESCRIPTION
+        Refreshes a valid session.
+    .EXAMPLE
+        Send-LockpathPing
+    .INPUTS
+        None.
+    .OUTPUTS
+        System.String
+    .NOTES
+        The authentication account must have access to the API.
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

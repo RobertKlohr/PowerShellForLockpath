@@ -1,57 +1,71 @@
 ﻿function Set-LockpathGroup {
-    #FIXME Update to new coding standards
+    <#
+    .SYNOPSIS
+        Updates a group.
+
+    .DESCRIPTION
+        Updates a group.  All attributes that are updated are overwritten with the new value.
+
+    .PARAMETER Attributes
+        The list of fields and values to change as an array. The list of attributes must include the Id field and
+        the group Id as the value for the group being updated. The field names in the array are case sensitive.
+
+    .EXAMPLE
+        Set-LockpathGroup -Attributes @{'Id' = '7'; 'Name' = 'API Update Group'}
+
+    .EXAMPLE
+        Set-LockpathGroup -Attributes @{'Id' = '7'; 'Name' = 'API Update Group'; 'Users' = @(@{'Id'= '6'},@{'Id'= '10'}}
+
+    .INPUTS
+        System.Array
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read and Update Administrative Access permissions to administer groups.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
     [CmdletBinding(
-        ConfirmImpact = 'Medium',
+        ConfirmImpact = 'High',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        # Full URi to the Lockpath instance.
-        [Parameter(ValueFromPipeline = $true)]
-        $Session = 0,
-        # The fields used to populate the group configuration.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $Fields = 10000
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [array] $Attributes
     )
 
     begin {
-        $ResourcePath = "/SecurityService/UpdateGroup"
-        $Method = 'POST'
-
-        $Body = @{
-            "Fields" = $Fields
-        } | ConvertTo-Json
-
-        $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
-            WebSession = $LpSession
-            Method     = $Method
-            Body       = $Body
-        }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
-        try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
-        } catch {
-            # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
-            $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-                (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
-                'Invoke-RestMethod',
-                [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-                $parameters
-            )
-            $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-            $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-            $PSCmdlet.ThrowTerminatingError($ErrorRecord);
+
+        $GroupId = $Attributes.Id
+
+        $params = @{
+            'UriFragment' = "SecurityService/UpdateGroup"
+            'Method'      = 'POST'
+            'Description' = "Updating group with Id: $GroupId and values $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth 10
+        }
+        if ($PSCmdlet.ShouldProcess("Updating group with group Id $($GroupId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating group with group with Id $($GroupId) and settings:")) {
+            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
         }
     }
 
     end {
-        Return $Response
     }
 }

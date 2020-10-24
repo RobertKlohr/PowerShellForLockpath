@@ -1,32 +1,41 @@
 function Get-LockpathRecordDetail {
     <#
-.SYNOPSIS
-    Retrieves record information based on the provided component ID and record ID, with lookup field report
-    details.
-.DESCRIPTION
-    Retrieves record information based on the provided component ID and record ID, with lookup field report
-    details. Lookup field records will detail information for fields on their report definition, if one is defined.
-    Using the optional parameter -ExtractRichTextImages you can extract images contained in rich text fields.
-    The component Id may be found by using Get-LockpathComponentList. The record Id may be found by using
-    Get-LockpathRecords.
-.PARAMETER ComponentId
-    Specifies the Id number of the component as a positive integer.
-.PARAMETER RecordId
-    Specifies the Id number of the record as a positive integer.
-.EXAMPLE
-    Get-LockpathRecordDetail -ComponentId 2 -RecordId 1
-.EXAMPLE
-    Get-LockpathRecordDetail -ComponentId 2 -RecordId 1 -ExtractRichTextImages True
-.INPUTS
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read General Access permissions for the specific component, record and
-    field.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Retrieves record information based on the provided component ID and record ID, with lookup field report
+        details.
+
+    .DESCRIPTION
+        Retrieves record information based on the provided component ID and record ID, with lookup field report
+        details. Lookup field records will detail information for fields on their report definition, if one is
+        defined. Using the optional parameter -ExtractRichTextImages you can extract images contained in rich text
+        fields. The component Id may be found by using Get-LockpathComponentList. The record Id may be found by
+        using Get-LockpathRecords.
+
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER RecordId
+        Specifies the Id number of the record as a positive integer.
+
+    .EXAMPLE
+        Get-LockpathRecordDetail -ComponentId 2 -RecordId 1
+
+    .EXAMPLE
+        Get-LockpathRecordDetail -ComponentId 2 -RecordId 1 -ExtractRichTextImages True
+
+    .INPUTS
+        System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read General Access permissions for the specific component, record and
+        field.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -41,7 +50,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
-        [int] $ComponentId,
+        [uint]      $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -49,7 +58,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [int] $RecordId,
+        [uint]      $RecordId,
 
         [Parameter(ValueFromPipeline = $true)]
         [switch] $ExtractRichTextImages

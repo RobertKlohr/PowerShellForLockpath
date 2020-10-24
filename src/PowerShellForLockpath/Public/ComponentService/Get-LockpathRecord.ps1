@@ -1,25 +1,34 @@
 function Get-LockpathRecord {
     <#
-.SYNOPSIS
-    Returns the complete set of fields for a given record within a component.
-.DESCRIPTION
-    Returns the complete set of fields for a given record within a component. The component Id may be
-    found by using Get-LockpathComponentList. The record Id may be found by using Get-LockpathRecords.
-.PARAMETER ComponentId
-    Specifies the Id number of the component as a positive integer.
-.PARAMETER RecordId
-    Specifies the Id number of the record as a positive integer.
-.EXAMPLE
-    Get-LockpathRecord -ComponentId 2 -RecordId 1
-.INPUTS
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read General Access permissions for the specific component, record and field.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns the complete set of fields for a given record within a component.
+
+    .DESCRIPTION
+        Returns the complete set of fields for a given record within a component. The component Id may be found by
+        using Get-LockpathComponentList. The record Id may be found by using Get-LockpathRecords.
+
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER RecordId
+        Specifies the Id number of the record as a positive integer.
+
+    .EXAMPLE
+        Get-LockpathRecord -ComponentId 2 -RecordId 1
+
+    .INPUTS
+        System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read General Access permissions for the specific component, record and
+        field.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -34,7 +43,7 @@ function Get-LockpathRecord {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
-        [int] $ComponentId,
+        [uint]      $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -42,7 +51,7 @@ function Get-LockpathRecord {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [int] $RecordId
+        [uint]      $RecordId
     )
 
     begin {

@@ -23,7 +23,7 @@
 
         [string] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
 
-        [int] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
+        [uint]      $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
 
         [string] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
 

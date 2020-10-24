@@ -1,25 +1,34 @@
 function Get-LockpathUserCount {
     <#
-.SYNOPSIS
-    Returns the number of users.
-.DESCRIPTION
-    Returns the number of users. The count does not include Deleted users and can include non-Lockpath user
-    accounts, such as Vendor Contacts.
-.PARAMETER Filters
-    The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the groups meeting the selected criteria. Remove all filters to return a list of all groups.
-.EXAMPLE
-    Get-LockpathUserCount
-.EXAMPLE
-    Get-LockpathUserCount -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
-.INPUTS
-    System.Array.
-.OUTPUTS
-    System.Int32.
-.NOTES
-    The authentication account must have Read Administrative Access permissions to administer users.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns the number of users.
+
+    .DESCRIPTION
+        Returns the number of users. The count does not include Deleted users and can include non-Lockpath user
+        accounts, such as Vendor Contacts.
+
+    .PARAMETER Filters
+        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
+        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+
+    .EXAMPLE
+        Get-LockpathUserCount
+
+    .EXAMPLE
+        Get-LockpathUserCount -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+
+    .INPUTS
+        System.Array
+
+    .OUTPUTS
+        System.Int32
+
+    .NOTES
+        The authentication account must have Read Administrative Access permissions to administer users.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

@@ -1,32 +1,43 @@
 ﻿function Get-LockpathComponentByAlias {
     <#
-.SYNOPSIS
-    Returns available fields for a given component.
-.DESCRIPTION
-    Returns available fields for a given component. A component is a user-defined data object such as a
-    custom content table. The component alias may be found by using Get-LockpathComponentList.
-.PARAMETER ComponentAlias
-    Specifies the system alias of the component as a string.
-.EXAMPLE
-    Get-LockpathComponentByAlias -ComponentAlias 'Controls'
-.EXAMPLE
-    Get-LockpathComponentByAlias 'Controls'
-.EXAMPLE
-    'Controls' | Get-LockpathComponentByAlias
-.EXAMPLE
-    'Controls', 'AuthorityDocs', 'AwarenessEvents' | Get-LockpathComponentByAlias
-.EXAMPLE
-    $componentObject | Get-LockpathComponentByAlias
-    If $componentObject has an property called ComponentAlias that value is automatically passed as a parameter.
-.INPUTS
-    System.String.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read General Access permissions for the specific component.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns available fields for a given component.
+
+    .DESCRIPTION
+        Returns available fields for a given component. A component is a user-defined data object such as a custom
+        content table. The component alias may be found by using Get-LockpathComponentList.
+
+    .PARAMETER ComponentAlias
+        Specifies the system alias of the component as a string.
+
+    .EXAMPLE
+        Get-LockpathComponentByAlias -ComponentAlias 'Controls'
+
+    .EXAMPLE
+        Get-LockpathComponentByAlias 'Controls'
+
+    .EXAMPLE
+        'Controls' | Get-LockpathComponentByAlias
+
+    .EXAMPLE
+        'Controls', 'AuthorityDocs', 'AwarenessEvents' | Get-LockpathComponentByAlias
+
+    .EXAMPLE
+        $componentObject | Get-LockpathComponentByAlias
+        If $componentObject has an property called ComponentAlias that value is automatically passed as a parameter.
+
+    .INPUTS
+        System.String
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read General Access permissions for the specific component.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

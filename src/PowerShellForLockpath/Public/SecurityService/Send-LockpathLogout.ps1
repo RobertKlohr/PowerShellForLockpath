@@ -1,20 +1,26 @@
 function Send-LockpathLogout {
     <#
-.SYNOPSIS
-    Terminates the active session.
-.DESCRIPTION
-    Terminates the active session.
-.EXAMPLE
-    Send-LockpathLogout
-.INPUTS
-    None.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have access to the API.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Terminates the active session.
+
+    .DESCRIPTION
+        Terminates the active session.
+
+    .EXAMPLE
+        Send-LockpathLogout
+
+    .INPUTS
+        None.
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have access to the API.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

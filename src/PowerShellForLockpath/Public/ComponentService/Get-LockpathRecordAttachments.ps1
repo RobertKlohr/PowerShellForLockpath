@@ -1,27 +1,37 @@
 ﻿function Get-LockpathRecordAttachments {
     <#
-.SYNOPSIS
-    Returns the file name, field Id and document Id for all attachments associated with a given record.
-.DESCRIPTION
-    Returns the file name, field Id and document Id for all attachments associated with a given record. The
-    contents of the attachment are not returned.
-.PARAMETER ComponentId
-    Specifies the Id number of the component as a positive integer.
-.PARAMETER RecordId
-    Specifies the Id number of the record as a positive integer.
-.PARAMETER FieldId
-    Specifies the Id number of the field as a positive integer.
-.EXAMPLE
-    Get-LockpathRecordAttachments -ComponentId 2 -RecordId 1 -FieldId 1
-.INPUTS
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read General Access permissions for the specific component, record and field.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
-#>
+    .SYNOPSIS
+        Returns the file name, field Id and document Id for all attachments associated with a given record.
+
+    .DESCRIPTION
+        Returns the file name, field Id and document Id for all attachments associated with a given record. The
+        contents of the attachment are not returned.
+
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER RecordId
+        Specifies the Id number of the record as a positive integer.
+
+    .PARAMETER FieldId
+        Specifies the Id number of the field as a positive integer.
+
+    .EXAMPLE
+        Get-LockpathRecordAttachments -ComponentId 2 -RecordId 1 -FieldId 1
+
+    .INPUTS
+        System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read General Access permissions for the specific component, record and
+        field.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -36,7 +46,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
-        [int] $ComponentId,
+        [uint]      $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -44,7 +54,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [int] $RecordId,
+        [uint]      $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -52,7 +62,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Field")]
         [ValidateRange("Positive")]
-        [int] $FieldId
+        [uint]      $FieldId
     )
 
     begin {

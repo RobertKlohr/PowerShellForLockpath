@@ -1,30 +1,41 @@
 function Get-LockpathUser {
     <#
-.SYNOPSIS
-    Returns available fields for a given user.
-.DESCRIPTION
-    Returns available fields for a given user. The user Id may be found by using Get-LockpathUsers.
-.PARAMETER UserId
-    Specifies the Id number of the user as a positive integer.
-.EXAMPLE
-    Get-LockpathUser -UserId 6
-.EXAMPLE
-    Get-LockpathUser 6
-.EXAMPLE
-    6 | Get-LockpathUser
-.EXAMPLE
-    6,12,15 | Get-LockpathUser
-.EXAMPLE
-    $userObject | Get-LockpathUser
-    If $userObject has an property called UserId that value is automatically passed as a parameter.
-.INPUTS
-    System.Uint32.
-.OUTPUTS
-    System.String.
-.NOTES
-    The authentication account must have Read Administrative Access permissions to administer users.
-.LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath
+    .SYNOPSIS
+        Returns available fields for a given user.
+
+    .DESCRIPTION
+        Returns available fields for a given user. The user Id may be found by using Get-LockpathUsers.
+
+    .PARAMETER UserId
+        Specifies the Id number of the user as a positive integer.
+
+    .EXAMPLE
+        Get-LockpathUser -UserId 6
+
+    .EXAMPLE
+        Get-LockpathUser 6
+
+    .EXAMPLE
+        6 | Get-LockpathUser
+
+    .EXAMPLE
+        6,12,15 | Get-LockpathUser
+
+    .EXAMPLE
+        $userObject | Get-LockpathUser
+        If $userObject has an property called UserId that value is automatically passed as a parameter.
+
+    .INPUTS
+        System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read Administrative Access permissions to administer users.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
 #>
 
     [CmdletBinding(

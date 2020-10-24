@@ -1,24 +1,3 @@
-#TODO Rework configuration settings.
-#TODO All settings are written to file and assumed to be in the file to work.
-#TODO remove all references to session only in comments and logging text.
-#TODO Remove all "session-only" code.
-#TODO Remove -disable logging code. Everything is logged.
-#TODO Rework all API call functions to only pass UriFragment (strip starting and end "/") method and description.
-#TODO add switch for each call for serialized vs. raw format for content returned json vs. PsCustomObject
-#TODO background looping job for calling Lockpath Ping API call to keep session alive. Look at Keep Alive Script
-#TODO add badges to readme.md file.  See examples from PowershellForGitHub below.
-#TODO check quotes single (default) vs. double (only around variables)
-#TODO check and set cmdlet binding output settings on each function
-#TODO set $result variable in each function to an empty variable of the correct type at the beginning of the function
-#TODO see where it would be useful to have ArgumentCompleter attributes configured
-#TODO create a module to build searchcriteria items (API guide chapter 4.)
-#TODO ensure that all functions that support the pipeline include ValueFromPipelineByPropertyName=$true
-#TODO Document in examples sectons having a fitler with multiple criteria. ### (@{Shortname = "AccountType";
-#FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value ="true" })
-
-# [![[GitHub version]](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub.svg)](https://badge.fury.io/gh/microsoft%2FPowerShellForGitHub)
-# [![Build status](https://dev.azure.com/ms/PowerShellForGitHub/_apis/build/status/PowerShellForGitHub-CI?branchName=master)](https://dev.azure.com/ms/PowerShellForGitHub/_build/latest?definitionId=109&branchName=master)
-
 # this psm1 is for local testing and development use only
 
 # dot source the parent import for local development variables
