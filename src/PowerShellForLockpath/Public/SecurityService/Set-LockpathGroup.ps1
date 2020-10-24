@@ -35,6 +35,8 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
+    #TODO get the Id as a separate parameter
+
     param(
         [Parameter(
             Mandatory = $true,

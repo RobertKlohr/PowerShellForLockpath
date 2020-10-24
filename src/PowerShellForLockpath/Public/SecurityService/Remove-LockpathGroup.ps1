@@ -52,7 +52,7 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
-        [ValidateRange("NonNegative")]
+        [ValidateRange("Positive")]
         [int] $GroupId
     )
 
