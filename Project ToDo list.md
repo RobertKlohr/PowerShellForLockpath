@@ -13,6 +13,11 @@ FilterType = 5; Value = 1 }, @{ Shortname = "Deleted"; FilterType = 5; Value ="t
 * #TODO update login code to capture the auth cookie on successful login and use this cookie on subsequent
   connections instead of capturing and reusing the websession object
 
+* #TODO Create enhanced functions:
+** Get-LockpathRecord that resolves field names
+
+
+
 $requestUrl = "http://10.140.2.182"
 $username = "user1"
 $password = "123"

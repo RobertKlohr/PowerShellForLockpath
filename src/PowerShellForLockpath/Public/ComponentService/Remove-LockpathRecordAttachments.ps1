@@ -28,7 +28,7 @@
         Get-LockpathRecordAttachment.
 
     .EXAMPLE
-        Remove-LockpathRecordAttachments -ComponentId 2 -RecordId 1 -FieldId 1 -DocumentId 1
+        Remove-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -DocumentId 2014
 
     .INPUTS
         System.Uint32
