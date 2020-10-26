@@ -84,7 +84,7 @@
         'Remove-LockpathCredential',
         'Remove-LockpathGroup',
         'Remove-LockpathRecord',
-        'Remove-LockpathRecordAttachment',
+        'Remove-LockpathRecordAttachments',
         'Remove-LockpathUser',
         'Reset-LockpathConfiguration',
         'Send-LockpathAssessments',

@@ -63,7 +63,7 @@ function Get-LockpathFieldList {
 
     process {
         $params = @{
-            'UriFragment' = "ComponentService/GetFieldList?id=$ComponentId"
+            'UriFragment' = "ComponentService/GetFieldList?componentId=$ComponentId"
             'Method'      = 'GET'
             'Description' = "Getting fields from component with Id: $ComponentId"
         }

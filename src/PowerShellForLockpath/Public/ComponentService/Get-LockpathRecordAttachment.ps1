@@ -4,20 +4,24 @@
         Returns a single file specified by the component Id, record Id, field Id and Document Id.
 
     .DESCRIPTION
-        Returns a single file specified by the component Id, record Id, field Id and Document Id. The document Id
-        may be found by using Get-LockpathRecordAttachment. The file contents are returned as a Base64 string.
+        Returns a single file specified by the component Id, record Id, field Id and document Id. The file contents are returned as a Base64 string.
+
+        The component Id may be found by using Get-LockpathComponents.
+        The record Id may be found by using Get-LockpathRecords.
+        The field Id may be found by using Get-LockpathFieldsList.
+        The document Id may be found by using Get-LockpathRecordAttachment.
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component as a positive integer. The component Id may be found by using Get-LockpathComponents.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer.
+        Specifies the Id number of the record as a positive integer. The record Id may be found by using Get-LockpathRecords.
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field as a positive integer. The field Id may be found by using Get-LockpathFieldsList.
 
     .PARAMETER DocumentId
-        Specifies the Id number of the document as a positive integer.
+        Specifies the Id number of the document as a positive integer. The document Id may be found by using Get-LockpathRecordAttachment.
 
     .EXAMPLE
         Get-LockpathRecordAttachment -ComponentId 2 -RecordId 1 -FieldId 1 -DocumentId 1
@@ -84,9 +88,9 @@
         $params = @{
             'UriFragment' = "ComponentService/GetRecordAttachment?componentId=$ComponentId&recordId=$RecordId&fieldId=$FieldId&documentId=$DocumentId"
             'Method'      = 'GET'
-            'Description' = "Getting attachments from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & document Id: $DocumentId"
+            'Description' = "Getting attachment from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & document Id: $DocumentId"
         }
-        if ($PSCmdlet.ShouldProcess("Getting attachments from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", 'Getting attachments from field with:')) {
+        if ($PSCmdlet.ShouldProcess("Getting attachment from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", 'Getting attachment from field with:')) {
             $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
