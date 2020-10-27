@@ -66,8 +66,9 @@
             'Method'      = 'GET'
             'Description' = "Getting component with alias: $ComponentAlias"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting component with alias: $([environment]::NewLine) $ComponentAlias", $ComponentAlias, 'Getting component with alias:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

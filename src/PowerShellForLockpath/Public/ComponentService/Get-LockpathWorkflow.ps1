@@ -48,7 +48,7 @@ function Get-LockpathWorkflow {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [uint]      $WorkflowId
+        [uint] $WorkflowId
     )
 
     begin {
@@ -61,8 +61,9 @@ function Get-LockpathWorkflow {
             'Method'      = 'GET'
             'Description' = "Getting Workflow with Workflow Id: $WorkflowId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting workflow with Id: $([environment]::NewLine) $WorkflowId", $WorkflowId, 'Getting workflow with Id:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

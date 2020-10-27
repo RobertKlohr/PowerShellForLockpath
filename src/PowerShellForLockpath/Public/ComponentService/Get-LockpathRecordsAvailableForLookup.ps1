@@ -54,19 +54,19 @@
             Position = 0)]
         [Alias("Field")]
         [ValidateRange("Positive")]
-        [uint]      $FieldId,
+        [uint] $FieldId,
 
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [uint]      $RecordId,
+        [uint] $RecordId,
 
         [Alias("index")]
         [ValidateRange("NonNegative")]
-        [uint]      $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias("size")]
         [ValidateRange("Positive")]
-        [uint]      $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
+        [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -87,8 +87,9 @@
         'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filters | ConvertTo-Json -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth 10
     }
+
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting records from component with Id:')) {
-        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

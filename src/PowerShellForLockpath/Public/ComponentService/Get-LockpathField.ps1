@@ -52,7 +52,7 @@ function Get-LockpathField {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [uint]      $FieldId
+        [uint] $FieldId
     )
 
     begin {
@@ -65,8 +65,9 @@ function Get-LockpathField {
             'Method'      = 'GET'
             'Description' = "Getting Field with Field Id: $FieldId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting field with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting field with Id:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

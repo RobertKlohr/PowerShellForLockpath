@@ -39,7 +39,7 @@ function Send-LockpathLogout {
     }
 
     if ($PSCmdlet.ShouldProcess("Logout from: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Logout from:')) {
-        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

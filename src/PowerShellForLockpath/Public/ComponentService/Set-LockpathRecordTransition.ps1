@@ -21,7 +21,7 @@
         Set-LockpathRecordTransition -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61
 
     .INPUTS
-        System.Uint32, System.String
+        System.String, System.Uint32
 
     .OUTPUTS
         System.String
@@ -99,8 +99,9 @@
             'Description' = "Transitioning record with Id: $RecordId in component with alias: $ComponentAlias using transition Id: $TransitionId"
             'Body'        = $Body | ConvertTo-Json -Depth 10
         }
+
         if ($PSCmdlet.ShouldProcess("Transitioning record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", 'Transitioning record with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -1,4 +1,5 @@
-﻿* #TODO Update the descriptions on each function to highlight API calls to get each parameter. (see Get-LockpathRecordAttachment)
+﻿* #TODO test to see which fields can be updated vai updaterecord api verb.
+* #TODO Update the descriptions on each function to highlight API calls to get each parameter. (see Get-LockpathRecordAttachment)
 * #TODO Rework configuration settings.
 * #TODO add switch for each call for serialized vs. raw format for content returned json vs. PsCustomObject
 * #TODO background looping job for calling Lockpath Ping API call to keep session alive. Look at Keep Alive Script

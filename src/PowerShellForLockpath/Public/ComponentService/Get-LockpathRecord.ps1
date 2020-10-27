@@ -43,7 +43,7 @@ function Get-LockpathRecord {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
-        [uint]      $ComponentId,
+        [uint] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -51,7 +51,7 @@ function Get-LockpathRecord {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [uint]      $RecordId
+        [uint] $RecordId
     )
 
     begin {
@@ -64,8 +64,9 @@ function Get-LockpathRecord {
             'Method'      = 'GET'
             'Description' = "Getting record with component Id: $ComponentId & record Id: $RecordId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting record with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId", "component Id $ComponentId & record Id: $RecordId", 'Getting record with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

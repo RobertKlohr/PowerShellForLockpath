@@ -49,15 +49,15 @@
     }
 
     process {
-
         $params = @{
             'UriFragment' = "SecurityService/CreateUser"
             'Method'      = 'POST'
             'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth 10
         }
+
         if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Creating user with attributes:")) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

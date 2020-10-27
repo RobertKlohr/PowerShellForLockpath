@@ -28,10 +28,9 @@
         Get-LockpathRecordAttachment.
 
     .EXAMPLE
-        Remove-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -DocumentId 2014
-
+        Remove-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -DocumentId @{Id = 1833}, @{Id = 1832}
     .INPUTS
-        System.Uint32
+        System.String, System.Uint32
 
     .OUTPUTS
         System.String
@@ -39,11 +38,6 @@
     .NOTES
         The authentication account must have Read and Delete General Access permissions for the specific component,
         record and field.
-
-        There is an inconsistency in the API that requires the recordId and fieldId values to be formattted as an
-        array and uses a different name for the recordId (dynamicRecord).  It also nests the fieldId in the
-        recordId. As only a single recordId or fieldId is valid and the field that can take multiple values is the
-        document Id field I have chosen to make have this function be consistant in how handles parameters.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath
@@ -85,8 +79,7 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Document")]
-        [ValidateRange("Positive")]
-        [uint] $DocumentId
+        [array] $DocumentId
     )
 
     begin {
@@ -94,18 +87,13 @@
     }
 
     process {
-        # There is an inconsistency in the API that requires the recordId and fieldId values to be formattted as an
-        # array and uses a different name for the recordId (dynamicRecord).  It also nests the fieldId in the
-        # recordId. As only a single recordId or fieldId is valid and the field that can take multiple values is
-        # the document Id field I have chosen to make have this function be consistant in how handles parameters.
-
-        #TODO Update the parameters and logic to support passing multipule document Id values at the same time.
         $Body = [ordered]@{
             'componentId'   = $ComponentId
             'dynamicRecord' = [ordered]@{'Id' = $RecordId
-                'FieldValues'                 = @([ordered]@{ 'key' = $FieldId
-                        'value'                     = @([ordered]@{'Id' = $DocumentId })
-                    })
+                'FieldValues'                 = @(@{'key' = $FieldId
+                        'value'           = $DocumentId
+                    }
+                )
             }
         }
 
@@ -115,8 +103,9 @@
             'Description' = "Deleting attachment from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & document Id: $DocumentId"
             'Body'        = $Body | ConvertTo-Json -Depth 10
         }
-        if ($PSCmdlet.ShouldProcess("Getting attachments from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", 'Getting attachments from field with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+
+        if ($PSCmdlet.ShouldProcess("Getting attachments from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $($params.Body)", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $($params.Body)", 'Getting attachments from field with:')) {
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

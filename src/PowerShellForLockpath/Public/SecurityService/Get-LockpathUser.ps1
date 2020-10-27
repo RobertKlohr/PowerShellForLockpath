@@ -57,6 +57,7 @@ function Get-LockpathUser {
 
     begin {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
     }
 
     process {
@@ -65,8 +66,9 @@ function Get-LockpathUser {
             'Method'      = 'GET'
             'Description' = "Getting user record with Id: $UserId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Getting user with Id:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

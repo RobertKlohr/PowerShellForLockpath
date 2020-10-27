@@ -1,25 +1,92 @@
 ﻿function Set-LockpathRecord {
-    #FIXME Update to new coding standards
+    <#
+    .SYNOPSIS
+        Update fields in a specified record.
 
-    #TODO test to see which fields can be updated.
+    .DESCRIPTION
+        Update fields in a specified record.
 
-    [CmdletBinding()]
-    [OutputType('System.Int32')]
+    .PARAMETER ComponentId
+        Specifies the Id number of the component as a positive integer.
+
+    .PARAMETER RecordId
+        Specifies the Id number of the record as a positive integer.
+
+    .PARAMETER Attributes
+        The list of fields and values to change as an array. The field names in the array are case sensitive.
+
+    .EXAMPLE
+        Set-LockpathRecord -ComponentId 10066 -RecordId 3 -Attributes @{key = 1418; value = 'API Update to Description'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}, @{key = 7950; value = '999'}
+
+    .INPUTS
+        System.String, System.Uint32
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read and Update General Access permissions for the specific component,
+        record and field.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
+    [CmdletBinding(
+        ConfirmImpact = 'Medium',
+        PositionalBinding = $false,
+        SupportsShouldProcess = $true)]
+    [OutputType('System.String')]
 
     param(
-        [Parameter(Mandatory = $true)]
-        [string]
-        $Param1
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Component")]
+        [ValidateRange("Positive")]
+        [uint] $ComponentId,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Record")]
+        [ValidateRange("Positive")]
+        [uint] $RecordId,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [array] $Attributes = @()
     )
 
     begin {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
+        $params = @{
+            'UriFragment' = 'ComponentService/UpdateRecord'
+            'Method'      = 'POST'
+            'Description' = "Updating fields in record Id: $RecordId in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
+            'Body'        = [ordered]@{
+                'componentId'   = $ComponentId
+                'dynamicRecord' = [ordered]@{'Id' = $RecordId
+                    'FieldValues'                 = $Attributes
+                }
+            } | ConvertTo-Json -Depth 10 -Compress
+        }
 
+        if ($PSCmdlet.ShouldProcess("Updating fields with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId & attributes $($params.Body)", "component Id $ComponentId, record Id: $RecordId & attributes $($params.Body)", 'Updating fields with:')) {
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        }
     }
 
     end {
-        Return ${Return}
     }
 }

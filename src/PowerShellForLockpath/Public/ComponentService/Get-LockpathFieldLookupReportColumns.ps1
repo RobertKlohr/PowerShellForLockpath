@@ -51,7 +51,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [uint]      $FieldId,
+        [uint] $FieldId,
 
         [Parameter(
             Mandatory = $true,
@@ -60,7 +60,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("FieldPath")]
         [ValidateRange("Positive")]
-        [uint]      $FieldPathId
+        [uint] $FieldPathId
     )
 
     begin {
@@ -73,8 +73,9 @@
             'Method'      = 'GET'
             'Description' = "Getting fields from field Id: $FieldId & field path Id: $FieldPathId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting fields from lookupfield with: $([environment]::NewLine) field Id: $FieldId & field path Id: $FieldPathId", "field Id: $FieldId & field path Id: $FieldPathId", 'Getting fields from lookupfield with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -23,7 +23,7 @@
     .EXAMPLE
         Set-LockpathRecordVote -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61 -VotingComments 'voting comment'
     .INPUTS
-        System.Uint32, System.String
+        System.String, System.Uint32
 
     .OUTPUTS
         System.String
@@ -93,9 +93,6 @@
         [string] $VotingComments
     )
 
-    #FIXME Update to new coding standards
-    # need to test
-
     begin {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
@@ -114,8 +111,9 @@
             'Description' = "Voting on record with Id: $RecordId in component with alias: $ComponentAlias using transition Id: $TransitionId and voting comments: $VotingComments"
             'Body'        = $Body | ConvertTo-Json -Depth 10
         }
+
         if ($PSCmdlet.ShouldProcess("Voting on record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", 'Voting on record with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

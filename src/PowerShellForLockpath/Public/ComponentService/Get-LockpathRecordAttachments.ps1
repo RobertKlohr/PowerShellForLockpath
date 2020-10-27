@@ -46,7 +46,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Component")]
         [ValidateRange("Positive")]
-        [uint]      $ComponentId,
+        [uint] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -54,7 +54,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Record")]
         [ValidateRange("Positive")]
-        [uint]      $RecordId,
+        [uint] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -62,7 +62,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Field")]
         [ValidateRange("Positive")]
-        [uint]      $FieldId
+        [uint] $FieldId
     )
 
     begin {
@@ -75,8 +75,9 @@
             'Method'      = 'GET'
             'Description' = "Getting attachments from component Id: $ComponentId, record Id: $RecordId & field Id: $FieldId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting attachments from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId & F$ieldId", "component Id $ComponentId, record Id: $RecordId & $FieldId", 'Getting attachments from field with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

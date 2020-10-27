@@ -74,7 +74,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting record with: $([environment]::NewLine) record Id: $RecordId from component Id: $ComponentId", "record Id: $RecordId from component Id: $ComponentId", 'Deleting record with:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

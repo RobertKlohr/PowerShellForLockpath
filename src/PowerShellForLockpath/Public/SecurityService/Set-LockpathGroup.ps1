@@ -61,7 +61,7 @@
             'Body'        = $Attributes | ConvertTo-Json -Depth 10
         }
         if ($PSCmdlet.ShouldProcess("Updating group with group Id $($GroupId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating group with group with Id $($GroupId) and settings:")) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -54,8 +54,9 @@
             'Method'      = 'GET'
             'Description' = "Getting group record with Id: $GroupId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting group with Id: $([environment]::NewLine) $GroupId", $GroupId, 'Getting group with Id:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

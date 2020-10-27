@@ -62,7 +62,7 @@
             'Body'        = $Attributes | ConvertTo-Json -Depth 10
         }
         if ($PSCmdlet.ShouldProcess("Updating user with user with Id $($UserId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating user with user with Id $($UserId) and settings:")) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

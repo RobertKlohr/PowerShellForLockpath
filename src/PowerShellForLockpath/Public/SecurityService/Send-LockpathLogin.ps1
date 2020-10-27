@@ -46,7 +46,7 @@
     }
 
     if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Login to:')) {
-        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

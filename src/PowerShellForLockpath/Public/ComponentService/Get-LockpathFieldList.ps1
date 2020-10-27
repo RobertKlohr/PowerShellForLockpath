@@ -54,7 +54,7 @@ function Get-LockpathFieldList {
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [uint]      $ComponentId
+        [uint] $ComponentId
     )
 
     begin {
@@ -67,8 +67,9 @@ function Get-LockpathFieldList {
             'Method'      = 'GET'
             'Description' = "Getting fields from component with Id: $ComponentId"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting field list from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting field list from component with Id:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

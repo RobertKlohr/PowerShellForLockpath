@@ -57,15 +57,15 @@ function Get-LockpathRecords {
             Position = 0)]
         [Alias("Id")]
         [ValidateRange("Positive")]
-        [uint]      $ComponentId,
+        [uint] $ComponentId,
 
         [Alias("index")]
         [ValidateRange("NonNegative")]
-        [uint]      $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias("size")]
         [ValidateRange("Positive")]
-        [uint]      $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias("Filter")]
         [array]$Filters = @()
@@ -89,8 +89,9 @@ function Get-LockpathRecords {
         'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filters | ConvertTo-Json -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth 10
     }
+
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting records from component with Id:')) {
-        $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

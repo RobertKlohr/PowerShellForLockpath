@@ -52,8 +52,7 @@ function Get-LockpathWorkflows {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Alias")]
-        #TODO determine what the actual maximum length is for this attribute.  75 was largest found.
-        [ValidateLength(1, 256)]
+        [ValidateLength(1, 128)]
         [string] $ComponentAlias
     )
 
@@ -67,8 +66,9 @@ function Get-LockpathWorkflows {
             'Method'      = 'GET'
             'Description' = "Getting workflows with component alias: $ComponentAlias"
         }
+
         if ($PSCmdlet.ShouldProcess("Getting workflows with component alias: $([environment]::NewLine) $ComponentAlias", $ComponentAlias, 'Getting workflows with component alias:')) {
-            $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
