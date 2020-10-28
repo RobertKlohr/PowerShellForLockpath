@@ -1,7 +1,7 @@
 ﻿function Get-LockpathComponent {
     <#
     .SYNOPSIS
-        Returns information about a component specified by its Id.
+  Returns information about a component specified by its Id.
 
     .DESCRIPTION
         Returns information about a component specified by its Id.
@@ -11,7 +11,7 @@
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
-        The component Id may be found by using Get-LockpathComponentList.
+  The component Id may be found by using Get-LockpathComponentList.
 
     .EXAMPLE
         Get-LockpathComponent -ComponentId 2
