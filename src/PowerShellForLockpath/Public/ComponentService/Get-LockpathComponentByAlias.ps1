@@ -52,7 +52,7 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Alias")]
-        [ValidateLength(1, 256)]
+        [ValidateLength(1, 128)]
         [string] $ComponentAlias
     )
 

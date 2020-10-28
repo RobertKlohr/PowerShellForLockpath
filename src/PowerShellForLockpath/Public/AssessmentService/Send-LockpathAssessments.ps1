@@ -1,4 +1,7 @@
-﻿function Set-LockpathRecord {
+﻿function Send-LockpathAssessments {
+    #FIXME Update to new coding standards.  Need sample code from NAVEX Global on how to build this API call with
+    #JSON.
+
     <#
     .SYNOPSIS
         Update fields in a specified record.
@@ -12,11 +15,14 @@
     .PARAMETER RecordId
         Specifies the Id number of the record as a positive integer.
 
+    .PARAMETER FieldId
+        Specifies the Id number of the field as a positive integer.
+
     .PARAMETER Attributes
         The list of fields and values to change as an array. The field names in the array are case sensitive.
 
     .EXAMPLE
-        Set-LockpathRecord -ComponentId 10066 -RecordId 3 -Attributes @{key = 1418; value = 'API Update to Description'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}, @{key = 7950; value = '999'}
+        Send-LockpathAssessments
 
     .INPUTS
         System.String, System.Uint32
@@ -59,6 +65,14 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
+        [Alias("Field")]
+        [ValidateRange("Positive")]
+        [uint] $FieldId,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [array] $Attributes
     )
 
@@ -68,7 +82,7 @@
 
     process {
         $params = @{
-            'UriFragment' = 'ComponentService/UpdateRecord'
+            'UriFragment' = 'AssessmentService/IssueAssessment'
             'Method'      = 'POST'
             'Description' = "Updating fields in record Id: $RecordId in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = [ordered]@{

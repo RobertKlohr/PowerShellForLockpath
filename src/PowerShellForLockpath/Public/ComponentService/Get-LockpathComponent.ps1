@@ -1,14 +1,17 @@
 ﻿function Get-LockpathComponent {
     <#
     .SYNOPSIS
-        Returns available fields for a given component.
+        Returns information about a component specified by its Id.
 
     .DESCRIPTION
-        Returns available fields for a given component. A component is a user-defined data object such as a custom
-        content table. The component Id may be found by using Get-LockpathComponentList.
+        Returns information about a component specified by its Id.
+
+        Returns the Id, Name, SystemName and ShortName for the component.
 
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
+
+        The component Id may be found by using Get-LockpathComponentList.
 
     .EXAMPLE
         Get-LockpathComponent -ComponentId 2
@@ -16,21 +19,15 @@
     .EXAMPLE
         Get-LockpathComponent 2
 
-    .EXAMPLE
-        2 | Get-LockpathComponent
-
-    .EXAMPLE
-        2,3,6 | Get-LockpathComponent
-
-    .EXAMPLE
-        $componentObject | Get-LockpathComponent
-        If $componentObject has an property called ComponentId that value is automatically passed as a parameter.
-
     .INPUTS
         System.Uint32
 
     .OUTPUTS
-        System.String
+        {
+            "Id": 10050, "Name": "Incident Reports",
+            "SystemName": "LPIncidentReports",
+            "ShortName": "LPIncidentReports"
+        }
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component.

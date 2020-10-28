@@ -1,74 +1,105 @@
 ﻿function Import-LockpathFile {
-    #FIXME Update to new coding standards
-    [CmdletBinding()]
-    [OutputType('System.Int32')]
+    #TODO need to test
+    <#
+    .SYNOPSIS
+        Queues a job to import a file for a defined import template.
 
-    #TODO: Work on making this more user friendly, and to only allow valid combinations (parameter sets)
+    .DESCRIPTION
+        Queues a job to import a file for a defined import template.
+
+    .PARAMETER ComponentAlias
+        Specifies the system alias of the component as a string. The component alias may be found by using
+        Get-LockpathComponentList.
+
+    .EXAMPLE
+        Import-LockpathFile -ComponentAlias 'Vendors' -ImportTemplateName 'Load Vendor from API' -FilePath 'c:\temp\test.txt' -RunAsSystem
+
+    .INPUTS
+        System.IO.FileInfo, System.String
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        The authentication account must have Read, Create, Update, and Import/Bulk General Access permissions to
+        the defined table.
+
+        To enable the Run As System option, the authentication account must have also have Read,
+        Create, and Update Administrative Access permissions to the defined table.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath
+    #>
+
+    [CmdletBinding(
+        ConfirmImpact = 'Medium',
+        PositionalBinding = $false,
+        SupportsShouldProcess = $true)]
+    [OutputType('System.String')]
+
     param(
-        # Full URi to the Lockpath instance.
-        [Parameter(ValueFromPipeline = $true)]
-        $Session,
-        # Id of the component
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $TableAlias,
-        # The index of the page of result to return. Must be >0.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $ImportTemplateName,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $FileName,
-        # The filter parameters the users must meet to be included.
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
-        $FileData,
-        # The filter parameters the users must meet to be included.
-        [Parameter(ValueFromPipeline = $true)]
-        [switch]
-        $RunAsSystem = $false
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Alias")]
+        [ValidateLength(1, 128)]
+        [string] $ComponentAlias,
+
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("Template")]
+        [ValidateLength(1, 128)]
+        [string] $ImportTemplateName,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("File")]
+        [System.IO.FileInfo] $FilePath,
+
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias("System")]
+        [switch] $RunAsSystem
     )
 
     begin {
-        $ResourcePath = "/ComponentService/ImportFile"
-        $Method = 'POST'
-
-        $Body = [ordered]@{
-            "tableAlias"         = $TableAlias
-            "importTemplateName" = $ImportTemplateName
-            "fileName"           = $FileName
-            "fileData"           = $FileData
-            "runAsSystem"        = $RunAsSystem.ToBool()
-        } | ConvertTo-Json
-
-        $Parameters = @{
-            Uri        = $LpUrl + $ResourcePath
-            WebSession = $LpSession
-            Method     = $Method
-            Body       = $Body
-        }
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
     }
 
     process {
-        try {
-            $Response = Invoke-RestMethod @parameters -ErrorAction Stop
-        } catch {
-            # Get the message returned from the server which will be in JSON format
-            #$ErrorMessage = $_.ErrorDetails.Message | ConvertFrom-Json | Select -ExpandProperty Message
-            $ErrorRecord = New-Object System.Management.Automation.ErrorRecord(
-                (New-Object Exception("Exception executing the Invoke-RestMethod cmdlet. $($_.ErrorDetails.Message)")),
-                'Invoke-RestMethod',
-                [System.Management.Automation.ErrorCategory]$_.CategoryInfo.Category,
-                $parameters
-            )
-            $ErrorRecord.CategoryInfo.Reason = $_.CategoryInfo.Reason;
-            $ErrorRecord.CategoryInfo.Activity = $_.InvocationInfo.InvocationName;
-            $PSCmdlet.ThrowTerminatingError($ErrorRecord);
+        $fileData = [Convert]::ToBase64String([IO.File]::ReadAllBytes($FilePath))
+
+        $Body = [ordered]@{
+            'tableAlias'         = $ComponentAlias
+            'importTemplateName' = $ImportTemplateName
+            'fileName'           = $FilePath.Name
+            'fileData'           = $fileData
+            'runAsSystem'        = $RunAsSystem
+        }
+
+        $params = @{
+            'UriFragment' = 'ComponentService/ImportFile'
+            'Method'      = 'POST'
+            'Description' = "Importing file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName"
+            'Body'        = $Body | ConvertTo-Json -Depth 10
+        }
+
+        if ($PSCmdlet.ShouldProcess("Importing: $([environment]::NewLine) file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", "file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", 'Importing:')) {
+            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            return $result
+        } else {
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
         }
     }
 
     end {
-        Return $Response
     }
 }

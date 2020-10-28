@@ -1,6 +1,4 @@
 ﻿function Set-LockpathRecordAttachments {
-    #FIXME Update to new coding standards
-
     <#
     .SYNOPSIS
         Adds new attachments and/or updates existing attachments to the provided Documents field(s) on a specific
@@ -25,10 +23,10 @@
         Get-LockpathFieldsList.
 
     .EXAMPLE
-        Remove-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -FilePath 'c:\temp\test.txt'
+        Set-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -FilePath 'c:\temp\test.txt'
 
     .INPUTS
-        System.String, System.Uint32
+        System.IO.FileInfo, System.String
 
     .OUTPUTS
         System.String
@@ -85,8 +83,7 @@
     }
 
     process {
-
-        $fileData = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($(Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Ignore)))
+        $fileData = [Convert]::ToBase64String([IO.File]::ReadAllBytes($FilePath))
 
         $Body = [ordered]@{
             'componentId'   = $ComponentId

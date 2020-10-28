@@ -64,7 +64,7 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Alias")]
-        [ValidateLength(1, 256)]
+        [ValidateLength(1, 128)]
         [string] $ComponentAlias,
 
         [Parameter(
@@ -89,7 +89,7 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias("Comments")]
-        [ValidateLength(1, 4096)]
+        [ValidateLength(1, 2048)]
         [string] $VotingComments
     )
 
