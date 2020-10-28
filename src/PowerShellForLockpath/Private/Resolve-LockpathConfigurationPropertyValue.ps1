@@ -1,22 +1,80 @@
 ﻿function Resolve-LockpathConfigurationPropertyValue {
-    #FIXME Update to new coding standards
+    <#
+    .SYNOPSIS
+        Returns the requested property from the provided object, if it exists and is a valid
+        value.  Otherwise, returns the default value.
+
+    .DESCRIPTION
+        Returns the requested property from the provided object, if it exists and is a valid
+        value.  Otherwise, returns the default value.
+
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
+    .PARAMETER InputObject
+        The object to check the value of the requested property.
+
+    .PARAMETER Name
+        The name of the property on InputObject whose value is desired.
+
+    .PARAMETER Type
+        The type of the value stored in the Name property on InputObject.  Used to validate
+        that the property has a valid value.
+
+    .PARAMETER DefaultValue
+        The value to return if Name doesn't exist on InputObject or is of an invalid type.
+
+    .EXAMPLE
+        Resolve-function Resolve-LockpathConfigurationPropertyValue -InputObject $config -Name instancePort -Type unit -DefaultValue 4443
+
+        Checks $config to see if it has a property named "instancePort".  If it does, and it's a
+        unit, returns that value, otherwise, returns 4443 (the DefaultValue).
+
+    .INPUTS
+        System.String
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        Internal-only helper method.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    #>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias('Object')]
         [PSCustomObject] $InputObject,
 
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [Alias('Property')]
         [string] $Name,
 
-        [Parameter(Mandatory)]
-        # [ValidateSet('Array', 'Boolean', 'Int32', 'Int64', 'String')]
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet('Boolean', 'Int32', 'Int64', 'String', 'String[]', 'Uint32')]
         [String] $Type,
 
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         $DefaultValue
     )
 
@@ -24,20 +82,15 @@
         return $DefaultValue
     }
 
-    $typeType = [String]
-    if ($Type -eq 'String[]') {
-        $typeType = [String[]]
+    switch (${Type}) {
+        'Boolean' { $typeType = [Boolean]; break }
+        'Int32' { $typeType = [Int32]; break }
+        'Int64' { $typeType = [Int64]; break }
+        'String' { $typeType = [String]; break }
+        'String[]' { $typeType = [String[]]; break }
+        'Uint32' { $typeType = [Uint32]; break }
+        Default {}
     }
-    if ($Type -eq 'Boolean') {
-        $typeType = [Boolean]
-    }
-    if ($Type -eq 'Int32') {
-        $typeType = [Int32]
-    }
-    #TODO check to see if int64 is needed
-    # if ($Type -eq 'Int64') {
-    #     $typeType = [Int64]
-    # }
 
     if (Test-LockpathConfigurationPropertyExists -InputObject $InputObject -Name $Name) {
         if ($InputObject.$Name -is $typeType) {

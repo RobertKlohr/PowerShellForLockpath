@@ -6,6 +6,8 @@ function Send-LockpathLogout {
     .DESCRIPTION
         Terminates the active session.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .EXAMPLE
         Send-LockpathLogout
 
@@ -19,7 +21,7 @@ function Send-LockpathLogout {
         The authentication account must have access to the API.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(

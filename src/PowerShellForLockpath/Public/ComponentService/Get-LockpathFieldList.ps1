@@ -8,6 +8,8 @@ function Get-LockpathFieldList {
         custom content table. The component Id may be found by using Get-LockpathComponentList. Assessments field
         type are not visible in this list.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -37,7 +39,7 @@ function Get-LockpathFieldList {
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -52,8 +54,8 @@ function Get-LockpathFieldList {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId
     )
 

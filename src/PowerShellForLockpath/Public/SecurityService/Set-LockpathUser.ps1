@@ -6,6 +6,8 @@
     .DESCRIPTION
         Updates a user account.  All attributes that are updated are overwritten with the new value.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER Attributes
         The list of fields and values to change as an array. The list of attributes must include the Id field and
         the user Id as the value for the user being updated. The field names in the array are case sensitive.
@@ -28,7 +30,7 @@
         Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -56,7 +58,7 @@
         $UserId = $Attributes.Id
 
         $params = @{
-            'UriFragment' = "SecurityService/UpdateUser"
+            'UriFragment' = 'SecurityService/UpdateUser'
             'Method'      = 'POST'
             'Description' = "Updating user with Id: $UserId and values $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth 10

@@ -11,6 +11,8 @@ function Get-LockpathRecordDetail {
         fields. The component Id may be found by using Get-LockpathComponentList. The record Id may be found by
         using Get-LockpathRecords.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -34,7 +36,7 @@ function Get-LockpathRecordDetail {
         field.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -48,16 +50,16 @@ function Get-LockpathRecordDetail {
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Component")]
-        [ValidateRange("Positive")]
+        [Alias('Component')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Record")]
-        [ValidateRange("Positive")]
+        [Alias('Record')]
+        [ValidateRange('Positive')]
         [uint] $RecordId,
 
         [Parameter(ValueFromPipeline = $true)]

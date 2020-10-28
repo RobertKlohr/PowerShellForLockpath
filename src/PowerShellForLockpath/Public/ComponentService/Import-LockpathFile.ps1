@@ -7,9 +7,24 @@
     .DESCRIPTION
         Queues a job to import a file for a defined import template.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentAlias
         Specifies the system alias of the component as a string. The component alias may be found by using
         Get-LockpathComponentList.
+
+    .PARAMETER ImportTemplateName
+        Specifies the system name of the import template configured in the component.
+
+    .PARAMETER FilePath
+        Specifies the absolute path to the file being imported.
+
+    .PARAMETER RunAsSystem
+        Specifies if the records being imported or updated will show the created by and/or updated by attributes as
+        the system. If set to false the creator and/or updated by attributes will be set to the account used to
+        authenticate the API call.
+
+        Defaults to the value in the configuration file if not supplied.
 
     .EXAMPLE
         Import-LockpathFile -ComponentAlias 'Vendors' -ImportTemplateName 'Load Vendor from API' -FilePath 'c:\temp\test.txt' -RunAsSystem
@@ -28,7 +43,7 @@
         Create, and Update Administrative Access permissions to the defined table.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -43,7 +58,7 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Alias")]
+        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [string] $ComponentAlias,
 
@@ -52,7 +67,7 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Template")]
+        [Alias('Template')]
         [ValidateLength(1, 128)]
         [string] $ImportTemplateName,
 
@@ -60,14 +75,14 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("File")]
+        [Alias('File')]
         [System.IO.FileInfo] $FilePath,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("System")]
-        [switch] $RunAsSystem
+        [Alias('System')]
+        [switch] $RunAsSystem = $(Get-LockpathConfiguration -Name 'runAsSystem')
     )
 
     begin {
@@ -82,7 +97,7 @@
             'importTemplateName' = $ImportTemplateName
             'fileName'           = $FilePath.Name
             'fileData'           = $fileData
-            'runAsSystem'        = $RunAsSystem
+            'runAsSystem'        = $RunAsSystem.IsPresent.ToString()
         }
 
         $params = @{

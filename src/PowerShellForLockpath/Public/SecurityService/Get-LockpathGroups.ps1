@@ -6,6 +6,8 @@
     .DESCRIPTION
         Returns a list of groups and available fields.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER PageIndex
         The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
         in the configuration.
@@ -40,7 +42,7 @@
         The authentication account must have Read Administrative Access permissions to administer groups.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -50,15 +52,15 @@
     [OutputType('System.String')]
 
     param(
-        [Alias("Index")]
-        [ValidateRange("NonNegative")]
+        [Alias('Index')]
+        [ValidateRange('NonNegative')]
         [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias("Size")]
-        [ValidateRange("Positive")]
+        [Alias('Size')]
+        [ValidateRange('Positive')]
         [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias("Filter")]
+        [Alias('Filter')]
         [array]$Filters = @()
     )
 

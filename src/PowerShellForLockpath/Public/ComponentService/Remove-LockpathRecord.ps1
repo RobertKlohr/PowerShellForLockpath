@@ -7,6 +7,8 @@
         Deletes a record. This is a soft delete that hides the record from the user interface and API by changing the
         permissions on the record. To undelete a record requires a support request.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -31,7 +33,7 @@
         permissions to the record.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -45,16 +47,16 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Component")]
-        [ValidateRange("Positive")]
+        [Alias('Component')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Record")]
-        [ValidateRange("Positive")]
+        [Alias('Record')]
+        [ValidateRange('Positive')]
         [uint] $RecordId
     )
 

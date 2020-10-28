@@ -8,6 +8,8 @@
 
         Returns the Id, Name, SystemName and ShortName for the component.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -33,7 +35,7 @@
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -48,8 +50,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId
     )
 

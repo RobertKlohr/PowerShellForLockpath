@@ -8,6 +8,8 @@ function Get-LockpathRecordsDetails {
         specify which fields are returned. Filters may be applied to return only the records meeting selected
         criteria. One or more sort orders may be applied to the results.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER PageIndex
         The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
         in the configuration.
@@ -30,22 +32,22 @@ function Get-LockpathRecordsDetails {
         Specifies the field path Id and sort order as an array.
 
     .EXAMPLE
-        Get-LockpathRecordsDetails -ComponentId 3
+        Get-LockpathRecordsDetails -ComponentId 10066
 
     .EXAMPLE
-        Get-LockpathRecordsDetails 3
+        Get-LockpathRecordsDetails 10066
 
     .EXAMPLE
-        Get-LockpathRecordsDetails -ComponentId 3 -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'}
+        Get-LockpathRecordsDetails -ComponentId 10066 -Filter @{'FieldPath'= @(9129); 'FilterType'='5'; 'Value'='True'}
 
     .EXAMPLE
-        Get-LockpathRecordsDetails -ComponentId 3 -FieldIds @(1,2,3)
+        Get-LockpathRecordsDetails -ComponentId 10066 -FieldIds @(1417,1418,1430,9129)
 
     .EXAMPLE
-        Get-LockpathRecordsDetails -ComponentId 3 -SortOrder @{'FieldPath'= @(84); 'Ascending'='true'}
+        Get-LockpathRecordsDetails -ComponentId 10066 -SortOrder @{'FieldPath'= @(1418); 'Ascending'='True'}
 
     .EXAMPLE
-        Get-LockpathRecordsDetails -ComponentId 3 -FieldIds @(1,2,3) -Filter @{'FieldPath'= @(84); 'FilterType'='1'; 'Value'='Test'} -SortOrder @{'FieldPath'= @(84); 'Ascending'='true'}
+        Get-LockpathRecordsDetails -ComponentId 10066 -FieldIds @(1417,1418,1430,9129) -Filter @{'FieldPath'= @(9129); 'FilterType'='5'; 'Value'='True'} -SortOrder @{'FieldPath'= @(1418); 'Ascending'='True'}
 
     .INPUTS
         System.Array System.Uint32
@@ -58,7 +60,7 @@ function Get-LockpathRecordsDetails {
         and fields.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -71,25 +73,25 @@ function Get-LockpathRecordsDetails {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
-        [Alias("index")]
-        [ValidateRange("NonNegative")]
+        [Alias('index')]
+        [ValidateRange('NonNegative')]
         [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias("size")]
-        [ValidateRange("Positive")]
+        [Alias('size')]
+        [ValidateRange('Positive')]
         [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias("Filter")]
+        [Alias('Filter')]
         [array]$Filters = @(),
 
-        [Alias("Fields")]
+        [Alias('Fields')]
         [array]$FieldIds = @(),
 
-        [Alias("Sort")]
+        [Alias('Sort')]
         [array]$SortOrder = @()
     )
 

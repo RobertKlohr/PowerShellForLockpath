@@ -6,6 +6,8 @@
     .DESCRIPTION
         Creates a group. The Name attribute is required when creating a group.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER Attributes
         The list of fields and values to change as an array. The field names in the array are case sensitive.
 
@@ -22,7 +24,7 @@
         The authentication account must have Read and Update Administrative Access permissions to administer groups.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -47,13 +49,13 @@
     process {
 
         $params = @{
-            'UriFragment' = "SecurityService/CreateGroup"
+            'UriFragment' = 'SecurityService/CreateGroup'
             'Method'      = 'POST'
             'Description' = "Creating group with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth 10
         }
 
-        if ($PSCmdlet.ShouldProcess("Creating group with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Creating group with attributes:")) {
+        if ($PSCmdlet.ShouldProcess("Creating group with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating group with attributes:')) {
             [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

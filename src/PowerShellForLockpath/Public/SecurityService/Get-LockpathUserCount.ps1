@@ -7,6 +7,8 @@ function Get-LockpathUserCount {
         Returns the number of users. The count does not include Deleted users and can include non-Lockpath user
         accounts, such as Vendor Contacts.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER Filters
         The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
         groups meeting the selected criteria. Remove all filters to return a list of all groups.
@@ -27,7 +29,7 @@ function Get-LockpathUserCount {
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -37,7 +39,7 @@ function Get-LockpathUserCount {
     [OutputType('System.String')]
 
     param(
-        [Alias("Filter")]
+        [Alias('Filter')]
         [array]$Filters = @()
     )
 

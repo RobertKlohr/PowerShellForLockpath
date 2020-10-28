@@ -5,15 +5,17 @@
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [ValidatePattern('^(?!https?:).*')]
 
+        [securestring] $Credential,
+
+        [ValidatePattern('^(?!https?:).*')]
         [string] $InstanceName,
 
         [ValidateRange(0, 65535)]
-        [uint]      $InstancePort,
+        [uint] $InstancePort,
 
         [string] $InstancePortocol,
 
@@ -23,11 +25,11 @@
 
         [switch] $LogTimeAsUtc,
 
-        [uint]      $PageIndex,
+        [uint] $PageIndex,
 
-        [uint]      $PageSize,
+        [uint] $PageSize,
 
-        [uint]      $RetryDelaySeconds,
+        [uint] $RetryDelaySeconds,
 
         [boolean] $RunAsSystem,
 
@@ -36,7 +38,7 @@
         [string] $UserAgent,
 
         [ValidateRange(0, 3600)]
-        [uint]      $WebRequestTimeoutSec,
+        [uint] $WebRequestTimeoutSec,
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )

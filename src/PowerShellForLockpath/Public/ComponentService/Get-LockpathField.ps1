@@ -6,6 +6,8 @@ function Get-LockpathField {
     .DESCRIPTION
         Returns available fields for a given component. The field Id may be found by using Get-LockpathFieldList.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER FieldId
         Specifies the Id number of the field as a positive integer.
 
@@ -35,7 +37,7 @@ function Get-LockpathField {
         The authentication account must have Read General Access permissions for the specific component and field.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -50,8 +52,8 @@ function Get-LockpathField {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $FieldId
     )
 

@@ -6,6 +6,8 @@
     .DESCRIPTION
         Transitions a record in a workflow.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentAlias
         Specifies the system alias of the component as a string.
 
@@ -33,7 +35,7 @@
         There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -61,7 +63,7 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Alias")]
+        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [string] $ComponentAlias,
 
@@ -69,16 +71,16 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Record")]
-        [ValidateRange("Positive")]
+        [Alias('Record')]
+        [ValidateRange('Positive')]
         [uint] $RecordId,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Transition")]
-        [ValidateRange("Positive")]
+        [Alias('Transition')]
+        [ValidateRange('Positive')]
         [uint] $TransitionId
     )
 

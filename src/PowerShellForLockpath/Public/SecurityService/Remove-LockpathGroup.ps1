@@ -7,6 +7,8 @@
         Deletes a group. This is a soft delete that hides the group from the user interface and API by changing the
         permissions on the group. It also does not remove members from the group. To undelete a group requires a support request.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER GroupId
         Specifies the Id number of the group as a positive integer.
 
@@ -36,7 +38,7 @@
         The authentication account must have Read and Delete Administrative Access permissions to administer groups.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -51,8 +53,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [int] $GroupId
     )
 

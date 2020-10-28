@@ -6,6 +6,8 @@ function Get-LockpathUser {
     .DESCRIPTION
         Returns available fields for a given user. The user Id may be found by using Get-LockpathUsers.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER UserId
         Specifies the Id number of the user as a positive integer.
 
@@ -35,7 +37,7 @@ function Get-LockpathUser {
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
 #>
 
     [CmdletBinding(
@@ -50,8 +52,8 @@ function Get-LockpathUser {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("NonNegative")]
+        [Alias('Id')]
+        [ValidateRange('NonNegative')]
         [int] $UserId
     )
 

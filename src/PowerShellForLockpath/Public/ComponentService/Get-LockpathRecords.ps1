@@ -7,6 +7,8 @@ function Get-LockpathRecords {
         Return the title/default field for a set of records within a chosen component. Filters may be applied to
         return only the records meeting selected criteria.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER PageIndex
         The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
         in the configuration.
@@ -42,7 +44,7 @@ function Get-LockpathRecords {
         field.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -55,19 +57,19 @@ function Get-LockpathRecords {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
-        [Alias("index")]
-        [ValidateRange("NonNegative")]
+        [Alias('index')]
+        [ValidateRange('NonNegative')]
         [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias("size")]
-        [ValidateRange("Positive")]
+        [Alias('size')]
+        [ValidateRange('Positive')]
         [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias("Filter")]
+        [Alias('Filter')]
         [array]$Filters = @()
     )
 

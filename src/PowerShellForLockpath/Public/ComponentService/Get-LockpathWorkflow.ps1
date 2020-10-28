@@ -7,6 +7,8 @@ function Get-LockpathWorkflow {
         Retrieves workflow details and all workflow stages specified by Id. The Id for a workflow may be found by
         using Get-LockpathWorkflows.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER WorkflowId
         Specifies the Id number of the workflow as a positive integer.
 
@@ -31,7 +33,7 @@ function Get-LockpathWorkflow {
         containing the workflow.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -46,8 +48,8 @@ function Get-LockpathWorkflow {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $WorkflowId
     )
 

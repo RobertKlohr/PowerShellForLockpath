@@ -7,6 +7,8 @@
         Returns available fields for a given component. A component is a user-defined data object such as a custom
         content table. The component alias may be found by using Get-LockpathComponentList.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentAlias
         Specifies the system alias of the component as a string.
 
@@ -36,7 +38,7 @@
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -51,7 +53,7 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Alias")]
+        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [string] $ComponentAlias
     )

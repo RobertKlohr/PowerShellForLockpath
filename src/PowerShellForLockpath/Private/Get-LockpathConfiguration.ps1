@@ -1,11 +1,47 @@
 ﻿function Get-LockpathConfiguration {
-    #FIXME Update to new coding standards
+    <#
+    .SYNOPSIS
+        Gets the currently configured value for the requested configuration setting.
+
+    .DESCRIPTION
+        Gets the currently configured value for the requested configuration setting.
+
+        Always returns the value for this session, which may or may not be the persisted
+        setting (that all depends on whether or not the setting was previously modified
+        during this session using Set-LockpathConfiguration -SessionOnly).
+
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
+    .PARAMETER Name
+        The name of the configuration whose value is desired.
+
+    .EXAMPLE
+        Get-LockpathConfiguration -Name instanceName
+
+        Gets the currently configured value for instanceName for this PowerShell session
+        (which may or may not be the same as the persisted configuration value, depending on
+        whether this value was modified during this session with Set-LockpathConfiguration -SessionOnly).
+
+    .INPUTS
+        System.String
+
+    .OUTPUTS
+        System.String
+
+    .NOTES
+        Internal-only helper method.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+#>
+
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [Parameter(Mandatory)]
@@ -13,6 +49,7 @@
             'acceptHeader',
             'configurationFilePath',
             'credentialFilePath',
+            'credential',
             'instanceName',
             'instancePort',
             'instanceProtocol',

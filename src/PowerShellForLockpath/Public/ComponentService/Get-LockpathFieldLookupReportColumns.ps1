@@ -10,6 +10,8 @@
         Get-LockpathFieldLookupReportColumns compliments Get-LockpathRecordDetail by adding additional details
         about the lookup report columns returned from Get-LockpathRecordDetail.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER FieldId
         Specifies the Id number of the field as a positive integer.
 
@@ -34,7 +36,7 @@
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -49,8 +51,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $FieldId,
 
         [Parameter(
@@ -58,8 +60,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("FieldPath")]
-        [ValidateRange("Positive")]
+        [Alias('FieldPath')]
+        [ValidateRange('Positive')]
         [uint] $FieldPathId
     )
 

@@ -7,6 +7,8 @@ function Get-LockpathWorkflows {
         Retrieves all workflows for a component specified by its Alias. A component is a user-defined data object
         such as a custom content table. The component Alias may be found by using GetComponentList (ShortName).
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentAlias
         Specifies the system alias of the component as a string.
 
@@ -36,7 +38,7 @@ function Get-LockpathWorkflows {
         The authentication account must have Read Administrative Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -51,7 +53,7 @@ function Get-LockpathWorkflows {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Alias")]
+        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [string] $ComponentAlias
     )

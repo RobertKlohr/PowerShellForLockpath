@@ -5,7 +5,7 @@
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [Parameter(Mandatory)]
@@ -16,23 +16,23 @@
 
     # Create a configuration object with all the default values.
     $config = [PSCustomObject]@{
+        'acceptHeader'          = [String] 'application/json'
         'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
         'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
-        'acceptHeader'          = 'application/json'
         'instanceName'          = [String]::Empty
-        'instancePort'          = 4443
-        'instanceProtocol'      = 'https'
+        'instancePort'          = [Uint32] 4443
+        'instanceProtocol'      = [String] 'https'
         'logPath'               = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
-        'logRequestBody'        = $false
-        'logTimeAsUtc'          = $false
-        'MethodContainsBody'    = ("Delete", "Post")
-        'pageIndex'             = 0
-        'pageSize'              = 100
-        'retryDelaySeconds'     = 30
-        'runAsSystem'           = $true
+        'logRequestBody'        = [Boolean] $false
+        'logTimeAsUtc'          = [Boolean] $false
+        'MethodContainsBody'    = [String[]] ('Delete', 'Post')
+        'pageIndex'             = [Uint32] 0
+        'pageSize'              = [Uint32] 100
+        'retryDelaySeconds'     = [Uint32] 30
+        'runAsSystem'           = [Boolean] $true
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
-        'webRequestTimeoutSec'  = 0
-        'webSession'            = $false
+        'webRequestTimeoutSec'  = [Uint32] 0
+        'webSession'            = [Boolean] $false
     }
 
     # Update the values with any that we find in the configuration file.

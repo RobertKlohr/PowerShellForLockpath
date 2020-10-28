@@ -4,6 +4,8 @@
         Returns available fields for a given group.
     .DESCRIPTION
         Returns available fields for a given group. The group Id may be found by using Get-LockpathGroups.
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER GroupId
         Specifies the Id number of the group as a positive integer.
     .EXAMPLE
@@ -24,7 +26,7 @@
     .NOTES
         The authentication account must have Read Administrative Access permissions to administer users.
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -39,8 +41,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("NonNegative")]
+        [Alias('Id')]
+        [ValidateRange('NonNegative')]
         [uint]      $GroupId
     )
 

@@ -4,6 +4,8 @@ function Send-LockpathPing {
         Refreshes a valid session.
     .DESCRIPTION
         Refreshes a valid session.
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .EXAMPLE
         Send-LockpathPing
     .INPUTS
@@ -13,7 +15,7 @@ function Send-LockpathPing {
     .NOTES
         The authentication account must have access to the API.
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(

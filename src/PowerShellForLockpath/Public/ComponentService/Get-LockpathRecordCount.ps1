@@ -8,6 +8,8 @@ function Get-LockpathRecordCount {
         meeting a given criteria. This function may be used to help determine the amount of records before
         retrieving the records themselves.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -34,7 +36,7 @@ function Get-LockpathRecordCount {
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -47,11 +49,11 @@ function Get-LockpathRecordCount {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
-        [Alias("Filter")]
+        [Alias('Filter')]
         [array]$Filters = @()
     )
 

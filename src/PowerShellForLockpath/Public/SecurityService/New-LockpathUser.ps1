@@ -8,6 +8,8 @@
         EmailAddress, FirstName, LastName, Password, Username, SecurityConfiguration, SecurityRoles. The password
         set must meet the criteria of the settings in the selected SecurityConfiguration.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER Attributes
         The list of fields and values to change as an array. The field names in the array are case sensitive.
 
@@ -26,7 +28,7 @@
         Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -50,13 +52,13 @@
 
     process {
         $params = @{
-            'UriFragment' = "SecurityService/CreateUser"
+            'UriFragment' = 'SecurityService/CreateUser'
             'Method'      = 'POST'
             'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth 10
         }
 
-        if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Creating user with attributes:")) {
+        if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating user with attributes:')) {
             [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

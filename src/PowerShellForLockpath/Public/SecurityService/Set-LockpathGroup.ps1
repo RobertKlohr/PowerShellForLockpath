@@ -6,6 +6,8 @@
     .DESCRIPTION
         Updates a group.  All attributes that are updated are overwritten with the new value.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER Attributes
         The list of fields and values to change as an array. The list of attributes must include the Id field and
         the group Id as the value for the group being updated. The field names in the array are case sensitive.
@@ -26,7 +28,7 @@
         The authentication account must have Read and Update Administrative Access permissions to administer groups.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -55,7 +57,7 @@
         $GroupId = $Attributes.Id
 
         $params = @{
-            'UriFragment' = "SecurityService/UpdateGroup"
+            'UriFragment' = 'SecurityService/UpdateGroup'
             'Method'      = 'POST'
             'Description' = "Updating group with Id: $GroupId and values $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth 10

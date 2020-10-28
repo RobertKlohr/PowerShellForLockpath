@@ -7,6 +7,8 @@
         Deletes a user account. To inactive a user account use Set-LockpathUser. To undelete an account you must
         use the platform interface.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER UserId
         Specifies the Id number of the user as a positive integer.
 
@@ -38,7 +40,7 @@
         Vendor Profiles.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -53,8 +55,8 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Id")]
-        [ValidateRange("Positive")]
+        [Alias('Id')]
+        [ValidateRange('Positive')]
         [int] $UserId
     )
 

@@ -8,6 +8,8 @@
         enforce mandatory fields in a record. It is possible to pass an empty array for the attribute parameter to
         create an empty record.
 
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
@@ -28,7 +30,7 @@
         and record along with Update General Access to the fields.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -42,8 +44,8 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias("Component")]
-        [ValidateRange("Positive")]
+        [Alias('Component')]
+        [ValidateRange('Positive')]
         [uint] $ComponentId,
 
         [Parameter(
