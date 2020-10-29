@@ -33,6 +33,7 @@
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
         'webRequestTimeoutSec'  = [Uint32] 0
         'webSession'            = [Boolean] $false
+        'credential'            = [PSCredential]::Empty
     }
 
     # Update the values with any that we find in the configuration file.

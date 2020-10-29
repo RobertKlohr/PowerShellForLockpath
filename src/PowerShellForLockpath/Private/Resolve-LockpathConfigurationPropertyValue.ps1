@@ -68,7 +68,7 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet('Boolean', 'Int32', 'Int64', 'String', 'String[]', 'Uint32')]
+        [ValidateSet('Boolean', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'Uint32')]
         [String] $Type,
 
         [Parameter(
@@ -83,12 +83,27 @@
     }
 
     switch (${Type}) {
-        'Boolean' { $typeType = [Boolean]; break }
-        'Int32' { $typeType = [Int32]; break }
-        'Int64' { $typeType = [Int64]; break }
-        'String' { $typeType = [String]; break }
-        'String[]' { $typeType = [String[]]; break }
-        'Uint32' { $typeType = [Uint32]; break }
+        'Boolean' {
+            $typeType = [Boolean]; break
+        }
+        'Int32' {
+            $typeType = [Int32]; break
+        }
+        'Int64' {
+            $typeType = [Int64]; break
+        }
+        'PSCredential' {
+            $typeType = [PSCredential]; break
+        }
+        'String' {
+            $typeType = [String]; break
+        }
+        'String[]' {
+            $typeType = [String[]]; break
+        }
+        'Uint32' {
+            $typeType = [Uint32]; break
+        }
         Default {}
     }
 

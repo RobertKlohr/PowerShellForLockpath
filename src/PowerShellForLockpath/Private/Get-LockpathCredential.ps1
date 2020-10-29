@@ -45,35 +45,20 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    #read from config object
+    $credential = $(Get-LockpathConfiguration -Name 'credential')
 
-    if ($null -ne $(Get-LockpathConfiguration -Name 'credential')) {
-        $accessCredentials = $(Get-LockpathConfiguration -Name 'credential')
-    }
-
-    # read from file
-
-    $content = Import-Clixml -Path $FilePath -ErrorAction Ignore
-
-    if (-not [String]::IsNullOrEmpty($content)) {
+    if ($null -ne $credential.UserName) {
+        return $credential
+    } else {
         try {
-            $accessCredentials = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
+            $content = Import-Clixml -Path $FilePath
+            $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
             Write-LockpathLog -Message 'Restoring login credentials from file. These values can be cleared by calling Remove-LockpathCredential.' -Level Verbose
-            Set-LockpathConfiguration -Credential $accessCredentials
-            return $accessCredentials
+            $script:configuration | Add-Member NoteProperty -Name 'credential' -Value $credential -Force
+            return $credential
         } catch {
             Write-LockpathLog -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning
         }
     }
 
-
-    # $Credential = Read-LockpathCredential -Path $Path
-
-    # if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
-    #     $message = 'The password was not provided in the password field.'
-    #     Write-LockpathLog -Message $message -Level Error -Confirm:$false -WhatIf:$false
-    #     throw $message
-    # }
-
-    return $accessCredentials
 }
