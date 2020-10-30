@@ -24,7 +24,7 @@
     .PARAMETER Indent
         The number of spaces to indent the line in the log file.
 
-    .PARAMETER Path
+    .PARAMETER FilePath
         The log file path.
         Defaults to $env:USERPROFILE\Documents\PowerShellForGitHub.log
 
@@ -111,7 +111,7 @@
         [ValidateRange(1, 30)]
         [Int16] $Indent = 0,
 
-        [IO.FileInfo] $Path = (Get-LockpathConfiguration -Name 'logPath'),
+        [IO.FileInfo] $FilePath = (Get-LockpathConfiguration -Name 'logPath'),
 
         [System.Management.Automation.ErrorRecord] $Exception
     )
@@ -150,7 +150,7 @@
         (' ' * $Indent),
         $finalMessage
 
-        if (Get-LocpathConfiguration -Name 'logProcessId') {
+        if (Get-LockpathConfiguration -Name 'logProcessId') {
             $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
             $pidColumnLength = $maxPidDigits + '[]'.Length
             $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f
@@ -196,20 +196,20 @@
         }
 
         try {
-            if ([String]::IsNullOrWhiteSpace($Path)) {
+            if ([String]::IsNullOrWhiteSpace($FilePath)) {
                 Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
             } else {
-                if (-not (Test-Path $Path)) {
-                    New-Item -Path $Path -ItemType File -Force
+                if (-not (Test-Path $FilePath)) {
+                    New-Item -Path $FilePath -ItemType File -Force
                 }
-                $logFileMessage | Out-File -FilePath $Path -Append
+                $logFileMessage | Out-File -FilePath $FilePath -Append
             }
         } catch {
             $output = @()
-            $output += "Failed to add log entry to [$Path]. The error was:"
+            $output += "Failed to add log entry to [$FilePath]. The error was:"
             $output += Out-String -InputObject $_
 
-            if (Test-Path -Path $Path -PathType Leaf) {
+            if (Test-Path -Path $FilePath -PathType Leaf) {
                 # The file exists, but likely is being held open by another process.
                 # Let's do best effort here and if we can't log something, just report
                 # it and move on.

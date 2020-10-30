@@ -1,5 +1,7 @@
 ﻿function Set-LockpathConfiguration {
     #FIXME Update to new coding standards
+    #FIXME move save-lockpathconfiguration into this function
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
@@ -45,7 +47,7 @@
 
     $persistedConfig = $null
     if (-not $SessionOnly) {
-        $persistedConfig = Read-LockpathConfiguration -Path $script:configurationFilePath
+        $persistedConfig = Read-LockpathConfiguration -FilePath $script:configurationFilePath
     }
 
     $properties = Get-Member -InputObject $script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
@@ -64,7 +66,12 @@
     }
 
     if (-not $SessionOnly) {
-        Save-LockpathConfiguration -Configuration $persistedConfig -Path $script:ConfigurationFilePath
+        try {
+            $null = New-Item -Path $FilePath -Force
+            ConvertTo-Json -InputObject $Configuration | Set-Content -Path $FilePath -Force
+            return ('Successfully saved configuration to disk.')
+        } catch {
+            Write-LockpathLog -Message 'Failed to save configuration to disk.  It will remain for this PowerShell session only.' -Level Warning
+        }
     }
-
 }

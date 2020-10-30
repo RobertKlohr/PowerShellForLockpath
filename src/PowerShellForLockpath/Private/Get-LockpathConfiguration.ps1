@@ -56,6 +56,7 @@
             'instancePort',
             'instanceProtocol',
             'logPath',
+            'logProcessId',
             'logRequestBody',
             'logTimeAsUtc',
             'MethodContainsBody',

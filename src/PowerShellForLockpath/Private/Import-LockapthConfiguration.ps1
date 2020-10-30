@@ -1,4 +1,7 @@
 ﻿function Import-LockpathConfiguration {
+
+    #FIXME setting the defaults into initialize-lockpathconfiguration
+
     #FIXME Update to new coding standards
 
     #FIXME Clean up help
@@ -11,27 +14,34 @@
         Loads in the default configuration values, and then updates the individual properties
         with values that may exist in a file.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER Path
-        The file that may or may not exist with a serialized version of the configuration
+    .PARAMETER FilePath
+        The file that may or may not exist with a JSON serialized version of the configuration
         values for this module.
+
+    .INPUTS
+        System.IO.FileInfo
 
     .OUTPUTS
         PSCustomObject
 
     .NOTES
         Internal helper method.
-        No side-effects.
 
     .EXAMPLE
-        Import-GitHubConfiguration -Path 'c:\foo\config.json'
+        Import-LockpathConfiguration -Path 'c:\temp\config.json'
 
         Creates a new default config object and updates its values with any that are found
-        within a deserialized object from the content in $Path.  The configuration object
+        within a deserialized object from the content in $FilePath.  The configuration object
         is then returned.
-#>
 
+    .NOTES
+        The authentication account must have access to the API.
+
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -41,11 +51,13 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory)]
-        [string] $Path
+        [Parameter(
+            Mandatory = $true)]
+        [Alias('Path')]
+        [System.IO.FileInfo] $FilePath
     )
-
-    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    #FIXME the following line can be set to active once the defaults are moved to initialize-lockpathconfiguration
+    #    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     # Create a configuration object with all the default values.
     $config = [PSCustomObject]@{
@@ -71,13 +83,17 @@
     }
 
     # Update the values with any that we find in the configuration file.
-    $jsonObject = Read-LockpathConfiguration -Path $Path
-    Get-Member -InputObject $config -MemberType NoteProperty |
-    ForEach-Object {
-        $name = $_.Name
-        $type = $config.$name.GetType().Name
-        $config.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $jsonObject -Name $name -Type $type -DefaultValue $config.$name
+    try {
+        $savedConfiguration = Read-LockpathConfiguration -Path $FilePath
+        Get-Member -InputObject $config -MemberType NoteProperty |
+        ForEach-Object {
+            $name = $_.Name
+            $type = $config.$name.GetType().Name
+            $config.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $config.$name
+        }
+        return $config
+    } catch {
+        Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
     }
 
-    return $config
 }

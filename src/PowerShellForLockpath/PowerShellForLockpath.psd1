@@ -71,6 +71,7 @@
         'Get-LockpathRecords',
         'Get-LockpathRecordsAvailableForLookup',
         'Get-LockpathRecordsDetails',
+        'Get-LockpathReport',
         'Get-LockpathUser',
         'Get-LockpathUserCount',
         'Get-LockpathUsers',

@@ -11,7 +11,7 @@
         Populates the configuration of the module for this session, loading in any values
         that may have been saved to disk.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .NOTES
         Internal helper method.  This is actually invoked at the END of this file.
@@ -31,6 +31,7 @@
         Export-ModuleMember
     }
 
+    #FIXME this may not be needed to put these two variables into the script scope
     @{
         ConfigurationFilePath = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
         CredentialFilePath    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
@@ -38,7 +39,7 @@
         Set-Variable -Scope Script -Option ReadOnly -Name $_.Key -Value $_.Value
     }
 
-    $script:configuration = Import-LockpathConfiguration -Path $script:configurationFilePath
+    $script:configuration = Import-LockpathConfiguration -FilePath $script:configurationFilePath
 
     # Normally Write-LockpathInvocationLog is the first call in a function except here since the location of the
     # log file is only set in the previous line.

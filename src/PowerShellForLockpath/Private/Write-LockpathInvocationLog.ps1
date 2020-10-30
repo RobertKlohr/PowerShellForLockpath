@@ -74,7 +74,6 @@
             }
         }
     }
-    # Write-Host "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')"
 
     Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
 }

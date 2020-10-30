@@ -10,7 +10,7 @@
     .DESCRIPTION
         Loads in the default configuration values and returns the deserialized object.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Path
         The file that may or may not exist with a serialized version of the configuration
@@ -21,7 +21,6 @@
 
     .NOTES
         Internal helper method.
-        No side-effects.
 
     .EXAMPLE
         Read-GitHubConfiguration -Path 'c:\foo\config.json'
@@ -38,12 +37,15 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [string] $Path
+        [Parameter(
+            Mandatory = $true)]
+        [Alias('Path')]
+        [System.IO.FileInfo] $FilePath
     )
+    #FIXME the folllowing line can be made active once defaults are set in initialize-lockpathconfiguration
+    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
-
-    $content = Get-Content -Path $Path -Encoding UTF8 -ErrorAction Ignore
+    $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Ignore
     if (-not [String]::IsNullOrEmpty($content)) {
         try {
             return ($content | ConvertFrom-Json)

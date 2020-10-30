@@ -78,6 +78,9 @@
         $DefaultValue
     )
 
+    #FIXME the folllowing line can be made active once defaults are set in initialize-lockpathconfiguration
+    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
     if ($null -eq $InputObject) {
         return $DefaultValue
     }
