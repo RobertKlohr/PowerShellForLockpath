@@ -12,8 +12,8 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER Path
-        Path to the file storing the API credentials. If not provided defaults to the path in the configuration file.
+    .EXAMPLE
+        Get-LockpathCredential
 
     .INPUTS
         System.IO.FileInfo
@@ -35,13 +35,7 @@
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
-    param(
-        [Parameter(
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [Alias('Path')]
-        [System.IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'credentialFilePath')
-    )
+    param()
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
@@ -51,7 +45,7 @@
         return $credential
     } else {
         try {
-            $content = Import-Clixml -Path $FilePath
+            $content = Import-Clixml -Path $(Get-LockpathConfiguration -Name 'credentialFilePath')
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
             Write-LockpathLog -Message 'Restoring login credentials from file. These values can be cleared by calling Remove-LockpathCredential.' -Level Verbose
             $script:configuration | Add-Member NoteProperty -Name 'credential' -Value $credential -Force
@@ -60,5 +54,4 @@
             Write-LockpathLog -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning
         }
     }
-
 }

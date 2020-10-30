@@ -111,7 +111,7 @@
         if ($InputObject.$Name -is $typeType) {
             return $InputObject.$Name
         } else {
-            Write-LockpathInvocationLog "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
+            Write-LockpathLog -Message "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
             return $DefaultValue
         }
     } else {

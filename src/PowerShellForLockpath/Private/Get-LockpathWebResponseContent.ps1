@@ -11,7 +11,7 @@
         [System.Net.HttpWebResponse] $WebResponse
     )
 
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $streamReader = $null
 

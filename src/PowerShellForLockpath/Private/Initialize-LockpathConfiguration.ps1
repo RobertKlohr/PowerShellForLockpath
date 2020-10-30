@@ -25,5 +25,5 @@
 
     # Normally Write-LockpathInvocationLog is the first call in a function except here since the location of the
     # log file is only set in the previous line.
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 }

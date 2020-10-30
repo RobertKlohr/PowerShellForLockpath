@@ -44,7 +44,9 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory = $true,
+            Position = 0)]
         [ValidateSet(
             'acceptHeader',
             'configurationFilePath',

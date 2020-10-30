@@ -1,27 +1,34 @@
 ﻿function Save-LockpathConfiguration {
     #FIXME Update to new coding standards
+
+
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory = $true)]
+        [Alias('Config')]
         [PSCustomObject] $Configuration,
 
-        [Parameter(Mandatory)]
-        [string] $Path
+        [Parameter(
+            Mandatory = $true)]
+        [Alias('Path')]
+        [System.IO.FileInfo] $FilePath
     )
 
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $null = New-Item -Path $Path -Force
     ConvertTo-Json -InputObject $Configuration |
     Set-Content -Path $Path -Force -ErrorAction SilentlyContinue -ErrorVariable ev
 
     if (($null -ne $ev) -and ($ev.Count -gt 0)) {
-        Write-LockpathLog -Message "Failed to persist these updated settings to disk.  They will remain for this PowerShell session only." -Level Warning -Exception $ev[0]
+        Write-LockpathLog -Message 'Failed to persist these updated settings to disk.  They will remain for this PowerShell session only.' -Level Warning -Exception $ev[0]
     }
 }

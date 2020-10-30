@@ -5,11 +5,13 @@
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [string] $Path
     )
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $content = Get-Content -Path $Path -Encoding UTF8 -ErrorAction Ignore
     if (-not [String]::IsNullOrEmpty($content)) {

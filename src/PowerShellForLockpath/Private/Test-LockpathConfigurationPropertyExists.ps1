@@ -48,6 +48,8 @@
         [String] $Name
     )
 
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
     return (($null -ne $InputObject) -and
         ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties)))
 }

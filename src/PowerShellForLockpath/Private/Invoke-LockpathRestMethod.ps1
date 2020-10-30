@@ -33,7 +33,7 @@
         [string] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
 
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     # Normalize our Uri fragment to remove leading "/" or trailing '/'
     if ($UriFragment.StartsWith('/')) {

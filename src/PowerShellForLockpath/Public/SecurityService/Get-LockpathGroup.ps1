@@ -4,6 +4,7 @@
         Returns available fields for a given group.
     .DESCRIPTION
         Returns available fields for a given group. The group Id may be found by using Get-LockpathGroups.
+
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER GroupId

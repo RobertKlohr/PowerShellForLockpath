@@ -12,12 +12,13 @@
         [string] $Path
     )
 
-    # Write-LockpathInvocationLog
+    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     # Create a configuration object with all the default values.
     $config = [PSCustomObject]@{
         'acceptHeader'          = [String] 'application/json'
         'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
+        'credential'            = [PSCredential]::Empty
         'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
         'instanceName'          = [String]::Empty
         'instancePort'          = [Uint32] 4443
@@ -33,7 +34,6 @@
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
         'webRequestTimeoutSec'  = [Uint32] 0
         'webSession'            = [Boolean] $false
-        'credential'            = [PSCredential]::Empty
     }
 
     # Update the values with any that we find in the configuration file.
