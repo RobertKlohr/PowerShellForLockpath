@@ -1,11 +1,28 @@
 ﻿function Initialize-LockpathConfiguration {
     #FIXME Update to new coding standards
+
+    #FIXME Clean up help
+    <#
+    .SYNOPSIS
+        Populates the configuration of the module for this session, loading in any values
+        that may have been saved to disk.
+
+    .DESCRIPTION
+        Populates the configuration of the module for this session, loading in any values
+        that may have been saved to disk.
+
+        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+
+    .NOTES
+        Internal helper method.  This is actually invoked at the END of this file.
+#>
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param()
 

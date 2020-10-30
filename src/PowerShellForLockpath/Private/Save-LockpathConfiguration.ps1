@@ -2,6 +2,31 @@
     #FIXME Update to new coding standards
 
 
+    #FIXME Clean up help
+    <#
+    .SYNOPSIS
+        Serializes the provided settings object to disk as a JSON file.
+
+    .DESCRIPTION
+        Serializes the provided settings object to disk as a JSON file.
+
+        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+
+    .PARAMETER Configuration
+        The configuration object to persist to disk.
+
+    .PARAMETER Path
+        The path to the file on disk that Configuration should be persisted to.
+
+    .NOTES
+        Internal helper method.
+
+    .EXAMPLE
+        Save-GitHubConfiguration -Configuration $config -Path 'c:\foo\config.json'
+
+        Serializes $config as a JSON object to 'c:\foo\config.json'
+#>
+
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

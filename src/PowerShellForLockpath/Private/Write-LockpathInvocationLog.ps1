@@ -2,12 +2,50 @@
     #FIXME Update to new coding standards
     #FIXME add redact and exclude parameters to configuration
 
+    #FIXME Clean up help
+
+    <#
+    .SYNOPSIS
+        Writes a log entry for the invoke command.
+
+    .DESCRIPTION
+        Writes a log entry for the invoke command.
+
+        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+
+    .PARAMETER InvocationInfo
+        The '$MyInvocation' object from the calling function.
+        No need to explicitly provide this if you're trying to log the immediate function this is
+        being called from.
+
+    .PARAMETER RedactParameter
+        An optional array of parameter names that should be logged, but their values redacted.
+
+    .PARAMETER ExcludeParameter
+        An optional array of parameter names that should simply not be logged.
+
+    .EXAMPLE
+        Write-InvocationLog -Invocation $MyInvocation
+
+    .EXAMPLE
+        Write-InvocationLog -Invocation $MyInvocation -ExcludeParameter @('Properties', 'Metrics')
+
+    .NOTES
+        The actual invocation line will not be _completely_ accurate as converted parameters will
+        be in JSON format as opposed to PowerShell format.  However, it should be sufficient enough
+        for debugging purposes.
+
+        ExcludeParameter will always take precedence over RedactParameter.
+#>
+
+
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
