@@ -1,4 +1,5 @@
 ﻿* #TODO create a post-sandbox function that turns specific items back on
+* #TODO create a user query function that uses switches and simple parameters instead of JSON for input
 * #TODO test to see which fields can be updated vai updaterecord api verb.
 * #TODO Update the descriptions on each function to highlight API calls to get each parameter. (see Get-LockpathRecordAttachment)
 * #TODO Rework configuration settings.

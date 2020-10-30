@@ -94,8 +94,8 @@
             'componentId'   = $ComponentId
             'dynamicRecord' = [ordered]@{'Id' = $RecordId
                 'FieldValues'                 = @(@{'key' = $FieldId
-                        'value'           = @(@{'FileName' = $FilePath.Name
-                                'FileData'       = $fileData
+                        'value'           = @(@{'fileName' = $FilePath.Name
+                                'fileData'       = $fileData
                             }
                         )
                     }
