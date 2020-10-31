@@ -77,11 +77,6 @@
         [FileInfo] - The temporary file created for the downloaded file if -Save was specified.
 
     .EXAMPLE
-        Invoke-GHRestMethod -UriFragment "users/octocat" -Method Get -Description "Get information on the octocat user"
-
-        Gets the user information for Octocat.
-
-    .EXAMPLE
         Invoke-GHRestMethod -UriFragment "user" -Method Get -Description "Get current user"
 
         Gets information about the current authenticated user.
@@ -116,7 +111,7 @@
 
         [string] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
 
-        [uint]      $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
+        [uint] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
 
         [string] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
 
@@ -196,22 +191,23 @@
             $finalResult = $finalResult
         }
 
-        $resultNotReadyStatusCode = 202
-        if ($result.StatusCode -eq $resultNotReadyStatusCode) {
-            $retryDelaySeconds = Get-LockpathConfiguration -Name RetryDelaySeconds
+        # FIXME lockpath does not use 202 so this section of code and setting is not needed.
+        # $resultNotReadyStatusCode = 202
+        # if ($result.StatusCode -eq $resultNotReadyStatusCode) {
+        #     $retryDelaySeconds = Get-LockpathConfiguration -Name RetryDelaySeconds
 
-            if ($Method -ne 'Get') {
-                # We only want to do our retry logic for GET requests...
-                # We don't want to repeat PUT/PATCH/POST/DELETE.
-                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
-            } elseif ($retryDelaySeconds -le 0) {
-                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
-            } else {
-                Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
-                Start-Sleep -Seconds ($retryDelaySeconds)
-                return (Invoke-LockpathRestMethod @PSBoundParameters)
-            }
-        }
+        #     if ($Method -ne 'Get') {
+        #         # We only want to do our retry logic for GET requests...
+        #         # We don't want to repeat PUT/PATCH/POST/DELETE.
+        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
+        #     } elseif ($retryDelaySeconds -le 0) {
+        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
+        #     } else {
+        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
+        #         Start-Sleep -Seconds ($retryDelaySeconds)
+        #         return (Invoke-LockpathRestMethod @PSBoundParameters)
+        #     }
+        # }
         return $result.Content
         # return $finalResult
     } catch {

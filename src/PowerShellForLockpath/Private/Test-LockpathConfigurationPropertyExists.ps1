@@ -48,9 +48,8 @@
         [String] $Name
     )
 
-    #FIXME the folllowing line can be made active once defaults are set in initialize-lockpathconfiguration
-    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
-
-    return (($null -ne $InputObject) -and
-        ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties)))
+    #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    return $true
+    # return (($null -ne $InputObject) -and
+    # ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties)))
 }

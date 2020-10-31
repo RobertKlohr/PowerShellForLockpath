@@ -62,7 +62,6 @@
             'MethodContainsBody',
             'pageIndex',
             'pageSize',
-            'retryDelaySeconds',
             'runAsSystem',
             'UserAgent',
             'webRequestTimeoutSec',

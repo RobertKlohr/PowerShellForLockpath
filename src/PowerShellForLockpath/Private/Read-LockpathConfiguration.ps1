@@ -1,8 +1,4 @@
 ﻿function Read-LockpathConfiguration {
-    #FIXME Update to new coding standards
-
-
-    #FIXME Clean up help
     <#
     .SYNOPSIS
         Loads in the default configuration values and returns the deserialized object.
@@ -19,15 +15,23 @@
     .OUTPUTS
         PSCustomObject
 
+    .EXAMPLE
+        Read-LockpathConfiguration -Path 'c:\Temp\PowerShellForLockpath.json'
+
+        Returns back an object with the deserialized object contained in the specified file if it exists and is valid.
+
+    .INPUTS
+        System.IO.FileInfo
+
+    .OUTPUTS
+        PSCustomObject
+
     .NOTES
         Internal helper method.
 
-    .EXAMPLE
-        Read-GitHubConfiguration -Path 'c:\foo\config.json'
-
-        Returns back an object with the deserialized object contained in the specified file,
-        if it exists and is valid.
-#>
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -42,16 +46,14 @@
         [Alias('Path')]
         [System.IO.FileInfo] $FilePath
     )
-    #FIXME the folllowing line can be made active once defaults are set in initialize-lockpathconfiguration
-    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Ignore
-    if (-not [String]::IsNullOrEmpty($content)) {
-        try {
-            return ($content | ConvertFrom-Json)
-        } catch {
-            Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to recover.' -Level Warning
-        }
+    Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
+
+    try {
+        $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
+        return ($content | ConvertFrom-Json)
+    } catch {
+        Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     }
     return [PSCustomObject]@{ }
 }

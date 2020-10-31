@@ -78,6 +78,7 @@
         'Get-LockpathUsersDetails',
         'Get-LockpathWorkflow',
         'Get-LockpathWorkflows',
+        'Import-LockpathConfiguration',
         'Import-LockpathFile',
         'New-LockpathGroup',
         'New-LockpathRecord',

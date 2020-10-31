@@ -68,7 +68,7 @@
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet('Boolean', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'Uint32')]
+        [ValidateSet('Boolean', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'Uint16', 'Uint32')]
         [String] $Type,
 
         [Parameter(
@@ -78,9 +78,11 @@
         $DefaultValue
     )
 
-    #FIXME the folllowing line can be made active once defaults are set in initialize-lockpathconfiguration
-    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
+
+    # Need to adjust the datatypes for some settingssince we are storing the configuration in JSON and
+    # ConvertFrom-JSON return all integers as type [Int64] and all arrays as type [Object[]]
     if ($null -eq $InputObject) {
         return $DefaultValue
     }
@@ -90,7 +92,9 @@
             $typeType = [Boolean]; break
         }
         'Int32' {
-            $typeType = [Int32]; break
+            $typeType = [Int32]
+            $InputObject.$name = [Int32] $InputObject.$name
+            break
         }
         'Int64' {
             $typeType = [Int64]; break
@@ -102,10 +106,19 @@
             $typeType = [String]; break
         }
         'String[]' {
-            $typeType = [String[]]; break
+            $typeType = [String[]]
+            $InputObject.$name = [String[]] $InputObject.$name
+            break
+        }
+        'Uint16' {
+            $typeType = [Uint16]
+            $InputObject.$name = [UInt16] $InputObject.$name
+            break
         }
         'Uint32' {
-            $typeType = [Uint32]; break
+            $typeType = [Uint32]
+            $InputObject.$name = [UInt32] $InputObject.$name
+            break
         }
         Default {}
     }
@@ -114,6 +127,7 @@
         if ($InputObject.$Name -is $typeType) {
             return $InputObject.$Name
         } else {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
             Write-LockpathLog -Message "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
             return $DefaultValue
         }
