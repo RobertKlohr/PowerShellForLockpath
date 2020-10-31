@@ -15,7 +15,7 @@
         None.
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have access to the API.
@@ -48,7 +48,7 @@
     }
 
     if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Login to:')) {
-        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

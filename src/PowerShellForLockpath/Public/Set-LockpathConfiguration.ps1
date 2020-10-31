@@ -74,7 +74,7 @@
         Sets the pageSize value to 1000 for this session only.
 
     .INPUTS
-        Microsoft.PowerShell.Commands.WebRequestSession, System.String, System.Unit32
+        Microsoft.PowerShell.Commands.WebRequestSession, String, UInt32
 
     .OUTPUTS
         None.
@@ -91,22 +91,22 @@
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-
         [securestring] $Credential,
 
         [ValidatePattern('^(?!https?:).*')]
-        [string] $InstanceName,
+        [String] $InstanceName,
 
         [ValidateRange(0, 65535)]
-        [uint] $InstancePort,
+        [Int64] $InstancePort,
 
         [ValidatePattern('^https?$')]
-        [string] $InstancePortocol,
+        [String] $InstancePortocol,
 
-        [string] $LogPath,
+        [String] $LogPath,
 
         [switch] $LogProcessId,
 
@@ -115,20 +115,20 @@
         [switch] $LogTimeAsUtc,
 
         [ValidateRange('NonNegative')]
-        [uint] $PageIndex,
+        [Int64] $PageIndex,
 
         [ValidateRange('Positive')]
-        [uint] $PageSize,
+        [Int64] $PageSize,
 
-        [boolean] $RunAsSystem,
+        [Boolean] $RunAsSystem,
 
         [switch] $SessionOnly,
 
         [ValidateLength(1, 256)]
-        [string] $UserAgent,
+        [String] $UserAgent,
 
         [ValidateRange('NonNegative')]
-        [uint] $WebRequestTimeoutSec,
+        [Int64] $WebRequestTimeoutSec,
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )

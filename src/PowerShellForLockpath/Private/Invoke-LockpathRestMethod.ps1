@@ -97,27 +97,27 @@
 
     param(
         [Parameter(Mandatory)]
-        [string] $UriFragment,
+        [String] $UriFragment,
 
         [Parameter(Mandatory)]
         [ValidateSet('Delete', 'Get', 'Post')]
-        [string] $Method,
+        [String] $Method,
 
-        [string] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),
+        [String] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),
 
-        [string] $Body = $null,
+        [String] $Body = $null,
 
-        [string] $Description = $null,
+        [String] $Description = $null,
 
-        [string] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
+        [String] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
 
-        [uint] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
+        [UInt16] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
 
-        [string] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
+        [String] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
 
         [String[]] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
 
-        [string] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
+        [String] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -238,11 +238,11 @@
         $output = @()
         $output += $message
 
-        if (-not [string]::IsNullOrEmpty($statusCode)) {
+        if (-not [String]::IsNullOrEmpty($statusCode)) {
             $output += "$statusCode | $($statusDescription.Trim())"
         }
 
-        if (-not [string]::IsNullOrEmpty($innerMessage)) {
+        if (-not [String]::IsNullOrEmpty($innerMessage)) {
             try {
                 $innerMessageJson = ($innerMessage | ConvertFrom-Json)
                 if ($innerMessageJson -is [String]) {

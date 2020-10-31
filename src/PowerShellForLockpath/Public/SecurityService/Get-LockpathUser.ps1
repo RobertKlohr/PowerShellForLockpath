@@ -31,7 +31,7 @@ function Get-LockpathUser {
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read Administrative Access permissions to administer users.
@@ -54,7 +54,7 @@ function Get-LockpathUser {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('NonNegative')]
-        [int] $UserId
+        [Int64] $UserId
     )
 
     begin {
@@ -70,7 +70,7 @@ function Get-LockpathUser {
         }
 
         if ($PSCmdlet.ShouldProcess("Getting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Getting user with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

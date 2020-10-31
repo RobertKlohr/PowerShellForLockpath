@@ -30,10 +30,10 @@
         unit, returns that value, otherwise, returns 4443 (the DefaultValue).
 
     .INPUTS
-        System.String
+        String
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         Internal-only helper method.
@@ -62,13 +62,13 @@
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Property')]
-        [string] $Name,
+        [String] $Name,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet('Boolean', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'Uint16', 'Uint32')]
+        [ValidateSet('Boolean', 'Int64', 'PSCredential', 'String', 'String[]')]
         [String] $Type,
 
         [Parameter(
@@ -91,11 +91,6 @@
         'Boolean' {
             $typeType = [Boolean]; break
         }
-        'Int32' {
-            $typeType = [Int32]
-            $InputObject.$name = [Int32] $InputObject.$name
-            break
-        }
         'Int64' {
             $typeType = [Int64]; break
         }
@@ -110,20 +105,13 @@
             $InputObject.$name = [String[]] $InputObject.$name
             break
         }
-        'Uint16' {
-            $typeType = [Uint16]
-            $InputObject.$name = [UInt16] $InputObject.$name
-            break
-        }
-        'Uint32' {
-            $typeType = [Uint32]
-            $InputObject.$name = [UInt32] $InputObject.$name
-            break
-        }
         Default {}
     }
 
-    if (Test-LockpathConfigurationPropertyExists -InputObject $InputObject -Name $Name) {
+    if (
+        ($null -ne $InputObject) -and
+        ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties))
+    ) {
         if ($InputObject.$Name -is $typeType) {
             return $InputObject.$Name
         } else {

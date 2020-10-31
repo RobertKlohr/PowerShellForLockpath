@@ -23,10 +23,10 @@
         Set-LockpathRecordTransition -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61
 
     .INPUTS
-        System.String, System.Uint32
+        String, System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Update General Access permissions for the specific component,
@@ -56,7 +56,7 @@
         #     ValueFromPipelineByPropertyName = $true)]
         # [Alias("Component")]
         # [ValidateRange("Positive")]
-        # [uint] $ComponentId,
+        # [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -65,7 +65,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Alias')]
         [ValidateLength(1, 128)]
-        [string] $ComponentAlias,
+        [String] $ComponentAlias,
 
         [Parameter(
             Mandatory = $true,
@@ -73,7 +73,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -81,7 +81,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Transition')]
         [ValidateRange('Positive')]
-        [uint] $TransitionId
+        [Int64] $TransitionId
     )
 
     begin {
@@ -103,7 +103,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Transitioning record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", 'Transitioning record with:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

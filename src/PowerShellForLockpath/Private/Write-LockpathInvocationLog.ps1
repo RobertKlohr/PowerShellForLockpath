@@ -1,9 +1,4 @@
 ﻿function Write-LockpathInvocationLog {
-    #FIXME Update to new coding standards
-    #FIXME add redact and exclude parameters to configuration
-
-    #FIXME Clean up help
-
     <#
     .SYNOPSIS
         Writes a log entry for the invoke command.
@@ -11,12 +6,12 @@
     .DESCRIPTION
         Writes a log entry for the invoke command.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER InvocationInfo
         The '$MyInvocation' object from the calling function.
-        No need to explicitly provide this if you're trying to log the immediate function this is
-        being called from.
+
+        No need to explicitly provide this if you're trying to log the immediate function this is being called from.
 
     .PARAMETER RedactParameter
         An optional array of parameter names that should be logged, but their values redacted.
@@ -25,20 +20,23 @@
         An optional array of parameter names that should simply not be logged.
 
     .EXAMPLE
-        Write-InvocationLog -Invocation $MyInvocation
+        Write-LockpathInvocationLog -Invocation $MyInvocation
 
     .EXAMPLE
-        Write-InvocationLog -Invocation $MyInvocation -ExcludeParameter @('Properties', 'Metrics')
+        Write-LockpathInvocationLog -Invocation $MyInvocation -ExcludeParameter @('Properties', 'Metrics')
+
+    .INPUTS
+        Management.Automation.InvocationInfo, String
+
+    .OUTPUTS
+        None.
 
     .NOTES
-        The actual invocation line will not be _completely_ accurate as converted parameters will
-        be in JSON format as opposed to PowerShell format.  However, it should be sufficient enough
-        for debugging purposes.
-
         ExcludeParameter will always take precedence over RedactParameter.
-#>
 
-
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -55,7 +53,7 @@
         [string[]] $ExcludeParameter
     )
 
-    $jsonConversionDepth = 20 # Seems like it should be more than sufficient
+    $jsonConversionDepth = 20
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
     $params = @()

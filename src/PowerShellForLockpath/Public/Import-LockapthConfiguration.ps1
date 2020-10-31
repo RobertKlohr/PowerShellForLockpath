@@ -51,7 +51,7 @@
         [Parameter(
             Mandatory = $false)]
         [Alias('Path')]
-        [System.IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'configurationFilePath')
+        [IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'configurationFilePath')
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false

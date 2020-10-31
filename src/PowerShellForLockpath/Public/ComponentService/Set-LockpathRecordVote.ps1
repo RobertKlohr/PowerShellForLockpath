@@ -25,10 +25,10 @@
     .EXAMPLE
         Set-LockpathRecordVote -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61 -VotingComments 'voting comment'
     .INPUTS
-        System.String, System.Uint32
+        String, System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Update General Access permissions for the specific component,
@@ -58,7 +58,7 @@
         #     ValueFromPipelineByPropertyName = $true)]
         # [Alias("Component")]
         # [ValidateRange("Positive")]
-        # [uint] $ComponentId,
+        # [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -67,7 +67,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Alias')]
         [ValidateLength(1, 128)]
-        [string] $ComponentAlias,
+        [String] $ComponentAlias,
 
         [Parameter(
             Mandatory = $true,
@@ -75,7 +75,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -83,7 +83,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Transition')]
         [ValidateRange('Positive')]
-        [uint] $TransitionId,
+        [Int64] $TransitionId,
 
         [Parameter(
             # Mandatory = $true,
@@ -92,7 +92,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Comments')]
         [ValidateLength(1, 2048)]
-        [string] $VotingComments
+        [String] $VotingComments
     )
 
     begin {
@@ -115,7 +115,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Voting on record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", 'Voting on record with:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

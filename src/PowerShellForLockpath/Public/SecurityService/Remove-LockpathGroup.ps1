@@ -32,7 +32,7 @@
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Delete Administrative Access permissions to administer groups.
@@ -55,7 +55,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('Positive')]
-        [int] $GroupId
+        [Int64] $GroupId
     )
 
     begin {
@@ -71,7 +71,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting group with Id: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

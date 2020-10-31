@@ -31,10 +31,10 @@
         Set-LockpathRecordAttachments -ComponentId 10066 -RecordId 301 -FieldId 1434 -FilePath 'c:\temp\test.txt'
 
     .INPUTS
-        System.IO.FileInfo, System.String
+        IO.FileInfo, String
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Update General Access permissions for the specific component,
@@ -57,7 +57,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Component')]
         [ValidateRange('Positive')]
-        [uint] $ComponentId,
+        [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -65,7 +65,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -73,14 +73,14 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Field')]
         [ValidateRange('Positive')]
-        [uint] $FieldId,
+        [Int64] $FieldId,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('File')]
-        [System.IO.FileInfo] $FilePath
+        [IO.FileInfo] $FilePath
     )
 
     begin {
@@ -111,7 +111,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Updating attachments with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", "component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", 'Updating attachments with:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

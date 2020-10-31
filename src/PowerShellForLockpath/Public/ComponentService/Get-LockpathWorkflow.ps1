@@ -26,7 +26,7 @@ function Get-LockpathWorkflow {
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read Administrative Access permissions for the specific component
@@ -50,7 +50,7 @@ function Get-LockpathWorkflow {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('Positive')]
-        [uint] $WorkflowId
+        [Int64] $WorkflowId
     )
 
     begin {
@@ -65,7 +65,7 @@ function Get-LockpathWorkflow {
         }
 
         if ($PSCmdlet.ShouldProcess("Getting workflow with Id: $([environment]::NewLine) $WorkflowId", $WorkflowId, 'Getting workflow with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

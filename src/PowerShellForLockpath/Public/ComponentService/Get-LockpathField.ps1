@@ -31,7 +31,7 @@ function Get-LockpathField {
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component and field.
@@ -54,7 +54,7 @@ function Get-LockpathField {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('Positive')]
-        [uint] $FieldId
+        [Int64] $FieldId
     )
 
     begin {
@@ -69,7 +69,7 @@ function Get-LockpathField {
         }
 
         if ($PSCmdlet.ShouldProcess("Getting field with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting field with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

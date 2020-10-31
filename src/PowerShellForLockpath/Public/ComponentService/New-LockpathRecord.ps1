@@ -20,10 +20,10 @@
         New-LockpathRecord -ComponentId 10066 -Attributes @{key = 1417; value = '_ API New Vendor'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}
 
     .INPUTS
-        System.String, System.Uint32
+        String, System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Create General Access permissions for the specific component
@@ -46,13 +46,13 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Component')]
         [ValidateRange('Positive')]
-        [uint] $ComponentId,
+        [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [array] $Attributes
+        [Array] $Attributes
     )
 
     begin {
@@ -72,7 +72,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Creating record in: $([environment]::NewLine) component Id $ComponentId with attributes $($params.Body)", "component Id $ComponentId with attributes $($params.Body)", 'Creating record in:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

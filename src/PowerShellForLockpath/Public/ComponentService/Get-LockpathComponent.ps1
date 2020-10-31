@@ -52,7 +52,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('Positive')]
-        [uint] $ComponentId
+        [Int64] $ComponentId
     )
 
     begin {
@@ -67,7 +67,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Getting component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting component with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

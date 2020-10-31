@@ -16,10 +16,10 @@
         Get-LockpathCredential
 
     .INPUTS
-        System.IO.FileInfo
+        IO.FileInfo
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         Internal-only helper method.

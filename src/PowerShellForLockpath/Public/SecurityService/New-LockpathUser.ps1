@@ -20,7 +20,7 @@
         System.Array
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Update Administrative Access permissions to administer users.
@@ -43,7 +43,7 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [array] $Attributes
+        [Array] $Attributes
     )
 
     begin {
@@ -59,7 +59,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating user with attributes:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

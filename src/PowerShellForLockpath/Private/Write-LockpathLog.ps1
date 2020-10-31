@@ -9,14 +9,12 @@
     .DESCRIPTION
         Writes logging information to screen and log file simultaneously.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Message
         The message(s) to be logged. Each element of the array will be written to a separate line.
 
-        This parameter supports pipelining but there are no
-        performance benefits to doing so. For more information, see the .NOTES for this
-        cmdlet.
+        This parameter supports pipelining but there are no performance benefits to doing so. For more information, see the .NOTES for this function.
 
     .PARAMETER Level
         The type of message to be logged.
@@ -26,20 +24,22 @@
 
     .PARAMETER FilePath
         The log file path.
-        Defaults to $env:USERPROFILE\Documents\PowerShellForGitHub.log
+
+        Defaults to log path set in the configuration.
 
     .PARAMETER Exception
         If present, the exception information will be logged after the messages provided.
+
         The actual string that is logged is obtained by passing this object to Out-String.
 
     .EXAMPLE
-        Write-Log -Message "Everything worked." -Path C:\Debug.log
+        Write-LockpathLog -Message "Everything worked." -Path C:\Debug.log
 
         Writes the message "Everything worked." to the screen as well as to a log file at "c:\Debug.log",
         with the caller's username and a date/time stamp prepended to the message.
 
     .EXAMPLE
-        Write-Log -Message ("Everything worked.", "No cause for alarm.") -Path C:\Debug.log
+        Write-LockpathLog -Message ("Everything worked.", "No cause for alarm.") -Path C:\Debug.log
 
         Writes the following message to the screen as well as to a log file at "c:\Debug.log",
         with the caller's username and a date/time stamp prepended to the message:
@@ -48,7 +48,7 @@
         No cause for alarm.
 
     .EXAMPLE
-        Write-Log -Message "There may be a problem..." -Level Warning -Indent 2
+        Write-LockpathLog -Message "There may be a problem..." -Level Warning -Indent 2
 
         Writes the message "There may be a problem..." to the warning pipeline indented two spaces,
         as well as to the default log file with the caller's username and a date/time stamp
@@ -56,37 +56,34 @@
 
     .EXAMPLE
         try { $null.Do() }
-        catch { Write-Log -Message ("There was a problem.", "Here is the exception information:") -Exception $_ -Level Error }
+        catch { Write-LockpathLog -Message ("There was a problem.", "Here is the exception information:") -Exception $_ -Level Error }
 
         Logs the message:
 
-        Write-Log : 2018-01-23 12:57:37 : username : There was a problem.
+        Write-LockpathLog : 2018-01-23 12:57:37 : username : There was a problem.
         Here is the exception information:
         You cannot call a method on a null-valued expression.
         At line:1 char:7
-        + try { $null.Do() } catch { Write-Log -Message ("There was a problem." ...
+        + try { $null.Do() } catch { Write-LockpathLog -Message ("There was a problem." ...
         +       ~~~~~~~~~~
             + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
             + FullyQualifiedErrorId : InvokeMethodOnNull
 
     .INPUTS
-        System.String
+        String
 
     .NOTES
         The "LogPath" configuration value indicates where the log file will be created.
-        The "" determines if log entries will be made to the log file.
-           If $false, log entries will ONLY go to the relevant output pipeline.
 
-        Note that, although this function supports pipeline input to the -Message parameter,
-        there is NO performance benefit to using the pipeline. This is because the pipeline
-        input is simply accumulated and not acted upon until all input has been received.
+        Note that, although this function supports pipeline input to the -Message parameter, there is no
+        performance benefit to using the pipeline. This is because the input is simply accumulated and not acted
+        upon until all input has been received.
+
         This behavior is intentional, in order for a statement like:
-            "Multiple", "messages" | Write-Log -Exception $ex -Level Error
-        to make sense.  In this case, the cmdlet should accumulate the messages and, at the end,
-        include the exception information.
+            "Multiple", "messages" | WWrite-LockpathLog -Exception $ex -Level Error
+        to make sense.  In this case, the function should accumulate the messages and, at the end, include the
+        exception information.
 #>
-
-
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -106,10 +103,10 @@
         [string[]] $Message = @(),
 
         [ValidateSet('Error', 'Warning', 'Informational', 'Verbose', 'Debug')]
-        [string] $Level = 'Informational',
+        [String] $Level = 'Informational',
 
         [ValidateRange(1, 30)]
-        [Int16] $Indent = 0,
+        [UInt16] $Indent = 0,
 
         [IO.FileInfo] $FilePath = (Get-LockpathConfiguration -Name 'logPath'),
 
@@ -171,8 +168,8 @@
 
         # Write the message to screen/log.
         # Note that the below logic could easily be moved to a separate helper function, but a conscious
-        # decision was made to leave it here. When this cmdlet is called with -Level Error, Write-Error
-        # will generate a WriteErrorException with the origin being Write-Log. If this call is moved to
+        # decision was made to leave it here. When this function is called with -Level Error, Write-Error
+        # will generate a WriteErrorException with the origin being Write-LockpathLog. If this call is moved to
         # a helper function, the origin of the WriteErrorException will be the helper function, which
         # could confuse an end user.
         switch ($Level) {

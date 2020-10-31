@@ -29,10 +29,10 @@ function Get-LockpathWorkflows {
         If $workflowObject has an property called ComponentAlias that value is automatically passed as a parameter.
 
     .INPUTS
-        System.String
+        String
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read Administrative Access permissions for the specific component.
@@ -55,7 +55,7 @@ function Get-LockpathWorkflows {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Alias')]
         [ValidateLength(1, 128)]
-        [string] $ComponentAlias
+        [String] $ComponentAlias
     )
 
     begin {
@@ -70,7 +70,7 @@ function Get-LockpathWorkflows {
         }
 
         if ($PSCmdlet.ShouldProcess("Getting workflows with component alias: $([environment]::NewLine) $ComponentAlias", $ComponentAlias, 'Getting workflows with component alias:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -18,9 +18,9 @@ param(
     [ValidateSet('True', 'False', 'Awareness', 'Full', 'Vendor')]
     [string] $FilterValue,
 
-    [ValidateRange(0, [int]::MaxValue)]
-    [int] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+    [ValidateRange(0, [Int64]::MaxValue)]
+    [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-    [ValidateRange(1, [int]::MaxValue)]
-    [int] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
+    [ValidateRange(1, [Int64]::MaxValue)]
+    [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
 )

@@ -26,7 +26,7 @@
         Get-LockpathReport -ReportId 2642 -FileType CSV -FilePath 'c:\temp\report.csv'
 
     .INPUTS
-        System.String, System.Uint32
+        String, System.Uint32
 
     .OUTPUTS
         System.Array
@@ -52,7 +52,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Report', 'Id')]
         [ValidateRange('Positive')]
-        [uint] $ReportId,
+        [Int64] $ReportId,
 
         [Parameter(
             Mandatory = $true,
@@ -60,12 +60,12 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Format')]
         [ValidateSet('csv', 'xlsx', 'pdf')]
-        [string] $FileType,
+        [String] $FileType,
 
         [Parameter(
             Mandatory = $false)]
         [Alias('Path')]
-        [System.IO.FileInfo] $FilePath
+        [IO.FileInfo] $FilePath
     )
 
     begin {

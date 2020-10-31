@@ -44,7 +44,7 @@
         [Parameter(
             Mandatory = $true)]
         [Alias('Path')]
-        [System.IO.FileInfo] $FilePath
+        [IO.FileInfo] $FilePath
     )
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false

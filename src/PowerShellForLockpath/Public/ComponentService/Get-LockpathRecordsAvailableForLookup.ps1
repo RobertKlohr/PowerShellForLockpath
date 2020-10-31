@@ -34,7 +34,7 @@
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component, record and
@@ -56,19 +56,19 @@
             Position = 0)]
         [Alias('Field')]
         [ValidateRange('Positive')]
-        [uint] $FieldId,
+        [Int64] $FieldId,
 
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Alias('index')]
         [ValidateRange('NonNegative')]
-        [uint] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias('size')]
         [ValidateRange('Positive')]
-        [uint] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
+        [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -91,7 +91,7 @@
     }
 
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting records from component with Id:')) {
-        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -6,11 +6,11 @@
     param(
         # Name of field attribute
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
+        [String]
         $FieldAttributeName,
         # Value to match against the field attribute
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [string]
+        [String]
         $FieldAttributeValue
     )
 

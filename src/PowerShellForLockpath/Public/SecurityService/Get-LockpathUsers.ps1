@@ -38,7 +38,7 @@ function Get-LockpathUsers {
         System.Array System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read Administrative Access permissions to administer users.
@@ -56,14 +56,14 @@ function Get-LockpathUsers {
     param(
         [Alias('index')]
         [ValidateRange('NonNegative')]
-        [uint]      $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [Alias('size')]
         [ValidateRange('Positive')]
-        [uint]      $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Alias('Filter')]
-        [array]$Filters = @()
+        [Array] $Filters = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -85,7 +85,7 @@ function Get-LockpathUsers {
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

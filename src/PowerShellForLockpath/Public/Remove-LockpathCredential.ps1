@@ -9,7 +9,8 @@ function Remove-LockpathCredential {
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSShouldProcess", "", Justification = "Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.")]
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [switch] $SessionOnly
@@ -17,13 +18,13 @@ function Remove-LockpathCredential {
 
     Write-LockpathInvocationLog
 
-    if ($PSCmdlet.ShouldProcess("Clear memory cache")) {
+    if ($PSCmdlet.ShouldProcess('Clear memory cache')) {
         $script:configuration.webSession = $null
         Write-LockpathLog -Message 'Cleared websession credentials from memory.' -Level Verbose
     }
 
     if (-not $SessionOnly) {
-        if ($PSCmdlet.ShouldProcess("Clear file-based cache")) {
+        if ($PSCmdlet.ShouldProcess('Clear file-based cache')) {
             Remove-Item -Path $(Get-LockpathConfiguration -Name 'credentialFilePath'), -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             Write-LockpathLog -Message "Removed the Lockpath credential file $($script:configuration.credentialFilePath) from file system." -Level Warning -Exception $ev[0]
 

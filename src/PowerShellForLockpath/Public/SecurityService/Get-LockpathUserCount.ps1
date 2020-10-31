@@ -40,7 +40,7 @@ function Get-LockpathUserCount {
 
     param(
         [Alias('Filter')]
-        [array]$Filters = @()
+        [Array] $Filters = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -64,7 +64,7 @@ function Get-LockpathUserCount {
     $params.Body = "[$($Filters | ConvertTo-Json -Depth 10)]"
 
     if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
-        [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

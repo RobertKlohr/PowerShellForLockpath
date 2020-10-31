@@ -32,7 +32,7 @@
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component, record and
@@ -55,7 +55,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Component')]
         [ValidateRange('Positive')]
-        [uint] $ComponentId,
+        [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -63,7 +63,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -71,7 +71,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Field')]
         [ValidateRange('Positive')]
-        [uint] $FieldId,
+        [Int64] $FieldId,
 
         [Parameter(
             Mandatory = $true,
@@ -79,7 +79,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Document')]
         [ValidateRange('Positive')]
-        [uint] $DocumentId
+        [Int64] $DocumentId
     )
 
     begin {
@@ -94,7 +94,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Getting attachment from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $DocumentId", 'Getting attachment from field with:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

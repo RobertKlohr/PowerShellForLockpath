@@ -32,7 +32,7 @@
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read and Delete Administrative Access permissions to administer users.
@@ -57,7 +57,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Id')]
         [ValidateRange('Positive')]
-        [int] $UserId
+        [Int64] $UserId
     )
 
     begin {
@@ -73,7 +73,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Deleting user with Id:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

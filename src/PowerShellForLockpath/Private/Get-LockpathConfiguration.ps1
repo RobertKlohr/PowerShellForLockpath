@@ -23,10 +23,10 @@
         whether this value was modified during this session with Set-LockpathConfiguration -SessionOnly).
 
     .INPUTS
-        System.String
+        String
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         Internal-only helper method.
@@ -66,7 +66,7 @@
             'UserAgent',
             'webRequestTimeoutSec',
             'webSession')]
-        [string] $Name
+        [String] $Name
     )
 
     return $script:configuration.$Name

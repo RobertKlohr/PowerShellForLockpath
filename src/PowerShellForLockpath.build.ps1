@@ -118,7 +118,7 @@ Add-BuildTask Analyze {
 
     $scriptAnalyzerParams = @{
         Path    = $script:ModuleSourcePath
-        Setting = "PSScriptAnalyzerSettings.psd1"
+        Setting = 'PSScriptAnalyzerSettings.psd1'
         Recurse = $true
         Verbose = $false
     }
@@ -140,7 +140,7 @@ Add-BuildTask AnalyzeTests -After Analyze {
 
         $scriptAnalyzerParams = @{
             Path    = $script:TestsPath
-            Setting = "PSScriptAnalyzerSettings.psd1"
+            Setting = 'PSScriptAnalyzerSettings.psd1'
             Recurse = $true
             Verbose = $false
         }
@@ -228,7 +228,7 @@ Add-BuildTask Test {
             }
             Write-Host "PowerShell Commands not tested:`n$(ConvertTo-Json -InputObject $testResults.CodeCoverage.MissedCommands)"
             #>
-            if ([Int]$coveragePercent -lt $coverageThreshold) {
+            if ([Int64]$coveragePercent -lt $coverageThreshold) {
                 throw ('Failed to meet code coverage threshold of {0}% with only {1}% coverage' -f $coverageThreshold, $coveragePercent)
             } else {
                 Write-Build Cyan "      $('Covered {0}% of {1} analyzed commands in {2} files.' -f $coveragePercent,$testResults.CodeCoverage.NumberOfCommandsAnalyzed,$testResults.CodeCoverage.NumberOfFilesAnalyzed)"
@@ -273,7 +273,7 @@ Add-BuildTask CreateMarkdownHelp -After CreateHelpStart {
         Force          = $true
         WithModulePage = $true
         Locale         = 'en-US'
-        FwLink         = "NA"
+        FwLink         = 'NA'
         HelpVersion    = $script:ModuleVersion
     }
 
@@ -293,7 +293,7 @@ Add-BuildTask CreateMarkdownHelp -After CreateHelpStart {
         }
     }
     # Replace each missing element we need for a proper generic module page .md file
-    $ModulePageFileContent = Get-Content -raw $ModulePage
+    $ModulePageFileContent = Get-Content -Raw $ModulePage
     $ModulePageFileContent = $ModulePageFileContent -replace '{{Manually Enter Description Here}}', $script:ModuleDescription
     $Script:FunctionsToExport | ForEach-Object {
         Write-Build DarkGray "             Updating definition for the following function: $($_)"
@@ -306,7 +306,7 @@ Add-BuildTask CreateMarkdownHelp -After CreateHelpStart {
     Write-Build Gray '           ...Markdown replacements complete.'
 
     Write-Build Gray '           Verifying documentation...'
-    $MissingDocumentation = Select-String -Path "$($script:ArtifactsPath)\docs\*.md" -Pattern "({{.*}})"
+    $MissingDocumentation = Select-String -Path "$($script:ArtifactsPath)\docs\*.md" -Pattern '({{.*}})'
     if ($MissingDocumentation.Count -gt 0) {
         Write-Build Yellow '             The documentation that got generated resulted in missing sections which should be filled out.'
         Write-Build Yellow '             Please review the following sections in your comment based help, fill out missing information and rerun this build:'
@@ -338,12 +338,12 @@ Add-BuildTask UpdateCBH -After AssetCopy {
 #>
 "@
 
-    $CBHPattern = "(?ms)(\<#.*\.SYNOPSIS.*?#>)"
+    $CBHPattern = '(?ms)(\<#.*\.SYNOPSIS.*?#>)'
     Get-ChildItem -Path "$($script:ArtifactsPath)\Public\*.ps1" -File | ForEach-Object {
         $FormattedOutFile = $_.FullName
         Write-Output "      Replacing CBH in file: $($FormattedOutFile)"
-        $UpdatedFile = (Get-Content  $FormattedOutFile -raw) -replace $CBHPattern, $ExternalHelp
-        $UpdatedFile | Out-File -FilePath $FormattedOutFile -force -Encoding:utf8
+        $UpdatedFile = (Get-Content $FormattedOutFile -Raw) -replace $CBHPattern, $ExternalHelp
+        $UpdatedFile | Out-File -FilePath $FormattedOutFile -Force -Encoding:utf8
     }
 }#UpdateCBH
 
@@ -438,7 +438,7 @@ Add-BuildTask Archive {
 
     $null = New-Item -Path $archivePath -ItemType Directory -Force
 
-    $zipFileName = '{0}_{1}_{2}.{3}.zip' -f $script:ModuleName, $script:ModuleVersion, ([DateTime]::UtcNow.ToString("yyyyMMdd")), ([DateTime]::UtcNow.ToString("hhmmss"))
+    $zipFileName = '{0}_{1}_{2}.{3}.zip' -f $script:ModuleName, $script:ModuleVersion, ([DateTime]::UtcNow.ToString('yyyyMMdd')), ([DateTime]::UtcNow.ToString('hhmmss'))
     $zipFile = Join-Path -Path $archivePath -ChildPath $zipFileName
 
     if ($PSEdition -eq 'Desktop') {

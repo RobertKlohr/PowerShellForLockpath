@@ -29,7 +29,7 @@ function Get-LockpathRecordDetail {
         System.Uint32
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component, record and
@@ -52,7 +52,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Component')]
         [ValidateRange('Positive')]
-        [uint] $ComponentId,
+        [Int64] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -60,7 +60,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Record')]
         [ValidateRange('Positive')]
-        [uint] $RecordId,
+        [Int64] $RecordId,
 
         [Parameter(ValueFromPipeline = $true)]
         [switch] $ExtractRichTextImages
@@ -78,7 +78,7 @@ function Get-LockpathRecordDetail {
         }
 
         if ($PSCmdlet.ShouldProcess("Getting record details for record with: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", "component Id: $ComponentId, record Id: $RecordId & extract rich text images: $ExtractRichTextImages", 'Getting record details for record with:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

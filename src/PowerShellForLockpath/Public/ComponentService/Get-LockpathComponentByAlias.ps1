@@ -29,10 +29,10 @@
         If $componentObject has an property called ComponentAlias that value is automatically passed as a parameter.
 
     .INPUTS
-        System.String
+        String
 
     .OUTPUTS
-        System.String
+        String
 
     .NOTES
         The authentication account must have Read General Access permissions for the specific component.
@@ -55,7 +55,7 @@
             ValueFromPipelineByPropertyName = $true)]
         [Alias('Alias')]
         [ValidateLength(1, 128)]
-        [string] $ComponentAlias
+        [String] $ComponentAlias
     )
 
     begin {
@@ -70,7 +70,7 @@
         }
 
         if ($PSCmdlet.ShouldProcess("Getting component with alias: $([environment]::NewLine) $ComponentAlias", $ComponentAlias, 'Getting component with alias:')) {
-            [string] $result = Invoke-LockpathRestMethod @params -Confirm:$false
+            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
