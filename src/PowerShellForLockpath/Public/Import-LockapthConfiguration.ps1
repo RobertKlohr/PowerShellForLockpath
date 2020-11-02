@@ -54,7 +54,7 @@
         [IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'configurationFilePath')
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
 
     # Create a configuration object with all the default values.
     # $config = [PSCustomObject]@{

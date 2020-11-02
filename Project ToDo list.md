@@ -1,4 +1,5 @@
-﻿* #TODO look at logging levels and how to control what goes to console, prod vs. debugging
+﻿* #TODO create functions to deal with log files extracted by the ambassador service
+* #TODO look at logging levels and how to control what goes to console, prod vs. debugging
 * #TODO create a post-sandbox function that turns specific items back on
 * #TODO create a user query function that uses switches and simple parameters instead of JSON for input
 * #TODO test to see which fields can be updated vai updaterecord api verb.

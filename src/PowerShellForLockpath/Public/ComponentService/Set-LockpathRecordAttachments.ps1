@@ -84,7 +84,7 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+        Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
     }
 
     process {
