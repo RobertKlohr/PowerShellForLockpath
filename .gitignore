@@ -55,33 +55,17 @@ $RECYCLE.BIN/
 #*.code-workspace
 
 ### Reference Documentation ###
-#*.pdf
+*.pdf
 
 ### Application Configuration Files ###
 *.ini
-.config
+*.config
 
 ### Invoke-Build Files and Folders ###
+
 Archive
 Artifacts
+Assets
+Docs
+Temp
 cov.xml
-
-
-
-
-
-
-
-Assets/Lockpath Keylight API Reference Guide 5.6 2020.09.pdf
-Assets/Examples/CHANGELOG.md
-Assets/Examples/CONTRIBUTING.md
-Assets/Examples/Filter Examples.json
-Assets/Examples/GOVERNANCE.md
-Assets/Examples/USAGE.md
-Assets/Images/LockpathIcon.png
-Temp/Get-LockpathWebResponseContent.ps1
-Temp/LockpathFilters.ps1
-Temp/Read-LockpathCredential.ps1
-Temp/Save-LockpathConfiguration.ps1
-Temp/Save-LockpathCredential.ps1
-Temp/Test-LockpathConfigurationPropertyExists.ps1
