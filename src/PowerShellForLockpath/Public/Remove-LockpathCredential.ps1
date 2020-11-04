@@ -16,7 +16,7 @@ function Remove-LockpathCredential {
         [switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     if ($PSCmdlet.ShouldProcess('Clear memory cache')) {
         $script:configuration.webSession = $null

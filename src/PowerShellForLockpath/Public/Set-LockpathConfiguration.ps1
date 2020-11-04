@@ -12,13 +12,16 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Credential
-        The username and password used to access the Lockpath instance.
+        The username and password used to access the API instance.
 
     .PARAMETER InstanceName
-        The URI of the Lockpath instance where all requests will be made.
+        The URI of the API instance where all requests will be made.
 
     .PARAMETER InstancePort
-        The portnumber of the Lockpath instance where all requests will be made.
+        The port number of the API instance where all requests will be made.
+
+    .PARAMETER InstancePortocol
+        The protocol (http, https) of the API instance where all requests will be made.
 
     .PARAMETER LogPath
         The location of the log file where all activity will be written.
@@ -34,6 +37,9 @@
 
     .PARAMETER LogTimeAsUtc
         If specified, all times logged will be logged as UTC instead of the local timezone.
+
+    .PARAMETER MethodContainsBody
+        Valid HTTP methods for this API that will include a message body.
 
     .PARAMETER PageIndex
         The index of the page of result to return.
@@ -74,7 +80,7 @@
         Sets the pageSize value to 1000 for this session only.
 
     .INPUTS
-        Microsoft.PowerShell.Commands.WebRequestSession, String, UInt32
+        Array, Microsoft.PowerShell.Commands.WebRequestSession, String, UInt32
 
     .OUTPUTS
         None.
@@ -104,7 +110,7 @@
         [Int64] $InstancePort,
 
         [ValidatePattern('^https?$')]
-        [String] $InstancePortocol,
+        [String] $InstanceProtocol,
 
         [String] $LogPath,
 
@@ -113,6 +119,9 @@
         [switch] $LogRequestBody,
 
         [switch] $LogTimeAsUtc,
+
+        [ValidateSet('Delete', 'Post')]
+        [String[]] $MethodContainsBody,
 
         [ValidateRange('NonNegative')]
         [Int64] $PageIndex,
@@ -132,6 +141,8 @@
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $properties = Get-Member -InputObject $script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {

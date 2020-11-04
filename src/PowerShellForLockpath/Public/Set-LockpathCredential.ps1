@@ -46,7 +46,7 @@
         which will be securely stored on the machine for use in all future PowerShell sessions.
 
     .EXAMPLE
-        Set-GitHubAuthentication -Credential $cred -SessionOnly
+        Set-LockpathCredential -Credential $cred -SessionOnly
 
         Uses the API token stored in the password field of the provided credential object for
         authentication, but keeps it in memory only for the duration of this PowerShell session.
@@ -73,12 +73,8 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(
-            Mandatory = $false)]
         [PSCredential] $Credential,
 
-        [Parameter(
-            Mandatory = $false)]
         [switch] $SessionOnly
     )
 

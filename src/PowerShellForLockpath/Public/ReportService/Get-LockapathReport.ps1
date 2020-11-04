@@ -62,8 +62,6 @@
         [ValidateSet('csv', 'xlsx', 'pdf')]
         [String] $FileType,
 
-        [Parameter(
-            Mandatory = $false)]
         [Alias('Path')]
         [IO.FileInfo] $FilePath
     )

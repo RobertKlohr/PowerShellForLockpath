@@ -10,6 +10,7 @@
     )
 
     begin {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
         $Response = @()
         $Groups = Get-LpGroups $SessionManager
     }

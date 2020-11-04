@@ -16,6 +16,8 @@
         [Array] $Filters = @()
     )
 
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
     #TODO add stopwatch to this cmdlet
 
     # %%%%%%%%%%

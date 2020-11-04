@@ -5,6 +5,8 @@
     #FIXME Update to new coding standards
 
     #FIXME Clean up help
+
+    #FIXME invalid error on load
     <#
     .SYNOPSIS
         Loads in the default configuration values, and then updates the individual properties
@@ -48,8 +50,6 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(
-            Mandatory = $false)]
         [Alias('Path')]
         [IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'configurationFilePath')
     )

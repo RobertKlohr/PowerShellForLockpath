@@ -34,8 +34,11 @@
     .NOTES
         ExcludeParameter will always take precedence over RedactParameter.
 
+        This function is derived from the Write-InvocationLog function in the PowerShellForGitHub module at
+        http://aka.ms/PowerShellForGitHub
+
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
     [CmdletBinding(
@@ -67,6 +70,8 @@
         } else {
             if ($param.Value -is [switch]) {
                 $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
+            } elseif (Test-Json $param.Value -ErrorAction SilentlyContinue) {
+                $params += "-$($param.Key) $($param.Value)"
             } else {
                 $params += "-$($param.Key) $(ConvertTo-Json -InputObject $param.Value -Depth $jsonConversionDepth -Compress)"
             }

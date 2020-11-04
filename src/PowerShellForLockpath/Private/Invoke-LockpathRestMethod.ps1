@@ -1,92 +1,65 @@
 ﻿function Invoke-LockpathRestMethod {
-    #FIXME Update to new coding standards
-    #FIXME compress error messages to a single line
-
-
-    #FIXME Clean up help
     <#
     .SYNOPSIS
-        A wrapper around Invoke-WebRequest that understands the GitHub API.
+        A wrapper around Invoke-WebRequest that understands the Lockpath API.
 
     .DESCRIPTION
-        A very heavy wrapper around Invoke-WebRequest that understands the GitHub API and
+        A very heavy wrapper around Invoke-WebRequest that understands the Lockpath API and
         how to perform its operation with and without console status updates.  It also
         understands how to parse and handle errors from the REST calls.
 
-        The Git repo for this module can be found here: http://aka.ms/PowerShellForGitHub
+        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER UriFragment
-        The unique, tail-end, of the REST URI that indicates what GitHub REST action will
+        The unique, tail-end, of the REST URI that indicates what REST action will
         be performed.  This should not start with a leading "/".
 
     .PARAMETER Method
         The type of REST method being performed.  This only supports a reduced set of the
-        possible REST methods (delete, get, post, put).
-
-    .PARAMETER Description
-        A friendly description of the operation being performed for logging and console
-        display purposes.
-
-    .PARAMETER Body
-        This optional parameter forms the body of a PUT or POST request. It will be automatically
-        encoded to UTF8 and sent as Content Type: "application/json; charset=UTF-8"
+        possible REST methods (delete, get, post).
 
     .PARAMETER AcceptHeader
         Specify the media type in the Accept header.  Different types of commands may require
         different media types.
 
-    .PARAMETER InFile
-        Gets the content of the web request from the specified file.  Only valid for POST requests.
+    .PARAMETER Body
+        This optional parameter forms the body of a PUT or POST request. It will be automatically
+        encoded to UTF8 and sent as Content Type: "application/json; charset=UTF-8"
 
-    .PARAMETER ContentType
-        Specifies the value for the MIME Content-Type header of the request.  This will usually
-        be configured correctly automatically.  You should only specify this under advanced
-        situations (like if the extension of InFile is of a type unknown to this module).
+    .PARAMETER Description
+        A friendly description of the operation being performed for logging and console
+        display purposes.
 
-    .PARAMETER ExtendedResult
-        If specified, the result will be a PSObject that contains the normal result, along with
-        the response code and other relevant header detail content.
+    .PARAMETER InstanceName
+        The URI of the API instance where all requests will be made.
 
-    .PARAMETER Save
-        If specified, this will save the result to a temporary file and return the FileInfo of that
-        temporary file.
+    .PARAMETER InstancePort
+        The portnumber of the API instance where all requests will be made.
 
-    .PARAMETER AccessToken
-        If provided, this will be used as the AccessToken for authentication with the
-        REST Api as opposed to requesting a new one.
+    .PARAMETER InstancePortocol
+        The protocol (http, https) of the API instance where all requests will be made.
 
-    .PARAMETER TelemetryEventName
-        If provided, the successful execution of this REST command will be logged to telemetry
-        using this event name.
+    .PARAMETER MethodContainsBody
+        Valid HTTP methods for this API that will include a message body.
 
-    .PARAMETER TelemetryProperties
-        If provided, the successful execution of this REST command will be logged to telemetry
-        with these additional properties.  This will be silently ignored if TelemetryEventName
-        is not provided as well.
-
-    .PARAMETER TelemetryExceptionBucket
-        If provided, any exception that occurs will be logged to telemetry using this bucket.
-        It's possible that users will wish to log exceptions but not success (by providing
-        TelemetryEventName) if this is being executed as part of a larger scenario.  If this
-        isn't provided, but TelemetryEventName *is* provided, then TelemetryEventName will be
-        used as the exception bucket value in the event of an exception.  If neither is specified,
-        no bucket value will be used.
+    .PARAMETER UserAgent
+        The UserAgent string that is sent with each API request.
 
     .OUTPUTS
         [PSCustomObject] - The result of the REST operation, in whatever form it comes in.
-        [FileInfo] - The temporary file created for the downloaded file if -Save was specified.
 
     .EXAMPLE
-        Invoke-GHRestMethod -UriFragment "user" -Method Get -Description "Get current user"
+        Invoke-LockpathRestMethod -UriFragment "GetUsers" -Method Get -Description "Get all users."
 
-        Gets information about the current authenticated user.
+        Gets a list of system users.
 
     .NOTES
         This wraps Invoke-WebRequest as opposed to Invoke-RestMethod because we want access
         to the headers that are returned in the response, and Invoke-RestMethod drops those headers.
+
+        This function is derived from the Invoke-RestMethod function in the PowerShellForGitHub module at
+        http://aka.ms/PowerShellForGitHub
 #>
-
-
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -96,43 +69,41 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory = $true)]
         [String] $UriFragment,
 
-        [Parameter(Mandatory)]
+        [Parameter(
+            Mandatory = $true)]
         [ValidateSet('Delete', 'Get', 'Post')]
         [String] $Method,
+
+        [Parameter(
+            Mandatory = $true)]
+        [String] $Description,
 
         [String] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),
 
         [String] $Body = $null,
 
-        [String] $Description = $null,
+        [String] $InstanceName = $(Get-LockpathConfiguration -Name 'instanceName'),
 
-        [String] $hostName = $(Get-LockpathConfiguration -Name 'instanceName'),
+        [UInt16] $InstancePort = $(Get-LockpathConfiguration -Name 'instancePort'),
 
-        [UInt16] $portNumber = $(Get-LockpathConfiguration -Name 'instancePort'),
-
-        [String] $protocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
+        [String] $InstancePortocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
 
         [String[]] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
 
         [String] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    # If the REST call is the login then redact the username and password sent in the body from the logs
+    if ($UriFragment -eq 'SecurityService/Login') {
+        Write-LockpathInvocationLog -RedactParameter Body -Confirm:$false -WhatIf:$false
+    } else {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    }
 
-    # Normalize our Uri fragment to remove leading "/" or trailing '/'
-    if ($UriFragment.StartsWith('/')) {
-        $UriFragment = $UriFragment.Substring(1)
-    }
-    if ($UriFragment.EndsWIth('/')) {
-        $UriFragment = $UriFragment.Substring(0, $UriFragment.Length - 1)
-    }
-    if ([String]::IsNullOrEmpty($Description)) {
-        $Description = "Executing: $UriFragment"
-    }
-    $url = "${Protocol}://${HostName}:$PortNumber/$UriFragment"
     $headers = @{
         'Accept'     = $AcceptHeader
         'User-Agent' = $UserAgent
@@ -142,144 +113,86 @@
         $headers.Add('Content-Type', 'application/json')
     }
 
+    $url = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
+
     try {
         Write-LockpathLog -Message $Description -Level Verbose
         Write-LockpathLog -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
 
-        if ($PSCmdlet.ShouldProcess($url, 'Invoke-WebRequest')) {
-            $params = @{ }
-            $params.Add('Uri', $url)
-            $params.Add('Method', $Method)
-            $params.Add('Headers', $headers)
-            $params.Add('TimeoutSec', (Get-LockpathConfiguration -Name WebRequestTimeoutSec))
-            #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
-            if ($UriFragment -eq 'SecurityService/Login') {
-                $params.Add('Body', $Body)
-                $params.Add('SessionVariable', 'webSession')
+        $params = @{ }
+        $params.Add('Uri', $url)
+        $params.Add('Method', $Method)
+        $params.Add('Headers', $headers)
+        $params.Add('TimeoutSec', (Get-LockpathConfiguration -Name WebRequestTimeoutSec))
+
+        #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
+        if ($UriFragment -eq 'SecurityService/Login') {
+            $params.Add('Body', $Body)
+            $params.Add('SessionVariable', 'webSession')
+        } else {
+            $params.Add('WebSession', $script:configuration.webSession)
+        }
+        if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
+            $params.Add('Body', $Body)
+            if (Get-LockpathConfiguration -Name LogRequestBody) {
+                Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
             } else {
-                $params.Add('WebSession', $script:configuration.webSession)
-            }
-            if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
-                #FIXME why encode as bytes, works with login but not get detail records
-                $bodyAsBytes = [System.Text.Encoding]::UTF8.GetBytes($Body)
-                $params.Add('Body', $bodyAsBytes)
-                #$params.Add('Body', $Body)
-                Write-LockpathLog -Message 'Request includes a body.' -Level Verbose
-                if (Get-LockpathConfiguration -Name LogRequestBody) {
-                    Write-LockpathLog -Message $Body -Level Verbose
-                }
-            }
-
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            $ProgressPreference = 'SilentlyContinue'
-            $result = Invoke-WebRequest @params
-            $ProgressPreference = 'Continue'
-            if ($UriFragment -eq 'SecurityService/Login') {
-                $script:configuration.webSession = $webSession
-            }
-            if ($Method -eq 'Delete') {
-                Write-LockpathLog -Message 'Successfully removed.' -Level Verbose
+                Write-LockpathLog -Message 'Request includes a body: <logging disabled>' -Level Verbose
             }
         }
 
-        $finalResult = $result.Content
-        try {
-            $finalResult = $finalResult | ConvertFrom-Json -AsHashtable -NoEnumerate
-        } catch [System.ArgumentException] {
-            # The content must not be JSON (which is a legitimate situation).  We'll return the raw content result instead.
-            # We do this unnecessary assignment to avoid PSScriptAnalyzer's PSAvoidUsingEmptyCatchBlock.
-            $finalResult = $finalResult
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $ProgressPreference = 'SilentlyContinue'
+        $result = Invoke-WebRequest @params
+        $ProgressPreference = 'Continue'
+        if ($UriFragment -eq 'SecurityService/Login') {
+            $script:configuration.webSession = $webSession
         }
-
-        # FIXME lockpath does not use 202 so this section of code and setting is not needed.
-        # $resultNotReadyStatusCode = 202
-        # if ($result.StatusCode -eq $resultNotReadyStatusCode) {
-        #     $retryDelaySeconds = Get-LockpathConfiguration -Name RetryDelaySeconds
-
-        #     if ($Method -ne 'Get') {
-        #         # We only want to do our retry logic for GET requests...
-        #         # We don't want to repeat PUT/PATCH/POST/DELETE.
-        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)])." -Level Warning
-        #     } elseif ($retryDelaySeconds -le 0) {
-        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]), however the module is currently configured to not retry in this scenario (RetryDelaySeconds is set to 0).  Please try this command again later." -Level Warning
-        #     } else {
-        #         Write-LockpathLog -Message "The server has indicated that the result is not yet ready (received status code of [$($result.StatusCode)]).  Will retry in [$retryDelaySeconds] seconds." -Level Warning
-        #         Start-Sleep -Seconds ($retryDelaySeconds)
-        #         return (Invoke-LockpathRestMethod @PSBoundParameters)
-        #     }
-        # }
+        if ($Method -eq 'Delete') {
+            Write-LockpathLog -Message 'Successfully removed.' -Level Verbose
+        }
         return $result.Content
-        # return $finalResult
+
     } catch {
-        $ex = $null
-        $message = $null
-        $statusCode = $null
-        $statusDescription = $null
-        $innerMessage = $null
-        $rawContent = $null
-
-        if ($_.Exception -is [System.Net.WebException]) {
-            $ex = $_.Exception
-            $message = $_.Exception.Message
-            $statusCode = $ex.Response.StatusCode.value__ # Note that value__ is not a typo.
-            $statusDescription = $ex.Response.StatusDescription
-            $innerMessage = $_.ErrorDetails.Message
-            try {
-                $rawContent = Get-LockpathWebResponseContent -WebResponse $ex.Response
-            } catch {
-                Write-LockpathLog -Message 'Unable to retrieve the raw HTTP Web Response:' -Exception $_ -Level Warning
+        switch ($_.Exception.Response.StatusCode.value__) {
+            '400' {
+                $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing)..'
             }
-
+            '401' {
+                $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource...The user agent MAY repeat the request with a new or replaced Authorization header field.'
+            }
+            '403' {
+                $httpResponseDetails = 'The 403 (Forbidden) status code indicates that the server understood the request but refuses to authorize it. If authentication credentials were provided in the request, the server considers them insufficient to grant access.'
+            }
+            '404' {
+                $httpResponseDetails = 'The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.'
+            }
+            '405' {
+                $httpResponseDetails = 'The 405 (Method Not Allowed) status code indicates that the method received in the request-line is known by the origin server but not supported by the target resource.'
+            }
+            '500' {
+                $httpResponseDetails = 'The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.'
+            }
+            '504' {
+                $httpResponseDetails = 'The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.'
+            }
+            Default {
+                $httpResponseDetails = 'Other Status Code.'
+            }
+        }
+        if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
+            $exceptionOutput = [ordered]@{
+                'exceptionMessage'   = $_.Exception.Message
+                'exceptionDetails'   = $httpResponseDetails
+                'scriptName'         = $_.InvocationInfo.ScriptName
+                'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
+                'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
+                'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
+                # 'innerMessage'       = $_.ErrorDetails.Message
+            }
+            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth 10 -Compress) -Level Error
         } else {
             Write-LockpathLog -Exception $_ -Level Error
-            throw
         }
-
-        $output = @()
-        $output += $message
-
-        if (-not [String]::IsNullOrEmpty($statusCode)) {
-            $output += "$statusCode | $($statusDescription.Trim())"
-        }
-
-        if (-not [String]::IsNullOrEmpty($innerMessage)) {
-            try {
-                $innerMessageJson = ($innerMessage | ConvertFrom-Json)
-                if ($innerMessageJson -is [String]) {
-                    $output += $innerMessageJson.Trim()
-                } elseif (-not [String]::IsNullOrWhiteSpace($innerMessageJson.message)) {
-                    $output += "$($innerMessageJson.message.Trim())"
-                    if ($innerMessageJson.details) {
-                        $output += "$($innerMessageJson.details | Format-Table | Out-String)"
-                    }
-                } else {
-                    # In this case, it's probably not a normal message from the API
-                    $output += ($innerMessageJson | Out-String)
-                }
-            } catch [System.ArgumentException] {
-                # Will be thrown if $innerMessage isn't JSON content
-                $output += $innerMessage.Trim()
-            }
-        }
-
-        # It's possible that the API returned JSON content in its error response.
-        if (-not [String]::IsNullOrWhiteSpace($rawContent)) {
-            $output += $rawContent
-        }
-
-        #TODO Add some logic here for capturing details from all the generic 400 errors that should be 401 or 403 errors
-
-        if ($statusCode -eq 404) {
-            $output += 'This typically happens when the API call has an error in the URL.'
-        }
-
-        if ($statusCode -eq 405) {
-            $output += 'This typically happens when the API call is using the wrong method.'
-        }
-
-        $newLineOutput = ($output -join [Environment]::NewLine)
-        Write-LockpathLog -Message $newLineOutput -Level Error
-        throw $newLineOutput
-        Write-Error $newLineOutput
     }
 }

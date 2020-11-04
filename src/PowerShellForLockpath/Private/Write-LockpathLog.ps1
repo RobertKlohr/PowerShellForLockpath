@@ -1,7 +1,4 @@
 ﻿function Write-LockpathLog {
-    #FIXME Update to new coding standards
-
-    #FIXME Clean up help
     <#
     .SYNOPSIS
         Writes logging information to screen and log file simultaneously.
@@ -13,8 +10,6 @@
 
     .PARAMETER Message
         The message(s) to be logged. Each element of the array will be written to a separate line.
-
-        This parameter supports pipelining but there are no performance benefits to doing so. For more information, see the .NOTES for this function.
 
     .PARAMETER Level
         The type of message to be logged.
@@ -33,15 +28,14 @@
         The actual string that is logged is obtained by passing this object to Out-String.
 
     .EXAMPLE
-        Write-LockpathLog -Message "Everything worked." -Path C:\Debug.log
+        Write-LockpathLog -Message "Everything worked." -Path "c:\Temp\PowerShellForLockpath.log"
 
-        Writes the message "Everything worked." to the screen as well as to a log file at "c:\Debug.log",
-        with the caller's username and a date/time stamp prepended to the message.
+        Writes the message "Everything worked." to the screen as well as to a log file at "c:\Temp\PowerShellForLockpath.log", with the caller's username and a date/time stamp prepended to the message.
 
     .EXAMPLE
-        Write-LockpathLog -Message ("Everything worked.", "No cause for alarm.") -Path C:\Debug.log
+        Write-LockpathLog -Message ("Everything worked.", "No cause for alarm.") -Path "c:\Temp\PowerShellForLockpath.log"
 
-        Writes the following message to the screen as well as to a log file at "c:\Debug.log",
+        Writes the following message to the screen as well as to a log file at "c:\Temp\PowerShellForLockpath.log",
         with the caller's username and a date/time stamp prepended to the message:
 
         Everything worked.
@@ -54,36 +48,21 @@
         as well as to the default log file with the caller's username and a date/time stamp
         prepended to the message.
 
-    .EXAMPLE
-        try { $null.Do() }
-        catch { Write-LockpathLog -Message ("There was a problem.", "Here is the exception information:") -Exception $_ -Level Error }
-
-        Logs the message:
-
-        Write-LockpathLog : 2018-01-23 12:57:37 : username : There was a problem.
-        Here is the exception information:
-        You cannot call a method on a null-valued expression.
-        At line:1 char:7
-        + try { $null.Do() } catch { Write-LockpathLog -Message ("There was a problem." ...
-        +       ~~~~~~~~~~
-            + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
-            + FullyQualifiedErrorId : InvokeMethodOnNull
-
     .INPUTS
         String
+
+    .OUTPUTS
+        None.
 
     .NOTES
         The "LogPath" configuration value indicates where the log file will be created.
 
-        Note that, although this function supports pipeline input to the -Message parameter, there is no
-        performance benefit to using the pipeline. This is because the input is simply accumulated and not acted
-        upon until all input has been received.
+        This function is derived from the Write-Log function in the PowerShellForGitHub module at
+        http://aka.ms/PowerShellForGitHub
 
-        This behavior is intentional, in order for a statement like:
-            "Multiple", "messages" | WWrite-LockpathLog -Exception $ex -Level Error
-        to make sense.  In this case, the function should accumulate the messages and, at the end, include the
-        exception information.
-#>
+    .LINK
+        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -127,7 +106,7 @@
     End {
         if ($null -ne $Exception) {
             # If we have an exception, add it after the accumulated messages.
-            $messages += Out-String -InputObject $Exception
+            $messages += $Exception | ConvertTo-Json -AsArray -Compress
         } elseif ($messages.Count -eq 0) {
             # If no exception and no messages, we should early return.
             return
@@ -166,15 +145,14 @@
             $finalMessage
         }
 
-        # Write the message to screen/log.
-        # Note that the below logic could easily be moved to a separate helper function, but a conscious
-        # decision was made to leave it here. When this function is called with -Level Error, Write-Error
-        # will generate a WriteErrorException with the origin being Write-LockpathLog. If this call is moved to
-        # a helper function, the origin of the WriteErrorException will be the helper function, which
-        # could confuse an end user.
+        # Write the message to screen/log. Note that the below logic could easily be moved to a separate helper
+        # function, but a conscious decision was made to leave it here. When this function is called with -Level
+        # Error, Write-Error will generate a WriteErrorException with the origin being Write-LockpathLog. If this
+        # call  is moved to a helper function, the origin of the WriteErrorException will be the helper function,
+        # which could confuse an end user.
         switch ($Level) {
-            # Need to explicitly say SilentlyContinue here so that we continue on, given that
-            # we've assigned a script-level ErrorActionPreference of "Stop" for the module.
+            # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
+            # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
                 Write-Error $consoleMessage -ErrorAction SilentlyContinue
             }
@@ -208,16 +186,14 @@
 
             if (Test-Path -Path $FilePath -PathType Leaf) {
                 # The file exists, but likely is being held open by another process.
-                # Let's do best effort here and if we can't log something, just report
-                # it and move on.
+                # Let's do best effort here and if we can't log something, just report it and move on.
                 $output += 'This is non-fatal, and your command will continue.  Your log file will be missing this entry:'
                 $output += $consoleMessage
                 Write-Warning ($output -join [Environment]::NewLine)
             } else {
-                # If the file doesn't exist and couldn't be created, it likely will never
-                # be valid.  In that instance, let's stop everything so that the user can
-                # fix the problem, since they have indicated that they want this logging to
-                # occur.
+                # If the file doesn't exist and couldn't be created, it likely will never  be valid. In that
+                # instance, let's stop everything so that the user can fix the problem, since they have indicated
+                # that they want this logging to occur.
                 throw ($output -join [Environment]::NewLine)
             }
         }

@@ -1,4 +1,10 @@
-﻿* #TODO create functions to deal with log files extracted by the ambassador service
+﻿* #TODO search and replace/remove as many instances of the term "Lockpath" as possible from the comments. (future
+  proof name changes)
+* #TODO add Lockpath API crossreference into description and/or notes. i.e. Get-LockpathUsers : GetUsers (create a
+  table in the github wiki)
+* #TODO Add a JsonDepth depth variable to the configuration and use that in all the API calls.
+* #TODO Add a MessageBodyCompress variable to the configuration that flattens all message bodies to a single line. (on by default)
+* #TODO create functions to deal with log files extracted by the ambassador service
 * #TODO look at logging levels and how to control what goes to console, prod vs. debugging
 * #TODO create a post-sandbox function that turns specific items back on
 * #TODO create a user query function that uses switches and simple parameters instead of JSON for input

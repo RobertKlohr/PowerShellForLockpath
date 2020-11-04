@@ -10,5 +10,7 @@
 
     param()
 
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
     return $script:configuration
 }

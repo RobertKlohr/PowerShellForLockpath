@@ -43,7 +43,7 @@
     $params = @{
         'UriFragment' = 'SecurityService/Login'
         'Method'      = 'POST'
-        'Description' = "Sending login to $($script:configuration.instanceName) with Username $($credential.username) and Password: [redacted]"
+        'Description' = "Sending login to $($script:configuration.instanceName) with Username $($credential.username) and Password: <redacted>"
         'Body'        = (ConvertTo-Json -InputObject $hashBody)
     }
 

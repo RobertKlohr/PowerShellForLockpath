@@ -81,7 +81,7 @@ function Get-LockpathUsers {
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
         'Description' = "Getting Users with Filter: $($Filters | ConvertTo-Json -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth 10
+        'Body'        = $Body | ConvertTo-Json -Depth 10 -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
