@@ -51,37 +51,28 @@
 
     param(
         [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            Mandatory = $true)]
         [Alias('Object')]
         [PSCustomObject] $InputObject,
 
         [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            Mandatory = $true)]
         [Alias('Property')]
         [String] $Name,
 
         [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            Mandatory = $true)]
         [ValidateSet('Boolean', 'Int64', 'PSCredential', 'String', 'String[]')]
         [String] $Type,
 
         [Parameter(
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            Mandatory = $true)]
         $DefaultValue
     )
 
     #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-
-    # Need to adjust the datatypes for some settingssince we are storing the configuration in JSON and
+    # Need to adjust the datatypes for some settings since we are storing the configuration in JSON and
     # ConvertFrom-JSON return all integers as type [Int64] and all arrays as type [Object[]]
     if ($null -eq $InputObject) {
         return $DefaultValue
