@@ -35,7 +35,7 @@
         ExcludeParameter will always take precedence over RedactParameter.
 
         This function is derived from the Write-InvocationLog function in the PowerShellForGitHub module at
-        http://aka.ms/PowerShellForGitHub
+        https://aka.ms/PowerShellForGitHub
 
     .LINK
     https://github.com/RobertKlohr/PowerShellForLockpath/wiki

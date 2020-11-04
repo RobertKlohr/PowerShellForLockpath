@@ -38,7 +38,7 @@ function Get-LockpathUser {
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki
-#>
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

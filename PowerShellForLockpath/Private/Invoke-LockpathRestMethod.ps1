@@ -58,8 +58,8 @@
         to the headers that are returned in the response, and Invoke-RestMethod drops those headers.
 
         This function is derived from the Invoke-RestMethod function in the PowerShellForGitHub module at
-        http://aka.ms/PowerShellForGitHub
-#>
+        https://aka.ms/PowerShellForGitHub
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
