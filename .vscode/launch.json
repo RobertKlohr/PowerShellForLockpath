@@ -42,7 +42,7 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Interactive Session",
-            "cwd": "${workspaceFolder}/src/${workspaceFolderBasename}",
+            "cwd": "${workspaceFolder}/${workspaceFolderBasename}",
             "script": "Import-Module",
             "args": [
                 ".\\PowerShellForLockpath.psd1 -Force"

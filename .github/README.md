@@ -5,32 +5,31 @@
 
 #### Table of Contents
 
-*   [Overview](#overview)
-*   [Current API Support](#current-api-support)
-*   [Installation](#installation)
-*   [Configuration](#configuration)
-*   [Usage](#usage)
-*   [Logging](#logging)
-*   [Developing and Contributing](#developing-and-contributing)
-*   [Code of Conduct](#code-of-conduct)
-*   [Maintainers](#maintainers)
-*   [Legal and Licensing](#legal-and-licensing)
+- [PowerShellForLockpath](#powershellforlockpath)
+      - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Current API Support](#current-api-support)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Usage](#usage)
+  - [Logging](#logging)
+  - [Developing and Contributing](#developing-and-contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [Maintainers](#maintainers)
+  - [Legal and Licensing](#legal-and-licensing)
 
 ----------
 
 ## Overview
 
-This is a [PowerShell](https://microsoft.com/powershell) [module](https://technet.microsoft.com/en-us/library/dd901839.aspx)
-that provides command-line interaction and automation for the [Lockpath v5.3r API](https://www.lockpath.com/).
+This is a [PowerShell](https://aka.ms/powershell) [module](https://technet.microsoft.com/en-us/library/dd901839.aspx)
+that provides command-line interaction and automation for the [Lockpath API](https://www.lockpath.com/).
 
 ----------
 
 ## Current API Support
 
-At present, this module can:
- * Query, create and update users
- * Query, update and remove records
- * Query and update fields
+At present this module supports all API methods except IssueAssessments.
 
 Development is ongoing, with the goal to add broad support for the entire API set.
 
