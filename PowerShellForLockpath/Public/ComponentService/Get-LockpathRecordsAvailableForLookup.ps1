@@ -37,6 +37,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetAvailableLookupRecords
+
         The authentication account must have Read General Access permissions for the specific component, record and
         fields.
 
@@ -54,19 +56,15 @@
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias('Field')]
         [ValidateRange('Positive')]
         [Int64] $FieldId,
 
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Alias('index')]
         [ValidateRange('NonNegative')]
         [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias('size')]
         [ValidateRange('Positive')]
         [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize')
     )

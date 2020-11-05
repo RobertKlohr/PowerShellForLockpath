@@ -31,6 +31,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/VoteRecord
+
         The authentication account must have Read and Update General Access permissions for the specific component,
         and record as well as View and Vote workflow stage permissions.
 
@@ -47,41 +49,23 @@
     [OutputType('System.String')]
 
     param(
-        #TODO Update the parameters and logic to support passing component Id in addition to component alias
-        # .PARAMETER ComponentId
-        #     Specifies the Id number of the component as a positive integer. The component Id may be found by using
-        #     Get-LockpathComponents.
-
-        # [Parameter(
-        #     Mandatory = $true,
-        #     ValueFromPipeline = $true,
-        #     ValueFromPipelineByPropertyName = $true)]
-        # [Alias("Component")]
-        # [ValidateRange("Positive")]
-        # [Int64] $ComponentId,
-
         [Parameter(
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [String] $ComponentAlias,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Transition')]
         [ValidateRange('Positive')]
         [Int64] $TransitionId,
 
@@ -90,7 +74,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Comments')]
         [ValidateLength(1, 2048)]
         [String] $VotingComments
     )

@@ -35,6 +35,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetComponentByAlias?alias=$ComponentAlias
+
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
@@ -53,7 +55,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [String] $ComponentAlias
     )

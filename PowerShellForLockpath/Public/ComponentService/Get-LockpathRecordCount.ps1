@@ -33,6 +33,8 @@ function Get-LockpathRecordCount {
         System.Int32.
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetRecordCount
+
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
@@ -49,11 +51,9 @@ function Get-LockpathRecordCount {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Alias('Filter')]
         [Array] $Filters = @()
     )
 

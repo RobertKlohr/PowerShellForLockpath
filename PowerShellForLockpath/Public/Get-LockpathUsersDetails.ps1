@@ -4,15 +4,12 @@
     [OutputType('System.Int32')]
 
     param(
-        [Alias('Index')]
         [ValidateRange('NonNegative')]
         [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias('Size')]
         [ValidateRange('Positive')]
         [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias('Filter')]
         [Array] $Filters = @()
     )
 

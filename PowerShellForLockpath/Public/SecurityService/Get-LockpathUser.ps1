@@ -34,6 +34,8 @@ function Get-LockpathUser {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/GetUser?Id=$UserId
+
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
@@ -52,7 +54,6 @@ function Get-LockpathUser {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('NonNegative')]
         [Int64] $UserId
     )

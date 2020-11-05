@@ -50,23 +50,17 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(
-            Mandatory = $true)]
-        [Alias('Object')]
+        [Parameter(Mandatory = $true)]
         [PSCustomObject] $InputObject,
 
-        [Parameter(
-            Mandatory = $true)]
-        [Alias('Property')]
+        [Parameter(Mandatory = $true)]
         [String] $Name,
 
-        [Parameter(
-            Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Boolean', 'Int64', 'PSCredential', 'String', 'String[]')]
         [String] $Type,
 
-        [Parameter(
-            Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         $DefaultValue
     )
 

@@ -19,6 +19,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetComponentList
+
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK

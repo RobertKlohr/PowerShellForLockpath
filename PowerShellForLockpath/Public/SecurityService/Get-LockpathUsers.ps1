@@ -41,6 +41,8 @@ function Get-LockpathUsers {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/GetUsers
+
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
@@ -54,15 +56,12 @@ function Get-LockpathUsers {
     [OutputType('System.String')]
 
     param(
-        [Alias('index')]
         [ValidateRange('NonNegative')]
         [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias('size')]
         [ValidateRange('Positive')]
         [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias('Filter')]
         [Array] $Filters = @()
     )
 

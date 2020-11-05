@@ -36,6 +36,8 @@ function Get-LockpathFieldList {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetFieldList?componentId=$ComponentId
+
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
@@ -54,7 +56,6 @@ function Get-LockpathFieldList {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId
     )

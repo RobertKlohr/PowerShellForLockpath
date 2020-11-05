@@ -23,6 +23,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/CreateUser
+
         The authentication account must have Read and Update Administrative Access permissions to administer users.
         For vendor contacts, the authentication account must also have the Read and Update General Access to Vendor
         Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.

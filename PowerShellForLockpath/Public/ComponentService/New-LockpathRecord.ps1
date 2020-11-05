@@ -26,6 +26,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/CreateRecord
+
         The authentication account must have Read and Create General Access permissions for the specific component
         and record along with Update General Access to the fields.
 
@@ -40,16 +42,13 @@
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Component')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Array] $Attributes

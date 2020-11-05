@@ -33,6 +33,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetLookupReportColumnFields?lookupFieldId=$FieldId&fieldPathId=$FieldPathId
+
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
@@ -51,7 +53,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $FieldId,
 
@@ -60,7 +61,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('FieldPath')]
         [ValidateRange('Positive')]
         [Int64] $FieldPathId
     )

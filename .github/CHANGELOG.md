@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Create script that touches all the records in a component to force a formula update
 - During setup allow user to specify json vs. xml
-- Configure all functions to except parameter based on API doc
-- Setup so that once the Send-LpLogin runs it calls a new cmdlet that runs the Send-LpPing periodically in the background?
 - Update functions to use this [style guide](https://github.com/PoshCode/PowerShellPracticeAndStyle).
 
 ## [0.0.1]

@@ -35,6 +35,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/DeleteUser
+
         The authentication account must have Read and Delete Administrative Access permissions to administer users.
         For vendor contacts, the authentication account can alternatively have Read and Delete General Access to
         Vendor Profiles.
@@ -55,7 +57,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $UserId
     )

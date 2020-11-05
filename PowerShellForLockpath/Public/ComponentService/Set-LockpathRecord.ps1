@@ -27,6 +27,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/UpdateRecord
+
         The authentication account must have Read and Update General Access permissions for the specific component,
         record and field.
 
@@ -41,24 +43,19 @@
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Component')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Array] $Attributes

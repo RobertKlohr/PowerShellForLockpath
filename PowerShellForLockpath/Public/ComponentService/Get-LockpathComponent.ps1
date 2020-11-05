@@ -1,7 +1,7 @@
 ﻿function Get-LockpathComponent {
     <#
     .SYNOPSIS
-  Returns information about a component specified by its Id.
+        Returns information about a component specified by its Id.
 
     .DESCRIPTION
         Returns information about a component specified by its Id.
@@ -13,7 +13,7 @@
     .PARAMETER ComponentId
         Specifies the Id number of the component as a positive integer.
 
-  The component Id may be found by using Get-LockpathComponentList.
+        The component Id may be found by using Get-LockpathComponentList.
 
     .EXAMPLE
         Get-LockpathComponent -ComponentId 2
@@ -32,6 +32,8 @@
         }
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetComponent?id=$ComponentId
+
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
@@ -50,7 +52,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId
     )

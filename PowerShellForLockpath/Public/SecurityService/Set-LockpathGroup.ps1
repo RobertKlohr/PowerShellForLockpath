@@ -25,6 +25,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/UpdateGroup
+
         The authentication account must have Read and Update Administrative Access permissions to administer groups.
 
     .LINK

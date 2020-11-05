@@ -35,6 +35,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/DeleteGroup
+
         The authentication account must have Read and Delete Administrative Access permissions to administer groups.
 
     .LINK
@@ -53,7 +55,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $GroupId
     )

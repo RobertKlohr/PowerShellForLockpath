@@ -35,6 +35,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetRecordAttachment?componentId=$ComponentId&recordId=$RecordId&fieldId=$FieldId&documentId=$DocumentId
+
         The authentication account must have Read General Access permissions for the specific component, record and
         field.
 
@@ -49,35 +51,27 @@
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Component')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Field')]
         [ValidateRange('Positive')]
         [Int64] $FieldId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Document')]
         [ValidateRange('Positive')]
         [Int64] $DocumentId
     )

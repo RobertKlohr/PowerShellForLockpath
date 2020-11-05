@@ -5,7 +5,8 @@
 
     param(
         # Full URi to the Lockpath instance.
-        [Parameter(ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         $Session
     )
 

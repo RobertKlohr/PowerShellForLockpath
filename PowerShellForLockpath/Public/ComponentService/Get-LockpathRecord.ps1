@@ -25,6 +25,8 @@ function Get-LockpathRecord {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetRecord?componentId=$ComponentId&recordId=$RecordId
+
         The authentication account must have Read General Access permissions for the specific component, record and
         field.
 
@@ -39,19 +41,15 @@ function Get-LockpathRecord {
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Component')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId
     )

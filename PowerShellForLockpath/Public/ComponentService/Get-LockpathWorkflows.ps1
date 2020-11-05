@@ -35,6 +35,8 @@ function Get-LockpathWorkflows {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetWorkflows?componentalias=$ComponentAlias
+
         The authentication account must have Read Administrative Access permissions for the specific component.
 
     .LINK
@@ -53,7 +55,6 @@ function Get-LockpathWorkflows {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [String] $ComponentAlias
     )

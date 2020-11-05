@@ -75,7 +75,8 @@
     # able to access the PID for logging purposes, and it is accessed via a global variable.')]
 
     param(
-        [Parameter(ValueFromPipeline)]
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [AllowEmptyCollection()]
         [AllowEmptyString()]
         [AllowNull()]

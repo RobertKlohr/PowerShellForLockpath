@@ -56,6 +56,8 @@ function Get-LockpathRecordsDetails {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetDetailRecords
+
         The authentication account must have Read General Access permissions for the specific component, records
         and fields.
 
@@ -73,25 +75,19 @@ function Get-LockpathRecordsDetails {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Alias('index')]
         [ValidateRange('NonNegative')]
         [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
-        [Alias('size')]
         [ValidateRange('Positive')]
         [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
-        [Alias('Filter')]
         [Array] $Filters = @(),
 
-        [Alias('Fields')]
         [Array] $FieldIds = @(),
 
-        [Alias('Sort')]
         [Array] $SortOrder = @()
     )
 

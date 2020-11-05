@@ -26,6 +26,8 @@ function Get-LockpathUserCount {
         System.Int32
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/GetUserCount
+
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
@@ -39,7 +41,6 @@ function Get-LockpathUserCount {
     [OutputType('System.String')]
 
     param(
-        [Alias('Filter')]
         [Array] $Filters = @()
     )
 

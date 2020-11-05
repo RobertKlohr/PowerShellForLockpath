@@ -29,6 +29,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/TransitionRecord
+
         The authentication account must have Read and Update General Access permissions for the specific component,
         and record as well as View and Transition workflow stage permissions.
 
@@ -63,23 +65,18 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [String] $ComponentAlias,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Transition')]
         [ValidateRange('Positive')]
         [Int64] $TransitionId
     )

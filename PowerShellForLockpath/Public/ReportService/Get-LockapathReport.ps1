@@ -32,6 +32,8 @@
         System.Array
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ReportService/ExportReport?id=$ReportId&fileExtension=$FileType
+
         The authentication account must have Read General Access and Print/Export General Access permissions to the
         report.
 
@@ -46,23 +48,18 @@
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Report', 'Id')]
         [ValidateRange('Positive')]
         [Int64] $ReportId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Format')]
         [ValidateSet('csv', 'xlsx', 'pdf')]
         [String] $FileType,
 
-        [Alias('Path')]
         [IO.FileInfo] $FilePath
     )
 

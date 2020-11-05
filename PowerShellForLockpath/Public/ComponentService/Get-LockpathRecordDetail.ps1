@@ -32,6 +32,8 @@ function Get-LockpathRecordDetail {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetDetailRecord?componentId=$ComponentId&recordId=$RecordId&embedRichTextImages=$ExtractRichTextImages
+
         The authentication account must have Read General Access permissions for the specific component, record and
         field.
 
@@ -46,23 +48,20 @@ function Get-LockpathRecordDetail {
     [OutputType('System.String')]
 
     param(
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Component')]
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Record')]
         [ValidateRange('Positive')]
         [Int64] $RecordId,
 
-        [Parameter(ValueFromPipeline = $true)]
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [switch] $ExtractRichTextImages
     )
 

@@ -36,6 +36,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/ImportFile
+
         The authentication account must have Read, Create, Update, and Import/Bulk General Access permissions to
         the defined table.
 
@@ -58,7 +60,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Alias')]
         [ValidateLength(1, 128)]
         [String] $ComponentAlias,
 
@@ -67,21 +68,17 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Template')]
         [ValidateLength(1, 128)]
         [String] $ImportTemplateName,
 
-        [Parameter(
-            Mandatory = $true,
+        [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('File')]
         [IO.FileInfo] $FilePath,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('System')]
         [switch] $RunAsSystem = $(Get-LockpathConfiguration -Name 'runAsSystem')
     )
 

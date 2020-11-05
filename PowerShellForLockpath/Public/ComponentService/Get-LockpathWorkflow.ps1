@@ -29,6 +29,8 @@ function Get-LockpathWorkflow {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetWorkflow?Id=$WorkflowId
+
         The authentication account must have Read Administrative Access permissions for the specific component
         containing the workflow.
 
@@ -48,7 +50,6 @@ function Get-LockpathWorkflow {
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('Positive')]
         [Int64] $WorkflowId
     )

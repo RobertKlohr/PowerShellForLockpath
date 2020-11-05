@@ -69,17 +69,14 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(
-            Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [String] $UriFragment,
 
-        [Parameter(
-            Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Delete', 'Get', 'Post')]
         [String] $Method,
 
-        [Parameter(
-            Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [String] $Description,
 
         [String] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),

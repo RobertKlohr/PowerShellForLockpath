@@ -2,6 +2,7 @@
     <#
     .SYNOPSIS
         Returns available fields for a given group.
+
     .DESCRIPTION
         Returns available fields for a given group. The group Id may be found by using Get-LockpathGroups.
 
@@ -9,23 +10,34 @@
 
     .PARAMETER GroupId
         Specifies the Id number of the group as a positive integer.
+
     .EXAMPLE
         Get-LockpathGroup -GroupId 2
+
     .EXAMPLE
         Get-LockpathGroup 2
+
     .EXAMPLE
         2 | Get-LockpathGroup
+
     .EXAMPLE
         2,8,9 | Get-LockpathGroup
+
     .EXAMPLE
         $userObject | Get-LockpathGroup
         If $userObject has an property called GroupId that value is automatically passed as a parameter.
+
     .INPUTS
         System.Uint32
+
     .OUTPUTS
         String
+
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/GetGroup?Id=$GroupId
+
         The authentication account must have Read Administrative Access permissions to administer users.
+
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
@@ -42,7 +54,6 @@
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Alias('Id')]
         [ValidateRange('NonNegative')]
         [Int64] $GroupId
     )

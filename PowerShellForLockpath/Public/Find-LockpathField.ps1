@@ -5,11 +5,18 @@
 
     param(
         # Name of field attribute
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(
+            Mandatory,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName)]
         [String]
         $FieldAttributeName,
         # Value to match against the field attribute
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(
+            Mandatory,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName
+        )]
         [String]
         $FieldAttributeValue
     )

@@ -18,6 +18,8 @@
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/Login
+
         The authentication account must have access to the API.
 
     .LINK

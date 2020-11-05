@@ -64,7 +64,7 @@ in an individual command, but for the common scenario, you'd have less typing to
 
  ```powershell
 Set-LockpathConfiguration -PageIndex 0
-Set-LockpathConfiguration -PageSize 1000
+Set-LockpathConfiguration -PageSize 500
 ```
 
 There are more great configuration options available.  Just review the help for that command for

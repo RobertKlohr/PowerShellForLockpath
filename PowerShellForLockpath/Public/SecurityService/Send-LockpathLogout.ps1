@@ -18,6 +18,8 @@ function Send-LockpathLogout {
         String
 
     .NOTES
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/Logout
+
         The authentication account must have access to the API.
 
     .LINK
