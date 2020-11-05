@@ -5,10 +5,11 @@ CHANGELOG.md merge=union
 * text=auto
 
 # Explicitly declare text files we want to always be normalized and converted to native line endings on checkout.
-*.md            text
 *.gitattributes text
 *.gitignore     text
 
+# Preserve trailing whitespace in markdown files
+*.md text whitespace=-cr-at-eol,-trailing-space
 
 # Explicitly declare text files we want to always be normalized.
 *.clixml text  eol=crlf
@@ -31,8 +32,3 @@ CHANGELOG.md merge=union
 *.jpg binary
 *.png binary
 *.svg binary
-
-# Documents
-*.docx diff=astextplain
-*.pdf  diff=astextplain
-*.rtf  diff=astextplain
