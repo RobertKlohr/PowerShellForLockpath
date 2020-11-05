@@ -93,18 +93,18 @@
         [System.Management.Automation.ErrorRecord] $Exception
     )
 
-    Begin {
+    begin {
         # Accumulate the list of Messages, whether by pipeline or parameter.
         $messages = @()
     }
 
-    Process {
+    process {
         foreach ($m in $Message) {
             $messages += $m
         }
     }
 
-    End {
+    end {
         if ($null -ne $Exception) {
             # If we have an exception, add it after the accumulated messages.
             $messages += $Exception | ConvertTo-Json -AsArray -Compress

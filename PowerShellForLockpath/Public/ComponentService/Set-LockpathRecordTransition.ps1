@@ -47,7 +47,7 @@
     [OutputType('System.String')]
 
     param(
-        #TODO Update the parameters and logic to support passing component Id in addition to component alias
+        # TODO Update the parameters and logic to support passing component Id in addition to component alias
         # .PARAMETER ComponentId
         #     Specifies the Id number of the component as a positive integer. The component Id may be found by using
         #     Get-LockpathComponents.

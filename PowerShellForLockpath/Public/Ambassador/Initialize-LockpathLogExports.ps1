@@ -1,6 +1,6 @@
 ﻿function Initialize-LockpathLogExports {
 
-    #FIXME Clean up help
+    # FIXME Clean up help
     <#
     .SYNOPSIS
         Creates the folder structure used for extracting log files via the Ambassador service.
@@ -16,7 +16,7 @@
     .PARAMETER Directory
 
 
-        #TODO need to complete the examples
+        # TODO need to complete the examples
     .EXAMPLE
         Initialize-LockpathLogExports
 

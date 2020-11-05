@@ -2,11 +2,10 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/github/RobertKlohr/PowerShellForLockpath?branch=master&svg=true)](https://ci.appveyor.com/project/RobertKlohr/powershellforlockpath)
 
-
-#### Table of Contents
+## Table of Contents
 
 - [PowerShellForLockpath](#powershellforlockpath)
-      - [Table of Contents](#table-of-contents)
+  - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Current API Support](#current-api-support)
   - [Installation](#installation)

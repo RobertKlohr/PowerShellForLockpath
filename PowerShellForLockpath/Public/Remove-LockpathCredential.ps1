@@ -1,8 +1,8 @@
 ﻿
 function Remove-LockpathCredential {
-    #TODO convert this to a switch on the set-configuration function
+    # TODO convert this to a switch on the set-configuration function
 
-    #FIXME Update to new coding standards
+    # FIXME Update to new coding standards
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

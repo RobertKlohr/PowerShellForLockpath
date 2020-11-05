@@ -1,5 +1,5 @@
 ﻿function Get-LockpathUsersDetails {
-    #FIXME Update to new coding standards
+    # FIXME Update to new coding standards
     [CmdletBinding()]
     [OutputType('System.Int32')]
 
@@ -15,7 +15,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    #TODO add stopwatch to this cmdlet
+    # TODO add stopwatch to this cmdlet
 
     # %%%%%%%%%%
     # Hard coded filter for testing

@@ -1,5 +1,5 @@
 ﻿function Get-LockpathGroupsDetails {
-    #FIXME Update to new coding standards
+    # FIXME Update to new coding standards
 
     [CmdletBinding()]
     [OutputType('System.Int32')]

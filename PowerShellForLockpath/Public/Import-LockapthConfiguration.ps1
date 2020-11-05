@@ -1,12 +1,12 @@
 ﻿function Import-LockpathConfiguration {
 
-    #FIXME setting the defaults into initialize-lockpathconfiguration
+    # FIXME setting the defaults into initialize-lockpathconfiguration
 
-    #FIXME Update to new coding standards
+    # FIXME Update to new coding standards
 
-    #FIXME Clean up help
+    # FIXME Clean up help
 
-    #FIXME invalid error on load
+    # FIXME invalid error on load
     <#
     .SYNOPSIS
         Loads in the default configuration values, and then updates the individual properties
@@ -88,7 +88,7 @@
                 $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
             }
         }
-        #FIXME does it need to return any values?
+        # FIXME does it need to return any values?
         return $script:configuration
     } catch {
         Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning

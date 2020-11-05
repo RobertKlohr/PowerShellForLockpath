@@ -1,6 +1,5 @@
 ﻿function Send-LockpathAssessments {
-    #FIXME Update to new coding standards.  Need sample code from NAVEX Global on how to build this API call with
-    #JSON.
+    # FIXME Update to new coding standards.
 
     <#
     .SYNOPSIS

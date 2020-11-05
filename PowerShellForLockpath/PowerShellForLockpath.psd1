@@ -47,7 +47,7 @@
     NestedModules        = @(
         # Ideally this list would be kept completely alphabetical, but other scripts (like GitHubConfiguration.ps1)
         # depend on some of the code in Helpers being around at load time.
-        #TODO: See if helpers needs to be loaded first and edit the comments and order as necessary.
+        # TODO: See if helpers needs to be loaded first and edit the comments and order as necessary.
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,

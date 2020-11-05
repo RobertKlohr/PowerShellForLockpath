@@ -1,5 +1,5 @@
 ﻿function Show-LockpathConfiguration {
-    #FIXME Update to new coding standards
+    # FIXME Update to new coding standards
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
