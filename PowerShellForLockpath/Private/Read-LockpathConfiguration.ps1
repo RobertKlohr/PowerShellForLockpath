@@ -53,5 +53,5 @@
     } catch {
         Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     }
-    return [PSCustomObject]@{ }
+    # return [PSCustomObject]@{ }
 }

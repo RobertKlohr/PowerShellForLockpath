@@ -79,7 +79,7 @@
 
     # Update the values with any that we find in the configuration file.
     try {
-        $savedConfiguration = Read-LockpathConfiguration -Path $FilePath
+        $savedConfiguration = Read-LockpathConfiguration -FilePath $FilePath
         Get-Member -InputObject $script:configuration -MemberType NoteProperty |
         ForEach-Object {
             $name = $_.Name
