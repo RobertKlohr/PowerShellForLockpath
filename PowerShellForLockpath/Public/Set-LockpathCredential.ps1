@@ -58,7 +58,7 @@
         String
 
     .NOTES
-        The authentication account must have access to the API.
+        Public helper method.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki

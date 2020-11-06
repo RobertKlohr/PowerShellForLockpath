@@ -32,6 +32,8 @@
         None.
 
     .NOTES
+        Private helper method.
+
         ExcludeParameter will always take precedence over RedactParameter.
 
         This function is derived from the Write-InvocationLog function in the PowerShellForGitHub module at

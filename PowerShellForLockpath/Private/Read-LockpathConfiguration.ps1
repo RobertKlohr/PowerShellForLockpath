@@ -27,7 +27,7 @@
         PSCustomObject
 
     .NOTES
-        Internal helper method.
+        Private helper method.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki

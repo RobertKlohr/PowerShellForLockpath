@@ -55,6 +55,8 @@
         None.
 
     .NOTES
+        Private helper method.
+
         The "LogPath" configuration value indicates where the log file will be created.
 
         This function is derived from the Write-Log function in the PowerShellForGitHub module at

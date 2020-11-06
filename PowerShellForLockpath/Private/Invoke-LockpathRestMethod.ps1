@@ -54,6 +54,9 @@
         Gets a list of system users.
 
     .NOTES
+
+        Private helper method.
+
         This wraps Invoke-WebRequest as opposed to Invoke-RestMethod because we want access
         to the headers that are returned in the response, and Invoke-RestMethod drops those headers.
 

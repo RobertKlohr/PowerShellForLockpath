@@ -20,7 +20,7 @@
         None
 
     .NOTES
-        Internal-only helper method. This function is automatically called when the module is loaded.
+        Private helper method. This function is automatically called when the module is loaded.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki

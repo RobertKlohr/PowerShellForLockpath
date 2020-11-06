@@ -22,7 +22,7 @@
         String
 
     .NOTES
-        Internal-only helper method.
+        Private helper method.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki

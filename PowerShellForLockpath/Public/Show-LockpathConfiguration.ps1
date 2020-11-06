@@ -31,6 +31,7 @@
         String
 
     .NOTES
+        Public helper method.
 
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki
