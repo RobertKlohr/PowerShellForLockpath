@@ -157,11 +157,13 @@
 
     if (-not $SessionOnly) {
         try {
+            # make a copy of the configuration without the credential or websession properties
+            $output = Select-Object -InputObject $configuration -ExcludeProperty credential, websession
             $null = New-Item -Path $script:configuration.configurationFilePath -Force
-            ConvertTo-Json -InputObject $script:configuration | Set-Content -Path $script:configuration.configurationFilePath -Force
+            ConvertTo-Json -InputObject $output | Set-Content -Path $script:configuration.configurationFilePath -Force
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
-            Write-LockpathLog -Message 'Failed to save configuration to disk.  It will remain for this PowerShell session only.' -Level Warning
+            Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning
         }
     }
 }

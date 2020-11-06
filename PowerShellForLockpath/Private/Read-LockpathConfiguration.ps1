@@ -8,7 +8,7 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER Path
+    .PARAMETER FilePath
         The file that may or may not exist with a serialized version of the configuration
         values for this module.
 
@@ -16,9 +16,7 @@
         PSCustomObject
 
     .EXAMPLE
-        Read-LockpathConfiguration -Path 'c:\Temp\PowerShellForLockpath.json'
-
-        Returns back an object with the deserialized object contained in the specified file if it exists and is valid.
+        Read-LockpathConfiguration -FilePath 'c:\Temp\PowerShellForLockpath.json'
 
     .INPUTS
         System.IO.FileInfo
@@ -53,5 +51,4 @@
     } catch {
         Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     }
-    # return [PSCustomObject]@{ }
 }

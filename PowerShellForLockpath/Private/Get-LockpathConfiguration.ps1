@@ -1,5 +1,5 @@
 ﻿function Get-LockpathConfiguration {
-    # TODO remove this function and it's dependencies and replace with $script:configuration.$Name
+    # TODO remove this function and update all dependent fucntions replace it with $script:configuration
     <#
     .SYNOPSIS
         Gets the currently configured value for the requested configuration setting.
