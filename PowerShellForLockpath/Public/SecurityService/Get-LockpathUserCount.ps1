@@ -23,7 +23,7 @@ function Get-LockpathUserCount {
         System.Array
 
     .OUTPUTS
-        System.Int32
+        System.Int64
 
     .NOTES
         Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/GetUserCount
@@ -38,7 +38,7 @@ function Get-LockpathUserCount {
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+    [OutputType('System.Int64')]
 
     param(
         [Array] $Filters = @()

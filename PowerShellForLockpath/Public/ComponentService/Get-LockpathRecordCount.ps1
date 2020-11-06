@@ -30,7 +30,7 @@ function Get-LockpathRecordCount {
         System.Array
 
     .OUTPUTS
-        System.Int32.
+        System.Int64
 
     .NOTES
         Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetRecordCount
@@ -45,7 +45,7 @@ function Get-LockpathRecordCount {
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+    [OutputType('System.Int64')]
 
     param(
         [Parameter(

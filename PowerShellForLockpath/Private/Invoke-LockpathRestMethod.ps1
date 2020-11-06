@@ -188,9 +188,7 @@
                 'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
                 'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
                 'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
-                # TODO Do we need or want to capture the message back from the server.  Maybe put this in a separate
-                #log line entry?
-                # 'innerMessage'       = $_.ErrorDetails.Message
+                'innerMessage'       = $_.ErrorDetails.Message
             }
             Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth 10 -Compress) -Level Error
         } else {

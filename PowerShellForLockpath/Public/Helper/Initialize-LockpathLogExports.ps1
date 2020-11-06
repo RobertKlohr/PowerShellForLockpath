@@ -1,6 +1,4 @@
 ﻿function Initialize-LockpathLogExports {
-
-    # FIXME Clean up help
     <#
     .SYNOPSIS
         Creates the folder structure used for extracting log files via the Ambassador service.
@@ -11,35 +9,25 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER FilePath
-
+        File path to the directory where the log files will be created.
 
     .PARAMETER Directory
-
-
-        # TODO need to complete the examples
-    .EXAMPLE
-        Initialize-LockpathLogExports
-
-        Local
+        Array of directories to create. @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
 
     .EXAMPLE
-        Initialize-LockpathLogExports
-
-        Mapped drive
+        Initialize-LockpathLogExports -FilePath 'c:\temp\'
 
     .EXAMPLE
-        Initialize-LockpathLogExports
-
-        UNC path
+        Initialize-LockpathLogExports -FilePath 'c:\temp\' -Directory @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
 
     .INPUTS
-        None
+        Array, System.IO.FileInfo
 
     .OUTPUTS
         None
 
     .NOTES
-        <logPath>
+        <FilePath>
             API
             Audit
             Email
@@ -61,7 +49,10 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [IO.FileInfo] $FilePath = (Get-LockpathConfiguration -Name 'logPath'),
+        [Parameter(
+            Mandatory = $true,
+            Position = 0)]
+        [IO.FileInfo] $FilePath,
 
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
     )
