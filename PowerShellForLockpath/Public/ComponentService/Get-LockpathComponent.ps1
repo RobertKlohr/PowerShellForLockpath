@@ -11,7 +11,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
         The component Id may be found by using Get-LockpathComponentList.
 

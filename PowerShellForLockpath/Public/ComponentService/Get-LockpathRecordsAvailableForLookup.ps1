@@ -11,18 +11,20 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER PageIndex
-        The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
-        in the configuration.
+        The index of the page of result to return.
+
+        If not set it defaults to the value set in the configuration.
 
     .PARAMETER PageSize
-        The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in
-        the configuration.
+        The size of the page results to return.
+
+        If not set it defaults to the value set in the configuration.
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer.
+        Specifies the Id number of the record.
 
     .EXAMPLE
         Get-LockpathRecordsAvailableForLookup -FieldId 3 -RecordId 4

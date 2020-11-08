@@ -6,8 +6,8 @@
     .DESCRIPTION
         Change the value of a configuration property for the module, for the session only, or saved to disk.
 
-        To change any of the boolean/switch properties to false, specify the switch,
-        immediately followed by ":$false" with no space.
+        To change any of the boolean/switch properties to false, specify the switch, immediately followed by
+        ":$false" with no space.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
@@ -27,13 +27,13 @@
         The location of the log file where all activity will be written.
 
     .PARAMETER LogProcessId
-        If specified, the Process ID of the current PowerShell session will be included in each
-        log entry.  This can be useful if you have concurrent PowerShell sessions all logging
-        to the same file, as it would then be possible to filter results based on ProcessId.
+        If specified, the Process ID of the current PowerShell session will be included in each log entry.  This
+        can be useful if you have concurrent PowerShell sessions all logging to the same file, as it would then be
+        possible to filter results based on ProcessId.
 
     .PARAMETER LogRequestBody
-        If specified, the JSON body of the REST request will be logged to verbose output.
-        This can be helpful for debugging purposes.
+        If specified, the JSON body of the REST request will be logged to verbose output. This can be helpful for
+        debugging purposes.
 
     .PARAMETER LogTimeAsUtc
         If specified, all times logged will be logged as UTC instead of the local timezone.

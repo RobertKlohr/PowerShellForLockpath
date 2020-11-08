@@ -11,16 +11,18 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer.
+        Specifies the Id number of the record.
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field.
 
     .PARAMETER Attributes
-        The list of fields and values to change as an array. The field names in the array are case sensitive.
+        The list of fields and values to change as an array.
+
+        The field names in the array are case sensitive.
 
     .EXAMPLE
         Send-LockpathAssessments

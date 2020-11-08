@@ -9,7 +9,7 @@ function Get-LockpathField {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field.
 
     .EXAMPLE
         Get-LockpathField -FieldId 7

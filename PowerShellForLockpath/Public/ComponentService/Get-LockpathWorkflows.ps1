@@ -10,7 +10,7 @@ function Get-LockpathWorkflows {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentAlias
-        Specifies the system alias of the component as a string.
+        Specifies the system alias of the component.
 
     .EXAMPLE
         Get-LockpathWorkflows -ComponentAlias 'Controls'

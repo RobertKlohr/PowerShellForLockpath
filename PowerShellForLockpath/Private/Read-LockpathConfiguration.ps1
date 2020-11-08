@@ -9,8 +9,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER FilePath
-        The file that may or may not exist with a serialized version of the configuration
-        values for this module.
+        The file that may or may not exist with a serialized version of the configuration values for this module.
 
     .OUTPUTS
         PSCustomObject

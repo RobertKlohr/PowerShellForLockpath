@@ -10,7 +10,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER UserId
-        Specifies the Id number of the user as a positive integer.
+        Specifies the Id number of the user.
 
     .EXAMPLE
         Remove-LockpathUser -UserId 6
@@ -26,6 +26,7 @@
 
     .EXAMPLE
         $userObject | Remove-LockpathUser
+
         If $userObject has an property called UserId that value is automatically passed as a parameter.
 
     .INPUTS

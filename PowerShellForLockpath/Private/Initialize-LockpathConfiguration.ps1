@@ -5,8 +5,7 @@
         that may have been saved to disk.
 
     .DESCRIPTION
-        Populates the configuration of the module for this session, loading in any values
-        that may have been saved to disk.
+        Populates the configuration of the module for this session, loading in any values that may have been saved to disk.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 

@@ -11,10 +11,12 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
     .PARAMETER Attributes
-        The list of fields and values to add as an array. The field names in the array are case sensitive.
+        The list of fields and values to add as an array.
+
+        The field names in the array are case sensitive.
 
     .EXAMPLE
         New-LockpathRecord -ComponentId 10066 -Attributes @{key = 1417; value = '_ API New Vendor'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}

@@ -13,16 +13,19 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer. The component Id may be found by using
-        Get-LockpathComponents.
+        Specifies the Id number of the component.
+
+        The component Id may be found by using Get-LockpathComponents.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer. The record Id may be found by using
-        Get-LockpathRecords.
+        Specifies the Id number of the record.
+
+        The record Id may be found by using Get-LockpathRecords.
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer. The field Id may be found by using
-        Get-LockpathFieldsList.
+        Specifies the Id number of the field.
+
+        The field Id may be found by using Get-LockpathFieldsList.
 
     .PARAMETER FilePath
         Specifies the absolute path to the file being updated.

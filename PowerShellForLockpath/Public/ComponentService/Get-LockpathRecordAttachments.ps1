@@ -10,13 +10,13 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer.
+        Specifies the Id number of the record.
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field.
 
     .EXAMPLE
         Get-LockpathRecordAttachments -ComponentId 2 -RecordId 1 -FieldId 1

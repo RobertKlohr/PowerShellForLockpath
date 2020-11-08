@@ -6,9 +6,8 @@
     .DESCRIPTION
         Gets the API credentials for use in the rest of the module.
 
-        First the will try to use the credential already cached in memory.
-        If not found, will look to see if there is a file with the API credential stored
-        as a SecureString.
+        First the will try to use the credential already cached in memory. If not found, will look to see if there
+        is a file with the API credential stored as a SecureString.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 

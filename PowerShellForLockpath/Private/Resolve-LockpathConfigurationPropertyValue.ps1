@@ -17,8 +17,8 @@
         The name of the property on InputObject whose value is desired.
 
     .PARAMETER Type
-        The type of the value stored in the Name property on InputObject.  Used to validate
-        that the property has a valid value.
+        The type of the value stored in the Name property on InputObject.  Used to validate that the property has a
+        valid value.
 
     .PARAMETER DefaultValue
         The value to return if Name doesn't exist on InputObject or is of an invalid type.
@@ -26,8 +26,7 @@
     .EXAMPLE
         Resolve-function Resolve-LockpathConfigurationPropertyValue -InputObject $config -Name instancePort -Type unit -DefaultValue 4443
 
-        Checks $config to see if it has a property named "instancePort".  If it does, and it's a
-        unit, returns that value, otherwise, returns 4443 (the DefaultValue).
+        Checks $config to see if it has a property named "instancePort".  If it does, and it's a unit, returns that Value, otherwise, returns 4443 (the DefaultValue).
 
     .INPUTS
         String

@@ -4,31 +4,35 @@
         A wrapper around Invoke-WebRequest that understands the Lockpath API.
 
     .DESCRIPTION
-        A very heavy wrapper around Invoke-WebRequest that understands the Lockpath API and
-        how to perform its operation with and without console status updates.  It also
-        understands how to parse and handle errors from the REST calls.
+        A wrapper around Invoke-WebRequest that understands the Lockpath API.
+
+        Perform its operation with and without console status updates and also understands how to parse and handle
+        errors from the REST calls.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER UriFragment
-        The unique, tail-end, of the REST URI that indicates what REST action will
-        be performed.  This should not start with a leading "/".
+        The unique, tail-end, of the REST URI that indicates what REST action will be performed.
+
+        This should not start with a leading "/".
 
     .PARAMETER Method
-        The type of REST method being performed.  This only supports a reduced set of the
-        possible REST methods (delete, get, post).
+        The type of REST method being performed.
+
+        This only supports a reduced set of the possible REST methods (delete, get, post).
 
     .PARAMETER AcceptHeader
-        Specify the media type in the Accept header.  Different types of commands may require
-        different media types.
+        Specify the media type in the Accept header.
+
+        Different types of commands may require different media types.
 
     .PARAMETER Body
-        This optional parameter forms the body of a PUT or POST request. It will be automatically
-        encoded to UTF8 and sent as Content Type: "application/json; charset=UTF-8"
+        This optional parameter forms the body of a PUT or POST request.
+
+        It will be automatically encoded to UTF8 and sent as Content Type: "application/json; charset=UTF-8"
 
     .PARAMETER Description
-        A friendly description of the operation being performed for logging and console
-        display purposes.
+        A friendly description of the operation being performed for logging and console display purposes.
 
     .PARAMETER InstanceName
         The URI of the API instance where all requests will be made.
@@ -102,6 +106,12 @@
         Write-LockpathInvocationLog -RedactParameter Body -Confirm:$false -WhatIf:$false
     } else {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+
+        # Check to see if there is a valid websession and if not exit early.
+        if (!$script:configuration.webSession) {
+            Write-LockpathLog -Message 'There is not active WebSession. You must first use Send-LockpathLogin to create an active WebSession.' -Level Warning
+            break
+        }
     }
 
     $headers = @{
@@ -154,33 +164,33 @@
         return $result.Content
 
     } catch {
-        switch ($_.Exception.Response.StatusCode.value__) {
-            '400' {
-                $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing)..'
-            }
-            '401' {
-                $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource...The user agent MAY repeat the request with a new or replaced Authorization header field.'
-            }
-            '403' {
-                $httpResponseDetails = 'The 403 (Forbidden) status code indicates that the server understood the request but refuses to authorize it. If authentication credentials were provided in the request, the server considers them insufficient to grant access.'
-            }
-            '404' {
-                $httpResponseDetails = 'The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.'
-            }
-            '405' {
-                $httpResponseDetails = 'The 405 (Method Not Allowed) status code indicates that the method received in the request-line is known by the origin server but not supported by the target resource.'
-            }
-            '500' {
-                $httpResponseDetails = 'The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.'
-            }
-            '504' {
-                $httpResponseDetails = 'The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.'
-            }
-            Default {
-                $httpResponseDetails = 'Other Status Code.'
-            }
-        }
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
+            switch ($_.Exception.Response.StatusCode.value__) {
+                '400' {
+                    $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing)..'
+                }
+                '401' {
+                    $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource...The user agent MAY repeat the request with a new or replaced Authorization header field.'
+                }
+                '403' {
+                    $httpResponseDetails = 'The 403 (Forbidden) status code indicates that the server understood the request but refuses to authorize it. If authentication credentials were provided in the request, the server considers them insufficient to grant access.'
+                }
+                '404' {
+                    $httpResponseDetails = 'The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.'
+                }
+                '405' {
+                    $httpResponseDetails = 'The 405 (Method Not Allowed) status code indicates that the method received in the request-line is known by the origin server but not supported by the target resource.'
+                }
+                '500' {
+                    $httpResponseDetails = 'The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.'
+                }
+                '504' {
+                    $httpResponseDetails = 'The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.'
+                }
+                Default {
+                    $httpResponseDetails = 'Other Status Code.'
+                }
+            }
             $exceptionOutput = [ordered]@{
                 'exceptionMessage'   = $_.Exception.Message
                 'exceptionDetails'   = $httpResponseDetails
@@ -190,9 +200,10 @@
                 'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
                 'innerMessage'       = $_.ErrorDetails.Message
             }
-            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth 10 -Compress) -Level Error
+            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth 10 -Compress) -Exception $_ -Level Error
         } else {
             Write-LockpathLog -Exception $_ -Level Error
+            throw
         }
     }
 }

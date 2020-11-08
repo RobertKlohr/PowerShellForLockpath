@@ -10,7 +10,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER GroupId
-        Specifies the Id number of the group as a positive integer.
+        Specifies the Id number of the group.
 
     .EXAMPLE
         Remove-LockpathGroup -GroupId 6

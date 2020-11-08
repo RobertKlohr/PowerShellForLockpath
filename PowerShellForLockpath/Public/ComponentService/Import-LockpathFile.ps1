@@ -9,8 +9,9 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentAlias
-        Specifies the system alias of the component as a string. The component alias may be found by using
-        Get-LockpathComponentList.
+        Specifies the system alias of the component.
+
+        The component alias may be found by using Get-LockpathComponentList.
 
     .PARAMETER ImportTemplateName
         Specifies the system name of the import template configured in the component.

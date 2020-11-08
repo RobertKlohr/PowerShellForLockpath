@@ -10,7 +10,7 @@ function Get-LockpathWorkflow {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER WorkflowId
-        Specifies the Id number of the workflow as a positive integer.
+        Specifies the Id number of the workflow.
 
     .EXAMPLE
         Get-LockpathWorkflow -WorkflowId 57

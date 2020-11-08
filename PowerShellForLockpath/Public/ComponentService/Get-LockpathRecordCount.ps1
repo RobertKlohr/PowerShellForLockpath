@@ -11,7 +11,7 @@ function Get-LockpathRecordCount {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
     .PARAMETER Filters
         The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the

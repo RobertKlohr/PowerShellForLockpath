@@ -9,18 +9,20 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentAlias
-        Specifies the system alias of the component as a string.
+        Specifies the system alias of the component.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer. The record Id may be found by using
-        Get-LockpathRecords.
+        Specifies the Id number of the record.
+
+        The record Id may be found by using Get-LockpathRecords.
 
     .PARAMETER TransitionId
-        Specifies the Id number of the workflow stage transition as a positive integer. The field Id may be found
-        by using Get-LockpathWorkflow.
+        Specifies the Id number of the workflow stage transition.
+
+        The field Id may be found by using Get-LockpathWorkflow.
 
     .PARAMETER VotingComments
-        Specifies the voting comments as a string.
+        Specifies the voting comments.
 
     .EXAMPLE
         Set-LockpathRecordVote -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61 -VotingComments 'voting comment'

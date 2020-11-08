@@ -13,10 +13,10 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER FieldId
-        Specifies the Id number of the field as a positive integer.
+        Specifies the Id number of the field.
 
     .PARAMETER FieldPathId
-        Specifies the Id number of the field path as a positive integer.
+        Specifies the Id number of the field path.
 
     .EXAMPLE
         Get-LockpathFieldLookupReportColumns -FieldId 2 -FieldPathId 3

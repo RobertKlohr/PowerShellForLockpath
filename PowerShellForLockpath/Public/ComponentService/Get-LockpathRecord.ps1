@@ -10,10 +10,10 @@ function Get-LockpathRecord {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER ComponentId
-        Specifies the Id number of the component as a positive integer.
+        Specifies the Id number of the component.
 
     .PARAMETER RecordId
-        Specifies the Id number of the record as a positive integer.
+        Specifies the Id number of the record.
 
     .EXAMPLE
         Get-LockpathRecord -ComponentId 2 -RecordId 1

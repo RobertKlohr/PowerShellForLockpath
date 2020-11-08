@@ -1,22 +1,24 @@
 ﻿function Get-LockpathUsersDetails {
     <#
     .SYNOPSIS
-        Combines Get-LockpathUsers and Get-LockpathUser to return all user fields based on the applied filter.
+        Returns all user details for selected users based on the applied filter.
 
     .DESCRIPTION
-        Combines Get-LockpathUsers and Get-LockpathUser to return all user fields based on the applied filter.
+        Returns all user details for selected users based on the applied filter.
 
-        The method uses the same filter as Get-LockpathUsers.
+        Combines Get-LockpathUsers and Get-LockpathUser and uses the same filter as Get-LockpathUsers.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER PageIndex
-        The index of the page of result to return. Must be an integer >= 0. If not set it defaults to the value set
-        in the configuration.
+        The index of the page of result to return.
+
+        If not set it defaults to the value set in the configuration.
 
     .PARAMETER PageSize
-        The size of the page results to return. Must be an integer >= 1. If not set it defaults to the value set in
-        the configuration.
+        The size of the page results to return.
+
+        If not set it defaults to the value set in the configuration.
 
     .PARAMETER Filters
         The filter parameters the users must meet to be included. Must be an array. Use filters to return only the

@@ -12,7 +12,7 @@
         File path to the directory where the log files will be created.
 
     .PARAMETER Directory
-        Array of directories to create. @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
+        Array of directories to create.
 
     .EXAMPLE
         Initialize-LockpathLogExports -FilePath 'c:\temp\'
@@ -38,8 +38,6 @@
     .LINK
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
-
-    # TODO add log filepath to configuration variable
 
     [CmdletBinding(
         ConfirmImpact = 'Low',

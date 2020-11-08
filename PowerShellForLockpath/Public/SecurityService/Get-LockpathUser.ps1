@@ -9,7 +9,7 @@ function Get-LockpathUser {
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER UserId
-        Specifies the Id number of the user as a positive integer.
+        Specifies the Id number of the user.
 
     .EXAMPLE
         Get-LockpathUser -UserId 6
@@ -25,6 +25,7 @@ function Get-LockpathUser {
 
     .EXAMPLE
         $userObject | Get-LockpathUser
+
         If $userObject has an property called UserId that value is automatically passed as a parameter.
 
     .INPUTS

@@ -9,7 +9,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER GroupId
-        Specifies the Id number of the group as a positive integer.
+        Specifies the Id number of the group.
 
     .EXAMPLE
         Get-LockpathGroup -GroupId 2
@@ -25,6 +25,7 @@
 
     .EXAMPLE
         $userObject | Get-LockpathGroup
+
         If $userObject has an property called GroupId that value is automatically passed as a parameter.
 
     .INPUTS
