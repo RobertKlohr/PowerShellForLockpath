@@ -9,7 +9,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Attributes
-        The list of fields and values to change as an array. The field names in the array are case sensitive.
+        The list of fields and values to change as an array.
 
     .EXAMPLE
         New-LockpathGroup -Attributes @{'Name' = 'API New Group'}

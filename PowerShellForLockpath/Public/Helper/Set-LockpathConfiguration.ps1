@@ -72,7 +72,7 @@
     .EXAMPLE
         Set-LockpathConfiguration -InstanceName <yourhost>.keylightgrc.com
 
-        Changes the Lockpath instance name to <yourhost>.keylightgrc.com. These settings will be persisted across future PowerShell sessions.
+        Changes the API instance name to <yourhost>.keylightgrc.com. These settings will be persisted across future PowerShell sessions.
 
     .EXAMPLE
         Set-LockpathConfiguration -PageSize 1000 -SessionOnly

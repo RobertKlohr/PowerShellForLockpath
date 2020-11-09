@@ -58,7 +58,7 @@ function Get-LockpathUserCount {
         'Body'        = $Body | ConvertTo-Json -Depth 10
     }
 
-    # TODO There is a bug in the Lockpath GetUserCount API (NAVEX Global ticket 01817531)
+    # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
     # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
     # and to then wrap it in a set of brackets.
     # When the bug is fixed we can delete the next line.

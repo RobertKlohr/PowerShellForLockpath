@@ -16,8 +16,6 @@
     .PARAMETER Attributes
         The list of fields and values to add as an array.
 
-        The field names in the array are case sensitive.
-
     .EXAMPLE
         New-LockpathRecord -ComponentId 10066 -Attributes @{key = 1417; value = '_ API New Vendor'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}
 

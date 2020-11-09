@@ -61,7 +61,6 @@
     }
 
     $result = @()
-    # TODO add progress bar here
     $componentCounter = 1
     foreach ($componentId in $ComponentIds) {
         # get the component details

@@ -29,10 +29,10 @@
     Copyright            = '(c) 2020 Robert Klohr. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description          = 'PowerShell wrapper for Lockpath API.'
+    Description          = 'PowerShell wrapper for the Lockpath platform API.'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion    = '5.1'
+    PowerShellVersion    = '7'
 
     # Name of the Windows PowerShell host required by this module PowerShellHostName     = ''
 
@@ -89,7 +89,8 @@
         'Remove-LockpathRecordAttachments',
         'Remove-LockpathUser',
         'Reset-LockpathConfiguration',
-        'Send-LockpathAssessments',
+        # See todo comment in function file as to why this is not implemented
+        # 'Send-LockpathAssessments',
         'Send-LockpathLogin',
         'Send-LockpathLogout',
         'Send-LockpathPing',

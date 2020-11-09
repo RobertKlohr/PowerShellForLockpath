@@ -1,34 +1,25 @@
 ﻿function Send-LockpathAssessments {
-    # FIXME Update to new coding standards.
-
     <#
     .SYNOPSIS
-        Update fields in a specified record.
+        Issue an assessment.
 
     .DESCRIPTION
-        Update fields in a specified record.
+        Issue an assessment.
+
+        Internal assessments can be issued with either immediate, onetime or recurring frequency.
+
+        Vendor assessments can be issued with either immediate or recurring frequency.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER ComponentId
-        Specifies the Id number of the component.
-
-    .PARAMETER RecordId
-        Specifies the Id number of the record.
-
-    .PARAMETER FieldId
-        Specifies the Id number of the field.
-
     .PARAMETER Attributes
-        The list of fields and values to change as an array.
-
-        The field names in the array are case sensitive.
+        The list of fields and values to configure the assessment.
 
     .EXAMPLE
         Send-LockpathAssessments
 
     .INPUTS
-        String, System.Uint32
+        String
 
     .OUTPUTS
         String
@@ -43,6 +34,9 @@
         https://github.com/RobertKlohr/PowerShellForLockpath/wiki
     #>
 
+    <# TODO The current (5.7) API guide only has XML examples for the request body and none of the body attribute are defined.  Until this is documented this function is not exported in the module.
+    #>
+
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,
@@ -53,25 +47,7 @@
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [ValidateRange('Positive')]
-        [Int64] $ComponentId,
-
-        [Parameter(Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [ValidateRange('Positive')]
-        [Int64] $RecordId,
-
-        [Parameter(Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [ValidateRange('Positive')]
-        [Int64] $FieldId,
-
-        [Parameter(Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [Array] $Attributes
+        [String] $AssessmentRequest
     )
 
     begin {
@@ -82,16 +58,11 @@
         $params = @{
             'UriFragment' = 'AssessmentService/IssueAssessment'
             'Method'      = 'POST'
-            'Description' = "Updating fields in record Id: $RecordId in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
-            'Body'        = [ordered]@{
-                'componentId'   = $ComponentId
-                'dynamicRecord' = [ordered]@{'Id' = $RecordId
-                    'FieldValues'                 = $Attributes
-                }
-            } | ConvertTo-Json -Depth 10 -Compress
+            'Description' = "Issuing Assessment with attributes $($AssessmentRequest | ConvertTo-Json -Depth 10 -Compress)"
+            'Body'        = $AssessmentRequest
         }
 
-        if ($PSCmdlet.ShouldProcess("Updating fields with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId & attributes $($params.Body)", "component Id $ComponentId, record Id: $RecordId & attributes $($params.Body)", 'Updating fields with:')) {
+        if ($PSCmdlet.ShouldProcess("Issuing Assessment with attributes: $([environment]::NewLine) $($params.Body)", "attributes $($params.Body)", 'Issuing Assessment with attributes:')) {
             [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {

@@ -72,9 +72,6 @@
         } else {
             if ($param.Value -is [switch]) {
                 $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
-                # FIXME following line shows error when running
-                # } elseif (Test-Json $param.Value -ErrorAction SilentlyContinue) {
-                #     $params += "-$($param.Key) $($param.Value)"
             } else {
                 $params += "-$($param.Key) $(ConvertTo-Json -InputObject $param.Value -Depth $jsonConversionDepth -Compress)"
             }

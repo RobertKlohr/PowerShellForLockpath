@@ -9,8 +9,9 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Attributes
-        The list of fields and values to change as an array. The list of attributes must include the Id field and
-        the group Id as the value for the group being updated. The field names in the array are case sensitive.
+        The list of fields and values to change as an array.
+
+        The list of attributes must include the Id field and the group Id as the value for the group being updated.
 
     .EXAMPLE
         Set-LockpathGroup -Attributes @{'Id' = '7'; 'Name' = 'API Update Group'}

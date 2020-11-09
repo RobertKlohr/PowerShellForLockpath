@@ -9,8 +9,9 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER Attributes
-        The list of fields and values to change as an array. The list of attributes must include the Id field and
-        the user Id as the value for the user being updated. The field names in the array are case sensitive.
+        The list of fields and values to change as an array.
+
+        The list of attributes must include the Id field and the user Id as the value for the user being updated.
 
     .EXAMPLE
         Set-LockpathUser -Attributes @{'Id' = '6'; 'Manager' = @{'Id'= '10'}}
