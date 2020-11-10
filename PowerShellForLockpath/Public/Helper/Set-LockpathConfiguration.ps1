@@ -17,6 +17,8 @@
     .PARAMETER InstanceName
         The URI of the API instance where all requests will be made.
 
+        If just the host name is passed in the parameter '.keylightgrc.com' will be appended to the host name.
+
     .PARAMETER InstancePort
         The port number of the API instance where all requests will be made.
 
@@ -150,6 +152,10 @@
             $value = $PSBoundParameters.$name
             if ($value -is [switch]) {
                 $value = $value.ToBool()
+            }
+            # If just the hostname is passed in $InstanceName then add '.keylightgrc.com' to the end of $InstanceName
+            if ($name -eq 'instanceName' -and $InstanceName.IndexOf('.') -eq -1) {
+                $value = $value + '.keylightgrc.com'
             }
             $script:configuration.$name = $value
         }
