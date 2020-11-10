@@ -62,5 +62,8 @@
                 $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
             }
         }
+        if ( $name -eq 'encryptedCookie') {
+            $script:configuration.$name = $savedConfiguration.$name
+        }
     }
 }

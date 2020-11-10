@@ -140,9 +140,7 @@
             $params.Add('Body', $Body)
             $params.Add('SessionVariable', 'webSession')
         } else {
-            $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
-            $webSession.Cookies.Add($script:configuration.encryptedCookie)
-            $params.Add('WebSession', $webSession)
+            $params.Add('WebSession', $script:configuration.webSession)
         }
         if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
             $params.Add('Body', $Body)
@@ -158,9 +156,7 @@
         $result = Invoke-WebRequest @params
         $ProgressPreference = 'Continue'
         if ($UriFragment -eq 'SecurityService/Login') {
-            $script:configuration.encryptedCookie = $websession.Cookies.GetCookies($url)
             $script:configuration.webSession = $webSession
-            # $cookies = $websession.Cookies.GetCookies($url)
         }
         if ($Method -eq 'Delete') {
             Write-LockpathLog -Message 'Successfully removed.' -Level Verbose

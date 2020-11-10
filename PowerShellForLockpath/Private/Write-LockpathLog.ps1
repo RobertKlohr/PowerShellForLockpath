@@ -109,7 +109,8 @@
     end {
         if ($null -ne $Exception) {
             # If we have an exception, add it after the accumulated messages.
-            $messages += $Exception | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -AsArray
+            # Any -Depth value greater than 2 returns an error due to the format of the ErrorRecord object.
+            $messages += $Exception | ConvertTo-Json -Depth 2 -Compress -AsArray
         } elseif ($messages.Count -eq 0) {
             # If no exception and no messages, we should early return.
             return
