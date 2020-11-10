@@ -86,19 +86,19 @@
         [Parameter(Mandatory = $true)]
         [String] $Description,
 
-        [String] $AcceptHeader = $(Get-LockpathConfiguration -Name 'acceptHeader'),
+        [String] $AcceptHeader = $script:configuration.acceptHeader,
 
         [String] $Body = $null,
 
-        [String] $InstanceName = $(Get-LockpathConfiguration -Name 'instanceName'),
+        [String] $InstanceName = $script:configuration.instanceName,
 
-        [UInt16] $InstancePort = $(Get-LockpathConfiguration -Name 'instancePort'),
+        [UInt16] $InstancePort = $script:configuration.instancePort,
 
-        [String] $InstancePortocol = $(Get-LockpathConfiguration -Name 'instanceProtocol'),
+        [String] $InstancePortocol = $script:configuration.instanceProtocol,
 
-        [String[]] $MethodContainsBody = $(Get-LockpathConfiguration -Name 'MethodContainsBody'),
+        [String[]] $MethodContainsBody = $script:configuration.methodContainsBody,
 
-        [String] $UserAgent = $(Get-LockpathConfiguration -Name 'userAgent')
+        [String] $UserAgent = $script:configuration.userAgent
     )
 
     # If the REST call is the login then redact the username and password sent in the body from the logs
@@ -127,24 +127,26 @@
 
     try {
         Write-LockpathLog -Message $Description -Level Verbose
-        Write-LockpathLog -Message "Accessing [$Method] $url [Timeout = $(Get-LockpathConfiguration -Name WebRequestTimeoutSec))]" -Level Verbose
+        Write-LockpathLog -Message "Accessing [$Method] $url [Timeout = $($script:configuration.webRequestTimeoutSec)]" -Level Verbose
 
         $params = @{ }
         $params.Add('Uri', $url)
         $params.Add('Method', $Method)
         $params.Add('Headers', $headers)
-        $params.Add('TimeoutSec', (Get-LockpathConfiguration -Name WebRequestTimeoutSec))
+        $params.Add('TimeoutSec', $script:configuration.webRequestTimeoutSec)
 
         #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
         if ($UriFragment -eq 'SecurityService/Login') {
             $params.Add('Body', $Body)
             $params.Add('SessionVariable', 'webSession')
         } else {
-            $params.Add('WebSession', $script:configuration.webSession)
+            $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+            $webSession.Cookies.Add($script:configuration.encryptedCookie)
+            $params.Add('WebSession', $webSession)
         }
         if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
             $params.Add('Body', $Body)
-            if (Get-LockpathConfiguration -Name LogRequestBody) {
+            if ($script:configuration.logRequestBody) {
                 Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
             } else {
                 Write-LockpathLog -Message 'Request includes a body: <logging disabled>' -Level Verbose
@@ -156,7 +158,9 @@
         $result = Invoke-WebRequest @params
         $ProgressPreference = 'Continue'
         if ($UriFragment -eq 'SecurityService/Login') {
+            $script:configuration.encryptedCookie = $websession.Cookies.GetCookies($url)
             $script:configuration.webSession = $webSession
+            # $cookies = $websession.Cookies.GetCookies($url)
         }
         if ($Method -eq 'Delete') {
             Write-LockpathLog -Message 'Successfully removed.' -Level Verbose

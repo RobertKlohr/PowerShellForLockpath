@@ -36,7 +36,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $credential = Get-LockpathCredential
+    $credential = Read-LockpathCredential
     $hashBody = [ordered]@{
         'username' = $credential.username
         'password' = $credential.GetNetworkCredential().Password
@@ -49,7 +49,7 @@
         'Body'        = (ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -InputObject $hashBody)
     }
 
-    if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Login to:')) {
+    if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $script:configuration.instanceName, 'Login to:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {

@@ -1,10 +1,10 @@
-﻿function Get-LockpathCredential {
+﻿function Read-LockpathCredential {
     <#
     .SYNOPSIS
-        Gets the API credentials for use in the rest of the module.
+        Loads the API credentials for use in the rest of the module.
 
     .DESCRIPTION
-        Gets the API credentials for use in the rest of the module.
+        Loads the API credentials for use in the rest of the module.
 
         First the will try to use the credential already cached in memory. If not found, will look to see if there
         is a file with the API credential stored as a SecureString.
@@ -38,13 +38,13 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $credential = $(Get-LockpathConfiguration -Name 'credential')
+    $credential = $script:configuration.credential
 
     if ($null -ne $credential.UserName) {
         return $credential
     } else {
         try {
-            $content = Import-Clixml -Path $(Get-LockpathConfiguration -Name 'credentialFilePath')
+            $content = Import-Clixml -Path $script:configuration.credentialFilePath
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
             Write-LockpathLog -Message 'Restoring login credentials from file. These values can be cleared by calling Remove-LockpathCredential.' -Level Verbose
             $script:configuration | Add-Member NoteProperty -Name 'credential' -Value $credential -Force

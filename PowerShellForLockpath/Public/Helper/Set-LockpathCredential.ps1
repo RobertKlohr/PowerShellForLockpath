@@ -95,7 +95,7 @@
     if (-not $SessionOnly) {
         try {
             $null = New-Item -Path $FilePath -Force
-            $Credential | Export-Clixml -Path $(Get-LockpathConfiguration -Name 'credentialFilePath') -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            $Credential | Export-Clixml -Path $script:configuration.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             return ('Successfully saved credential to disk.')
         } catch {
             Write-LockpathLog -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level Warning

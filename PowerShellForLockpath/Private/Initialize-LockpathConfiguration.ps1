@@ -40,6 +40,7 @@
         'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.json')
         'credential'            = [PSCredential]::Empty
         'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
+        'encryptedCookie'       = [String]::Empty
         'instanceName'          = [String] '<empty>.keylightgrc.com'
         'instancePort'          = [Int16] 4443
         'instanceProtocol'      = [String] 'https'
@@ -48,13 +49,13 @@
         'logProcessId'          = [Boolean] $false
         'logRequestBody'        = [Boolean] $false
         'logTimeAsUtc'          = [Boolean] $false
-        'MethodContainsBody'    = [String[]] ('Delete', 'Post')
+        'methodContainsBody'    = [String[]] ('Delete', 'Post')
         'pageIndex'             = [Int32] 0
         'pageSize'              = [Int32] 100
         'runAsSystem'           = [Boolean] $true
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
         'webRequestTimeoutSec'  = [Int32] 0
-        'webSession'            = [Boolean] $false
+        # 'webSession'            = [Boolean] $false
     }
 
     # Normally Write-LockpathInvocationLog is the first call in a function except here since the location of the

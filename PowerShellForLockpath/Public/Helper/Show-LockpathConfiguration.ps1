@@ -48,7 +48,7 @@
     param(
         [switch] $Saved,
 
-        [IO.FileInfo] $FilePath = $(Get-LockpathConfiguration -Name 'configurationFilePath')
+        [IO.FileInfo] $FilePath = $script:configuration.configurationFilePath
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false

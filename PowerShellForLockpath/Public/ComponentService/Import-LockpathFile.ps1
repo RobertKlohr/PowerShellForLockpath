@@ -79,7 +79,7 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [switch] $RunAsSystem = $(Get-LockpathConfiguration -Name 'runAsSystem')
+        [switch] $RunAsSystem = $script:configuration.runAsSystem
     )
 
     begin {

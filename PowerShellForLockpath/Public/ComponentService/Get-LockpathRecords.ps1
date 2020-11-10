@@ -65,10 +65,10 @@ function Get-LockpathRecords {
         [Int64] $ComponentId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Int32] $PageIndex = $script:configuration.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [Int32] $PageSize = $script:configuration.pageSize,
 
         [Array]$Filters = @()
     )

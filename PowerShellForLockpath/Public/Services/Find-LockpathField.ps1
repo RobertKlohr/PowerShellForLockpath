@@ -98,6 +98,7 @@
             $fieldCounter += 1
         }
     }
-    Write-Progress -Completed
+    # Write-Progress -Completed
+    # TODO fix the above line
     return $result
 }

@@ -53,8 +53,8 @@ function Reset-LockpathConfiguration {
 
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess("Reseting configuration file: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {
-            $null = Remove-Item -Path $(Get-LockpathConfiguration -Name 'configurationFilePath') -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-            $null = New-Item -Path $(Get-LockpathConfiguration -Name 'configurationFilePath') -Force
+            $null = Remove-Item -Path $script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            $null = New-Item -Path $script:configuration.configurationFilePath -Force
             $configuration | Set-LockpathConfiguration
         }
 

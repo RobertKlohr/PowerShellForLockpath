@@ -102,7 +102,10 @@
         'Set-LockpathRecordTransition',
         'Set-LockpathRecordVote',
         'Set-LockpathUser',
-        'Show-LockpathConfiguration'
+        'Show-LockpathConfiguration',
+        #
+        #
+        'Invoke-LockpathRestMethod'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry,
