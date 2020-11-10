@@ -41,18 +41,19 @@
         'credential'            = [PSCredential]::Empty
         'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
         'instanceName'          = [String] '<empty>.keylightgrc.com'
-        'instancePort'          = [Int64] 4443
+        'instancePort'          = [Int16] 4443
         'instanceProtocol'      = [String] 'https'
+        'jsonConversionDepth'   = [Int32] 100
         'logPath'               = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
         'logProcessId'          = [Boolean] $false
         'logRequestBody'        = [Boolean] $false
         'logTimeAsUtc'          = [Boolean] $false
         'MethodContainsBody'    = [String[]] ('Delete', 'Post')
-        'pageIndex'             = [Int64] 0
-        'pageSize'              = [Int64] 100
+        'pageIndex'             = [Int32] 0
+        'pageSize'              = [Int32] 100
         'runAsSystem'           = [Boolean] $true
         'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
-        'webRequestTimeoutSec'  = [Int64] 0
+        'webRequestTimeoutSec'  = [Int32] 0
         'webSession'            = [Boolean] $false
     }
 

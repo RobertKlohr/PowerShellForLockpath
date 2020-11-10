@@ -57,10 +57,10 @@
 
     param(
         [ValidateRange('NonNegative')]
-        [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Int32] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [ValidateRange('Positive')]
-        [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [Int32] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Array] $Filters = @()
     )
@@ -79,12 +79,12 @@
     $params = @{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filters | ConvertTo-Json -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth 10 -Compress
+        'Description' = "Getting groups with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -AsHashtable
+        $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
         $groupsProgress = $groups.count
         # Array
         # $result = @()
@@ -92,7 +92,7 @@
         $i = 1
         foreach ($group In $groups) {
             try {
-                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -AsHashtable
+                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
                 $result.Add($i, $groupDetails)
                 # Array
                 # $result += $userDetails

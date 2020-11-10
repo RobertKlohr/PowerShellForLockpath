@@ -56,7 +56,7 @@
         [String] $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Boolean', 'Int64', 'PSCredential', 'String', 'String[]')]
+        [ValidateSet('Boolean', 'Int16', 'Int32', 'Int64', 'String', 'String[]')]
         [String] $Type,
 
         [Parameter(Mandatory = $true)]
@@ -65,45 +65,62 @@
 
     #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    # Need to adjust the datatypes for some settings since we are storing the configuration in JSON and
-    # ConvertFrom-JSON return all integers as type [Int64] and all arrays as type [Object[]]
+    # Need to adjust the datatypes for some settings since we are storing the configuration in JSON. If the
+    # conversion fails in the switch statement then we have type mismatch.
     if ($null -eq $InputObject) {
         return $DefaultValue
     }
-
-    switch (${Type}) {
-        'Boolean' {
-            $typeType = [Boolean]; break
+    try {
+        switch (${Type}) {
+            'Boolean' {
+                $typeType = [Boolean]
+                break
+            }
+            'Int16' {
+                $typeType = [Int16]
+                # ConvertFrom-JSON returns all integers as type [Int64] need to type them back to [Int16]
+                $InputObject.$name = [Int16] $InputObject.$name
+                break
+            }
+            'Int32' {
+                $typeType = [Int32]
+                # ConvertFrom-JSON returns all integers as type [Int64] need to type them back to [Int32]
+                $InputObject.$name = [Int32] $InputObject.$name
+                break
+            }
+            'Int64' {
+                $typeType = [Int64]
+                break
+            }
+            'String' {
+                $typeType = [String]
+                break
+            }
+            'String[]' {
+                $typeType = [String[]]
+                # ConvertFrom-JSON returns String arrays as object arrays all need to type them back to [String[]]
+                $InputObject.$name = [String[]] $InputObject.$name
+                break
+            }
+            Default {}
         }
-        'Int64' {
-            $typeType = [Int64]; break
-        }
-        'PSCredential' {
-            $typeType = [PSCredential]; break
-        }
-        'String' {
-            $typeType = [String]; break
-        }
-        'String[]' {
-            $typeType = [String[]]
-            $InputObject.$name = [String[]] $InputObject.$name
-            break
-        }
-        Default {}
-    }
-
-    if (
-        ($null -ne $InputObject) -and
-        ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties))
-    ) {
-        if ($InputObject.$Name -is $typeType) {
-            return $InputObject.$Name
+        if (
+            ($null -ne $InputObject) -and
+            ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties))
+        ) {
+            if ($InputObject.$Name -is $typeType) {
+                return $InputObject.$Name
+            } else {
+                Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+                Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
+                return $DefaultValue
+            }
         } else {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
-            Write-LockpathLog -Message "The locally cached $Name configuration was not of type $Type.  Reverting to default value." -Level Warning
             return $DefaultValue
         }
-    } else {
+    } catch {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+        Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
         return $DefaultValue
     }
 }

@@ -46,7 +46,7 @@
         'UriFragment' = 'SecurityService/Login'
         'Method'      = 'POST'
         'Description' = "Sending login to $($script:configuration.instanceName) with Username $($credential.username) and Password: <redacted>"
-        'Body'        = (ConvertTo-Json -InputObject $hashBody)
+        'Body'        = (ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -InputObject $hashBody)
     }
 
     if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Login to:')) {

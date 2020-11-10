@@ -45,18 +45,22 @@
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
 
     # Update the values with any that we find in the configuration file.
-    try {
-        $savedConfiguration = Read-LockpathConfiguration -FilePath $FilePath
-        Get-Member -InputObject $script:configuration -MemberType NoteProperty |
-        ForEach-Object {
-            $name = $_.Name
+
+    $savedConfiguration = Read-LockpathConfiguration -FilePath $FilePath
+    If ($null -eq $savedConfiguration) {
+        Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
+        return
+    }
+    Get-Member -InputObject $script:configuration -MemberType NoteProperty |
+    ForEach-Object {
+        $name = $_.Name
+        if ($name -ne 'credential' -AND $name -ne 'webSession') {
             $type = $script:configuration.$name.GetType().Name
-            if ($name -ne 'credential') {
+            if ($type -eq 'String[]') {
+                $script:configuration.$name = [String[]] $(Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name)
+            } else {
                 $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
             }
         }
-    } catch {
-        Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
     }
-
 }

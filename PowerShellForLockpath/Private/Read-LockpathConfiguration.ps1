@@ -46,7 +46,7 @@
 
     try {
         $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
-        return ($content | ConvertFrom-Json)
+        return ($content | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth)
     } catch {
         Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     }

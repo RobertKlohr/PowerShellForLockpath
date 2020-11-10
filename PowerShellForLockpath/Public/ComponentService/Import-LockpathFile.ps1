@@ -101,7 +101,7 @@
             'UriFragment' = 'ComponentService/ImportFile'
             'Method'      = 'POST'
             'Description' = "Importing file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName"
-            'Body'        = $Body | ConvertTo-Json -Depth 10
+            'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Importing: $([environment]::NewLine) file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", "file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", 'Importing:')) {

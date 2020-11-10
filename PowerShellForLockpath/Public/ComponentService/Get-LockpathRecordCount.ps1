@@ -67,8 +67,8 @@ function Get-LockpathRecordCount {
     $params = @{
         'UriFragment' = 'ComponentService/GetRecordCount'
         'Method'      = 'POST'
-        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth 10
+        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting record count for: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", "component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", 'Getting record count for:')) {

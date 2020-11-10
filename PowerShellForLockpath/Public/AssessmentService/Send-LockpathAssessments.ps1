@@ -58,7 +58,7 @@
         $params = @{
             'UriFragment' = 'AssessmentService/IssueAssessment'
             'Method'      = 'POST'
-            'Description' = "Issuing Assessment with attributes $($AssessmentRequest | ConvertTo-Json -Depth 10 -Compress)"
+            'Description' = "Issuing Assessment with attributes $($AssessmentRequest | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
             'Body'        = $AssessmentRequest
         }
 

@@ -102,7 +102,7 @@
             'UriFragment' = 'ComponentService/DeleteRecordAttachments'
             'Method'      = 'POST'
             'Description' = "Deleting attachment from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & document Id: $DocumentId"
-            'Body'        = $Body | ConvertTo-Json -Depth 10
+            'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Getting attachments from field with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $($params.Body)", "component Id $ComponentId, record Id: $RecordId, $FieldId & document Id: $($params.Body)", 'Getting attachments from field with:')) {

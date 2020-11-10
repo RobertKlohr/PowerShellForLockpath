@@ -53,8 +53,8 @@
         $params = @{
             'UriFragment' = 'SecurityService/CreateGroup'
             'Method'      = 'POST'
-            'Description' = "Creating group with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
-            'Body'        = $Attributes | ConvertTo-Json -Depth 10
+            'Description' = "Creating group with attributes $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Creating group with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating group with attributes:')) {

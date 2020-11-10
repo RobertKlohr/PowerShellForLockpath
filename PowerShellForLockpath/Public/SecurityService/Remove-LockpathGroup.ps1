@@ -68,7 +68,7 @@
             'UriFragment' = 'SecurityService/DeleteGroup'
             'Method'      = 'DELETE'
             'Description' = "Deleting group with Id: $GroupId"
-            'Body'        = $GroupId | ConvertTo-Json
+            'Body'        = $GroupId | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting group with Id: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {

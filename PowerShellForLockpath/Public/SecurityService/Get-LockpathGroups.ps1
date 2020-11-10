@@ -57,10 +57,10 @@
 
     param(
         [ValidateRange('NonNegative')]
-        [Int64] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
+        [Int32] $PageIndex = $(Get-LockpathConfiguration -Name 'pageIndex'),
 
         [ValidateRange('Positive')]
-        [Int64] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
+        [Int32] $PageSize = $(Get-LockpathConfiguration -Name 'pageSize'),
 
         [Array] $Filters = @()
     )
@@ -79,8 +79,8 @@
     $params = @{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filters | ConvertTo-Json -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth 10
+        'Description' = "Getting groups with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {

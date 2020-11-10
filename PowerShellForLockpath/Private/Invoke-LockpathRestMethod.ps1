@@ -200,7 +200,7 @@
                 'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
                 'innerMessage'       = $_.ErrorDetails.Message
             }
-            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth 10 -Compress) -Exception $_ -Level Error
+            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress) -Exception $_ -Level Error
         } else {
             Write-LockpathLog -Exception $_ -Level Error
             throw

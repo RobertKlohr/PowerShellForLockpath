@@ -60,8 +60,8 @@
         $params = @{
             'UriFragment' = 'SecurityService/UpdateGroup'
             'Method'      = 'POST'
-            'Description' = "Updating group with Id: $GroupId and values $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
-            'Body'        = $Attributes | ConvertTo-Json -Depth 10
+            'Description' = "Updating group with Id: $GroupId and values $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
         }
         if ($PSCmdlet.ShouldProcess("Updating group with group Id $($GroupId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating group with group with Id $($GroupId) and settings:")) {
             [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false

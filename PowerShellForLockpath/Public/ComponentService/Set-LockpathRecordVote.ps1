@@ -96,7 +96,7 @@
             'UriFragment' = 'ComponentService/VoteRecord'
             'Method'      = 'POST'
             'Description' = "Voting on record with Id: $RecordId in component with alias: $ComponentAlias using transition Id: $TransitionId and voting comments: $VotingComments"
-            'Body'        = $Body | ConvertTo-Json -Depth 10
+            'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Voting on record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId and voting comments: $VotingComments", 'Voting on record with:')) {

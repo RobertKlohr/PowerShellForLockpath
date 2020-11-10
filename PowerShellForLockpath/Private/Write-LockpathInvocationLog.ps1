@@ -58,8 +58,6 @@
         [string[]] $ExcludeParameter
     )
 
-    $jsonConversionDepth = 20
-
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
     $params = @()
     foreach ($param in $Invocation.BoundParameters.GetEnumerator()) {
@@ -73,7 +71,7 @@
             if ($param.Value -is [switch]) {
                 $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
             } else {
-                $params += "-$($param.Key) $(ConvertTo-Json -InputObject $param.Value -Depth $jsonConversionDepth -Compress)"
+                $params += "-$($param.Key) $(ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -InputObject $param.Value)"
             }
         }
     }

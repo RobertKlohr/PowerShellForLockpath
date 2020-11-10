@@ -62,12 +62,12 @@
         $params = @{
             'UriFragment' = 'ComponentService/CreateRecord'
             'Method'      = 'POST'
-            'Description' = "Creating in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth 10 -Compress)"
+            'Description' = "Creating in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
             'Body'        = [ordered]@{
                 'componentId'   = $ComponentId
                 'dynamicRecord' = @{'FieldValues' = $Attributes
                 }
-            } | ConvertTo-Json -Depth 10 -Compress
+            } | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Creating record in: $([environment]::NewLine) component Id $ComponentId with attributes $($params.Body)", "component Id $ComponentId with attributes $($params.Body)", 'Creating record in:')) {
