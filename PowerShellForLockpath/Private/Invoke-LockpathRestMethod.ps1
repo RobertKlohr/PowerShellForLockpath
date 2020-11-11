@@ -157,6 +157,7 @@
         $ProgressPreference = 'Continue'
         if ($UriFragment -eq 'SecurityService/Login') {
             $script:configuration.webSession = $webSession
+            $script:configuration.authenticationCookie = $webSession.Cookies.GetCookies($url)
         }
         if ($Method -eq 'Delete') {
             Write-LockpathLog -Message 'Successfully removed.' -Level Verbose

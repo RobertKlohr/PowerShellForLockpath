@@ -56,7 +56,7 @@
         [String] $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Boolean', 'Int16', 'Int32', 'Int64', 'String', 'String[]')]
+        [ValidateSet('Boolean', 'CookieCollection', 'Int16', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'WebRequestSession')]
         [String] $Type,
 
         [Parameter(Mandatory = $true)]
@@ -76,6 +76,10 @@
                 $typeType = [Boolean]
                 break
             }
+            'CookieCollection' {
+                $InputObject.$name = [System.Net.CookieCollection] $InputObject.$name
+                break
+            }
             'Int16' {
                 $typeType = [Int16]
                 # ConvertFrom-JSON returns all integers as type [Int64] need to type them back to [Int16]
@@ -92,6 +96,10 @@
                 $typeType = [Int64]
                 break
             }
+            'PSCredential' {
+                InputObject.$name = [PSCredential] $InputObject.$name
+                break
+            }
             'String' {
                 $typeType = [String]
                 break
@@ -100,6 +108,10 @@
                 $typeType = [String[]]
                 # ConvertFrom-JSON returns String arrays as object arrays all need to type them back to [String[]]
                 $InputObject.$name = [String[]] $InputObject.$name
+                break
+            }
+            'WebRequestSession' {
+                $InputObject.$name = [Microsoft.PowerShell.Commands.WebRequestSession] $InputObject.$name
                 break
             }
             Default {}

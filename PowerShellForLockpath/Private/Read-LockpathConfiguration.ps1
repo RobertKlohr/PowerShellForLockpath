@@ -44,10 +44,20 @@
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
 
+
     try {
-        $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
-        return ($content | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth)
+        $content = Import-Clixml -Path $FilePath
+        Write-LockpathLog -Message 'Restoring configuration settings from file.' -Level Verbose
+        return $content
     } catch {
         Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     }
+
+
+    # try {
+    #     $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
+    #     return ($content | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth)
+    # } catch {
+    #     Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
+    # }
 }

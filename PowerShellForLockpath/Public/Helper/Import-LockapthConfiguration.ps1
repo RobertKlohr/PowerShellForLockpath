@@ -54,14 +54,14 @@
     Get-Member -InputObject $script:configuration -MemberType NoteProperty |
     ForEach-Object {
         $name = $_.Name
-        if ($name -ne 'credential' -AND $name -ne 'webSession') {
-            $type = $script:configuration.$name.GetType().Name
-            if ($type -eq 'String[]') {
-                $script:configuration.$name = [String[]] $(Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name)
-            } else {
-                $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
-            }
+        # if ($name -ne 'credential' -AND $name -ne 'webSession') {
+        $type = $script:configuration.$name.GetType().Name
+        if ($type -eq 'String[]') {
+            $script:configuration.$name = [String[]] $(Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name)
+        } else {
+            $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
         }
+        # }
         if ( $name -eq 'encryptedCookie') {
             $script:configuration.$name = $savedConfiguration.$name
         }

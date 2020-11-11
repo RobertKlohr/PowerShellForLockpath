@@ -11,8 +11,20 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
+    .PARAMETER AcceptHeader
+        The Accept Header for the APi request.
+
+    .PARAMETER ConfigurationFilePath
+        The path to the configuration file.
+
     .PARAMETER Credential
         The username and password used to access the API instance.
+
+    .PARAMETER CredentialFilePath
+        The path to the credentail file.
+
+    .PARAMETER FilePath
+        The file that may or may not exist with a serialized version of the configuration values for this module.
 
     .PARAMETER InstanceName
         The URI of the API instance where all requests will be made.
@@ -103,7 +115,15 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        [String] $AcceptHeader,
+
+        [System.IO.Path] $ConfigurationFilePath,
+
         [securestring] $Credential,
+
+        [System.IO.Path] $CredentialFilePath,
+
+        [IO.FileInfo] $FilePath,
 
         [ValidatePattern('^(?!https?:).*')]
         [String] $InstanceName,
@@ -165,10 +185,13 @@
 
     if (-not $SessionOnly) {
         try {
-            # make a copy of the configuration without the credential or websession properties
-            $output = Select-Object -InputObject $configuration -ExcludeProperty credential, websession
+            # make a copy of the configuration without the credential property as that is saved to the local profile
+            $output = Select-Object -InputObject $configuration -ExcludeProperty credential
             $null = New-Item -Path $script:configuration.configurationFilePath -Force
-            ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -InputObject $output | Set-Content -Path $script:configuration.configurationFilePath -Force
+            # ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -InputObject $output | Set-Content -Path $script:configuration.configurationFilePath -Force
+
+            $output | Export-Clixml -Path $script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
             Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning
