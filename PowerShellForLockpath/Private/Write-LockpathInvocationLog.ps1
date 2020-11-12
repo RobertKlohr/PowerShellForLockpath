@@ -61,11 +61,10 @@
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
     $params = @()
     foreach ($param in $Invocation.BoundParameters.GetEnumerator()) {
-        if ($param.Key -in ($script:alwaysExcludeParametersForLogging + $ExcludeParameter)) {
+        if ($param.Key -in ($ExcludeParameter)) {
             continue
         }
-
-        if ($param.Key -in ($script:alwaysRedactParametersForLogging + $RedactParameter)) {
+        if ($param.Key -in ($RedactParameter)) {
             $params += "-$($param.Key) <redacted>"
         } else {
             if ($param.Value -is [switch]) {
@@ -75,6 +74,5 @@
             }
         }
     }
-    # FIXME there is a space at the end of the line if there are no parameters passed.
-    Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
+    Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Level Verbose
 }

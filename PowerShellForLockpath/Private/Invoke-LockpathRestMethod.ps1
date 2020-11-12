@@ -121,8 +121,7 @@
     } else {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-        # Check to see if there is an authentication cookie and if not exit early.
-        # FIXME need to check either count or empty once the cookie storage code is completed
+        # Check to see if there is a valid authentication cookie and if not exit early.
         if ($script:configuration.authenticationCookie.Name -eq 'INVALID') {
             Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning
             break

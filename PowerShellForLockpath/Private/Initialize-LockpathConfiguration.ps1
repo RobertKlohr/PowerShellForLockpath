@@ -48,7 +48,6 @@
             'credential'            = [PSCredential]::Empty
             'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
             'instanceName'          = [String] '<empty>.keylightgrc.com'
-            'instanceName'          = [String] 'cambia-sandbox.keylightgrc.com'
             'instancePort'          = [Int16] 4443
             'instanceProtocol'      = [String] 'https'
             'jsonConversionDepth'   = [Int32] 100

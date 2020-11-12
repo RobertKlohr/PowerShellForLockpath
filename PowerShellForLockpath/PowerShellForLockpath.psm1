@@ -15,7 +15,7 @@ try {
     $private = @(Get-ChildItem -Path "$PSScriptRoot\Private" @itemSplat)
 } catch {
     Write-Error $_
-    throw "Unable to get get file information from Public & Private src."
+    throw 'Unable to get get file information from Public & Private src.'
 }
 
 # dot source all .ps1 file(s) found
@@ -27,22 +27,22 @@ foreach ($file in @($public + $private)) {
 
     }
 }
+# FIXME I think this can be removed once development is complete
+# function Get-PD {
+#     [CmdletBinding()]
+#     Param()
+#     $MyInvocation.MyCommand.Module.PrivateData
+# }
 
-function Get-PD {
-    [CmdletBinding()]
-    Param()
-    $MyInvocation.MyCommand.Module.PrivateData
-}
-
-$MyPD = Get-PD
-if ($MyPD.Count -eq 0) {
-    Export-ModuleMember
-}
+# $MyPD = Get-PD
+# if ($MyPD.Count -eq 0) {
+#     Export-ModuleMember
+# }
 
 # export all public functions
-#Export-ModuleMember -Function $public.Basename
-
+# Export-ModuleMember -Function $public.Basename
 
 Initialize-LockpathConfiguration
 
-# Export-ModuleMember -Variable 'configuration'
+# FIXME is there a need or value to exporting the configuration variable?
+Export-ModuleMember -Variable 'configuration'
