@@ -42,8 +42,6 @@ function Send-LockpathPing {
         'Description' = "Sending Ping API request to $($script:configuration.instanceName) to keep session alive."
     }
 
-    $MyInvocation.MyCommand
-
     if ($PSCmdlet.ShouldProcess("Refresh session for: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Refresh session for:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
