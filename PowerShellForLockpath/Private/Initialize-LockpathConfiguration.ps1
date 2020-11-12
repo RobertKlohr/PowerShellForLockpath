@@ -51,10 +51,13 @@
             'instancePort'          = [Int16] 4443
             'instanceProtocol'      = [String] 'https'
             'jsonConversionDepth'   = [Int32] 100
+            'keepAliveInterval'     = [Int32] 5
             'logPath'               = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
             'logProcessId'          = [Boolean] $false
             'logRequestBody'        = [Boolean] $false
             'logTimeAsUtc'          = [Boolean] $false
+            # FIXME this is causing validation errors again but only on the 2nd time through?  maybe it is getting
+            # FIXME changed during the first assignment and the type is changing?
             'methodContainsBody'    = [System.Collections.ArrayList] ('Delete', 'Post')
             'pageIndex'             = [Int32] 0
             'pageSize'              = [Int32] 100

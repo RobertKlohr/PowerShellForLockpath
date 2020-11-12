@@ -8,6 +8,11 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
+    .PARAMETER KeepAlive
+        After a successful login starts Send-LockpathPing as a background job that runs based on value of the parameter.
+
+        The default interval of the background job is set in minutes by using Set-LockpathConfiguration -KeepAlive 60.
+
     .EXAMPLE
         Send-LockpathLogin
 
@@ -32,7 +37,9 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
-    param()
+    param(
+        [switch] $KeepAlive
+    )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
@@ -51,7 +58,9 @@
 
     if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $script:configuration.instanceName, 'Login to:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Login -Confirm:$false
-        return $result
+        if ($KeepAlive) {
+            Send-LockpathKeepAlive
+        }
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

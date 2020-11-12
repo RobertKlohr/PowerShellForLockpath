@@ -40,6 +40,9 @@
     .PARAMETER InstancePortocol
         The protocol (http, https) of the API instance where all requests will be made.
 
+    .PARAMETER KeepAliveInterval
+        The interval of the background job in minutes.
+
     .PARAMETER LogPath
         The location of the log file where all activity will be written.
 
@@ -142,6 +145,9 @@
         [String] $InstanceProtocol,
 
         [Int32] $jsonConversionDepth,
+
+        [ValidateRange('Positive')]
+        [Int32] $KeepAliveInterval = $script:configuration.keepAliveInterval,
 
         [String] $LogPath,
 

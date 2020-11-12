@@ -39,12 +39,13 @@ function Send-LockpathPing {
     $params = @{
         'UriFragment' = 'SecurityService/Ping'
         'Method'      = 'GET'
-        'Description' = "Sending Ping API call to $($script:configuration.instanceName) to keep session alive."
+        'Description' = "Sending Ping API request to $($script:configuration.instanceName) to keep session alive."
     }
+
+    $MyInvocation.MyCommand
 
     if ($PSCmdlet.ShouldProcess("Refresh session for: $([environment]::NewLine) $($script:configuration.instanceName)", $($script:configuration.instanceName), 'Refresh session for:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

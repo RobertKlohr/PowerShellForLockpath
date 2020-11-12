@@ -91,6 +91,7 @@
         'Reset-LockpathConfiguration',
         # See todo comment in function file as to why this is not implemented
         # 'Send-LockpathAssessments',
+        'Send-LockpathKeepAlive',
         'Send-LockpathLogin',
         'Send-LockpathLogout',
         'Send-LockpathPing',
