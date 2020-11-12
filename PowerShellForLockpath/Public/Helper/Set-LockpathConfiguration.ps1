@@ -157,8 +157,7 @@
 
         [switch] $LogTimeAsUtc,
 
-        [ValidateSet('Delete', 'Post')]
-        [String[]] $MethodContainsBody,
+        [System.Collections] $MethodContainsBody,
 
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex,
@@ -169,6 +168,8 @@
         [Boolean] $RunAsSystem,
 
         [switch] $SessionOnly,
+
+        [Hashtable] $SystemFields,
 
         [ValidateLength(1, 256)]
         [String] $UserAgent,

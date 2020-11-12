@@ -55,7 +55,6 @@
 
     Start-Job -Name 'Lockpath-KeepAlive' -ScriptBlock {
         while ($true) {
-            Set-PSBreakpoint -Command 'Write-LockpathLog'
             Send-LockpathPing
             Start-Sleep -Seconds $using:KeepAliveInterval
         }

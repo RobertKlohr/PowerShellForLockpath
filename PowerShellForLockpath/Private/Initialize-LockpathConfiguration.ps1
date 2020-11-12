@@ -62,6 +62,19 @@
             'pageIndex'             = [Int32] 0
             'pageSize'              = [Int32] 100
             'runAsSystem'           = [Boolean] $true
+            'systemFields'          = [Hashtable] @{
+                'Begin Date'         = 'BeginDate'
+                'Created At'         = 'CreatedAt'
+                'Created By'         = 'CreatedBy'
+                'Current Revision'   = 'Version'
+                'Deleted'            = 'Deleted'
+                'End Date'           = 'EndDate'
+                'Id'                 = 'Id'
+                'Published Revision' = 'PublishedVersion'
+                'Updated At'         = 'UpdatedAt'
+                'Updated By'         = 'UpdatedBy'
+                'Workflow Stage'     = 'WorkflowStage'
+            }
             'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
             'webRequestTimeoutSec'  = [Int32] 0
         }
