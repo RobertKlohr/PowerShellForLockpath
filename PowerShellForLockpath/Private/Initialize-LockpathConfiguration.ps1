@@ -38,10 +38,17 @@
     if ($null -eq $script:configuration) {
         $script:configuration = [PSCustomObject]@{
             'acceptHeader'          = [String] 'application/json'
+            'authenticationCookie'  = [Hashtable] @{
+                'Domain' = '<empty>.keylightgrc.com'
+                'Name'   = 'INVALID'
+                'Value'  = 'THIS_IS_NOT_A_VALID_AUTHENTICATION_COOKIE'
+            }
             'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.xml')
+            'contentTypeHeader'     = [String] 'application/json'
             'credential'            = [PSCredential]::Empty
             'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
             'instanceName'          = [String] '<empty>.keylightgrc.com'
+            'instanceName'          = [String] 'cambia-sandbox.keylightgrc.com'
             'instancePort'          = [Int16] 4443
             'instanceProtocol'      = [String] 'https'
             'jsonConversionDepth'   = [Int32] 100
@@ -49,13 +56,12 @@
             'logProcessId'          = [Boolean] $false
             'logRequestBody'        = [Boolean] $false
             'logTimeAsUtc'          = [Boolean] $false
-            'methodContainsBody'    = [String[]] ('Delete', 'Post')
+            'methodContainsBody'    = [System.Collections.ArrayList] ('Delete', 'Post')
             'pageIndex'             = [Int32] 0
             'pageSize'              = [Int32] 100
             'runAsSystem'           = [Boolean] $true
             'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
             'webRequestTimeoutSec'  = [Int32] 0
-            'webSession'            = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
         }
     }
 

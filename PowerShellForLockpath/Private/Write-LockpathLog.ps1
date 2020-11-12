@@ -107,17 +107,21 @@
     }
 
     end {
+
         if ($null -ne $Exception) {
             # If we have an exception, add it after the accumulated messages.
-            # Any -Depth value greater than 2 returns an error due to the format of the ErrorRecord object.
-            $messages += $Exception | ConvertTo-Json -Depth 2 -Compress -AsArray
+            if (Test-Json -Json $Exception.ErrorDetails.Message) {
+                $messages += $Exception.ErrorDetails.Message
+            } else {
+                $messages += $Exception.ErrorDetails.Message | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            }
         } elseif ($messages.Count -eq 0) {
-            # If no exception and no messages, we should early return.
+            # If no exception and no messages return early.
             return
         }
 
         # Finalize the string to be logged.
-        $finalMessage = $messages -join [Environment]::NewLine
+        $finalMessage = $messages -join [Environment]::NewLine | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
 
         # Build the console and log-specific messages.
         $date = Get-Date
@@ -159,6 +163,7 @@
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
                 Write-Error $consoleMessage -ErrorAction SilentlyContinue
+                Write-Error $Exception #-ErrorAction SilentlyContinue
             }
             'Warning' {
                 Write-Warning $consoleMessage

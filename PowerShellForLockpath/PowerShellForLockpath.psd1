@@ -103,9 +103,14 @@
         'Set-LockpathRecordVote',
         'Set-LockpathUser',
         'Show-LockpathConfiguration',
-        #
-        #
+        # FIXME The following private funcdtions are exported during development
+        'Initialize-LockpathConfiguration'
         'Invoke-LockpathRestMethod'
+        'Read-LockpathConfiguration'
+        'Read-LockpathCredential'
+        'Resolve-LockpathConfigurationPropertyValue'
+        'Write-LockpathInvocationLog'
+        'Write-LockpathLog'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry,

@@ -95,6 +95,7 @@ function Get-LockpathRecords {
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting records from component with Id:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
+        return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
     }

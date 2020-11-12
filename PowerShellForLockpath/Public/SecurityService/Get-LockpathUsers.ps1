@@ -88,6 +88,7 @@ function Get-LockpathUsers {
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting users with body:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
+        return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
     }

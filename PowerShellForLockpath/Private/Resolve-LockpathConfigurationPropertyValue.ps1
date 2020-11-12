@@ -56,7 +56,7 @@
         [String] $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Boolean', 'CookieCollection', 'Int16', 'Int32', 'Int64', 'PSCredential', 'String', 'String[]', 'WebRequestSession')]
+        [ValidateSet('ArrayList', 'Boolean', 'Hashtable', 'Int16', 'Int32', 'Int64', 'PSCredential', 'PSObject', 'String', 'String[]')]
         [String] $Type,
 
         [Parameter(Mandatory = $true)]
@@ -72,24 +72,24 @@
     }
     try {
         switch (${Type}) {
+            'ArrayList' {
+                $typeType = [System.Collections.ArrayList]
+                break
+            }
             'Boolean' {
                 $typeType = [Boolean]
                 break
             }
-            'CookieCollection' {
-                $InputObject.$name = [System.Net.CookieCollection] $InputObject.$name
+            'Hashtable' {
+                $typeType = [Hashtable]
                 break
             }
             'Int16' {
                 $typeType = [Int16]
-                # ConvertFrom-JSON returns all integers as type [Int64] need to type them back to [Int16]
-                $InputObject.$name = [Int16] $InputObject.$name
                 break
             }
             'Int32' {
                 $typeType = [Int32]
-                # ConvertFrom-JSON returns all integers as type [Int64] need to type them back to [Int32]
-                $InputObject.$name = [Int32] $InputObject.$name
                 break
             }
             'Int64' {
@@ -97,7 +97,11 @@
                 break
             }
             'PSCredential' {
-                InputObject.$name = [PSCredential] $InputObject.$name
+                $typeType = [PSCredential]
+                break
+            }
+            'PSObject' {
+                $typeType = [PSObject]
                 break
             }
             'String' {
@@ -106,12 +110,6 @@
             }
             'String[]' {
                 $typeType = [String[]]
-                # ConvertFrom-JSON returns String arrays as object arrays all need to type them back to [String[]]
-                $InputObject.$name = [String[]] $InputObject.$name
-                break
-            }
-            'WebRequestSession' {
-                $InputObject.$name = [Microsoft.PowerShell.Commands.WebRequestSession] $InputObject.$name
                 break
             }
             Default {}

@@ -75,6 +75,6 @@
             }
         }
     }
-
+    # FIXME there is a space at the end of the line if there are no parameters passed.
     Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')" -Level Verbose
 }

@@ -103,6 +103,7 @@
             $i += 1
         }
         return $result
+        return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
     }

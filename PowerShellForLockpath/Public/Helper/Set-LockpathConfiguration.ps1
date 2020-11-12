@@ -14,6 +14,9 @@
     .PARAMETER AcceptHeader
         The Accept Header for the APi request.
 
+    .PARAMETER AuthenticationCookie
+        The authentication cookie from the WebRequestSession object set during login.
+
     .PARAMETER ConfigurationFilePath
         The path to the configuration file.
 
@@ -117,7 +120,11 @@
     param(
         [String] $AcceptHeader,
 
+        [Hashtable] $AuthenticationCookie,
+
         [System.IO.Path] $ConfigurationFilePath,
+
+        [String] $ContentTypetHeader,
 
         [securestring] $Credential,
 
@@ -186,15 +193,16 @@
     if (-not $SessionOnly) {
         try {
             # make a copy of the configuration without the credential property as that is saved to the local profile
-            $output = Select-Object -InputObject $configuration -ExcludeProperty credential
-            $null = New-Item -Path $script:configuration.configurationFilePath -Force
+            $output = Select-Object -InputObject $configuration -ExcludeProperty credential, webSession
+            # $null = New-Item -Path $script:configuration.configurationFilePath -Force
             # ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -InputObject $output | Set-Content -Path $script:configuration.configurationFilePath -Force
 
-            $output | Export-Clixml -Path $script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            Export-Clixml -InputObject $output -Path $script:configuration.configurationFilePath -Depth 10 -Force
 
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
             Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning
         }
     }
+    Show-LockpathConfiguration
 }

@@ -24,12 +24,13 @@
     .PARAMETER AcceptHeader
         Specify the media type in the Accept header.
 
-        Different types of commands may require different media types.
-
     .PARAMETER Body
         This optional parameter forms the body of a PUT or POST request.
 
         It will be automatically encoded to UTF8 and sent as Content Type: "application/json; charset=UTF-8"
+
+    .PARAMETER ContentTypeHeader
+        Specify the media type in the Content-Type header.
 
     .PARAMETER Description
         A friendly description of the operation being performed for logging and console display purposes.
@@ -42,6 +43,12 @@
 
     .PARAMETER InstancePortocol
         The protocol (http, https) of the API instance where all requests will be made.
+
+    .PARAMETER Login
+        The call being made is a login.
+
+        The default behavior is to set the cookie in the web request from memory.  Using this switch gets the
+        cookie from the login web request.
 
     .PARAMETER MethodContainsBody
         Valid HTTP methods for this API that will include a message body.
@@ -90,27 +97,39 @@
 
         [String] $Body = $null,
 
+        [String] $ContentTypeHeader = $script:configuration.contentTypeHeader,
+
         [String] $InstanceName = $script:configuration.instanceName,
 
         [UInt16] $InstancePort = $script:configuration.instancePort,
 
         [String] $InstancePortocol = $script:configuration.instanceProtocol,
 
+        [switch] $Login,
+
         [String[]] $MethodContainsBody = $script:configuration.methodContainsBody,
 
         [String] $UserAgent = $script:configuration.userAgent
     )
 
+    # TODO do I need this line? can it be more generic to remove hardcoded protocol?
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     # If the REST call is the login then redact the username and password sent in the body from the logs
-    if ($UriFragment -eq 'SecurityService/Login') {
+    if ($Login) {
         Write-LockpathInvocationLog -RedactParameter Body -Confirm:$false -WhatIf:$false
     } else {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-        # Check to see if there is a valid websession and if not exit early.
-        if (!$script:configuration.webSession) {
-            Write-LockpathLog -Message 'There is not active WebSession. You must first use Send-LockpathLogin to create an active WebSession.' -Level Warning
+        # Check to see if there is an authentication cookie and if not exit early.
+        # FIXME need to check either count or empty once the cookie storage code is completed
+        if ($script:configuration.authenticationCookie.Name -eq 'INVALID') {
+            Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning
             break
+        } else {
+            $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
+            $cookie = [System.Net.Cookie] $script:configuration.authenticationCookie
+            $webSession.Cookies.Add($cookie)
         }
     }
 
@@ -118,60 +137,58 @@
         'Accept'     = $AcceptHeader
         'User-Agent' = $UserAgent
     }
-
     if ($Method -in $MethodContainsBody) {
-        $headers.Add('Content-Type', 'application/json')
+        $headers.Add('Content-Type', $ContentTypeHeader)
     }
 
-    $url = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
+    $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
 
-    try {
-        Write-LockpathLog -Message $Description -Level Verbose
-        Write-LockpathLog -Message "Accessing [$Method] $url [Timeout = $($script:configuration.webRequestTimeoutSec)]" -Level Verbose
+    $params = [Hashtable]@{ }
+    $params.Add('Uri', $uri)
+    $params.Add('Method', $Method)
+    $params.Add('Headers', $headers)
+    $params.Add('TimeoutSec', $script:configuration.webRequestTimeoutSec)
 
-        $params = @{ }
-        $params.Add('Uri', $url)
-        $params.Add('Method', $Method)
-        $params.Add('Headers', $headers)
-        $params.Add('TimeoutSec', $script:configuration.webRequestTimeoutSec)
-
-        #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
-        if ($UriFragment -eq 'SecurityService/Login') {
-            $params.Add('Body', $Body)
-            $params.Add('SessionVariable', 'webSession')
+    #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
+    if ($Login) {
+        $params.Add('Body', $Body)
+        $params.Add('SessionVariable', 'webSession')
+    } else {
+        $params.Add('WebSession', $webSession)
+    }
+    Write-LockpathLog -Message $Description -Level Verbose
+    if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
+        $params.Add('Body', $Body)
+        if ($script:configuration.logRequestBody) {
+            Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
         } else {
-            $params.Add('WebSession', $script:configuration.webSession)
+            Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose
         }
-        if ($Method -in $methodContainsBody -and $UriFragment -ne 'SecurityService/Login' -and (-not [String]::IsNullOrEmpty($Body))) {
-            $params.Add('Body', $Body)
-            if ($script:configuration.logRequestBody) {
-                Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
-            } else {
-                Write-LockpathLog -Message 'Request includes a body: <logging disabled>' -Level Verbose
-            }
-        }
-
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    }
+    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($script:configuration.webRequestTimeoutSec)]" -Level Verbose
+    try {
         $ProgressPreference = 'SilentlyContinue'
         $result = Invoke-WebRequest @params
         $ProgressPreference = 'Continue'
-        if ($UriFragment -eq 'SecurityService/Login') {
-            $script:configuration.webSession = $webSession
-            $script:configuration.authenticationCookie = $webSession.Cookies.GetCookies($url)
+        if ($Login) {
+            # capture the authentication cookie for reuse in subsequent requests
+            $script:configuration.authenticationCookie = [Hashtable] @{
+                'Domain' = $webSession.Cookies.GetCookies($uri).Domain
+                'Name'   = $webSession.Cookies.GetCookies($uri).Name
+                'Value'  = $webSession.Cookies.GetCookies($uri).Value
+            }
         }
-        if ($Method -eq 'Delete') {
-            Write-LockpathLog -Message 'Successfully removed.' -Level Verbose
-        }
+        Write-LockpathLog -Message 'API request successful.' -Level Verbose
         return $result.Content
-
     } catch {
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
-            switch ($_.Exception.Response.StatusCode.value__) {
+            $statusCode = $_.Exception.Response.StatusCode.value__
+            switch ($statusCode) {
                 '400' {
-                    $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing)..'
+                    $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error.'
                 }
                 '401' {
-                    $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource...The user agent MAY repeat the request with a new or replaced Authorization header field.'
+                    $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource. The user agent MAY repeat the request with a new or replaced Authorization header field.'
                 }
                 '403' {
                     $httpResponseDetails = 'The 403 (Forbidden) status code indicates that the server understood the request but refuses to authorize it. If authentication credentials were provided in the request, the server considers them insufficient to grant access.'
@@ -189,11 +206,12 @@
                     $httpResponseDetails = 'The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.'
                 }
                 Default {
-                    $httpResponseDetails = 'Other Status Code.'
+                    $httpResponseDetails = "Other Status Code $($_.Exception.Response.StatusCode.value__)."
                 }
             }
             $exceptionOutput = [ordered]@{
-                'exceptionMessage'   = $_.Exception.Message
+                'statusCode'         = $statusCode
+                #'exceptionMessage'   = $_.Exception.Message
                 'exceptionDetails'   = $httpResponseDetails
                 'scriptName'         = $_.InvocationInfo.ScriptName
                 'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
