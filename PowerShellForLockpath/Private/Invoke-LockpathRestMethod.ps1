@@ -93,23 +93,23 @@
         [Parameter(Mandatory = $true)]
         [String] $Description,
 
-        [String] $AcceptHeader = $script:configuration.acceptHeader,
+        [String] $AcceptHeader = $Script:configuration.acceptHeader,
 
         [String] $Body = $null,
 
-        [String] $ContentTypeHeader = $script:configuration.contentTypeHeader,
+        [String] $ContentTypeHeader = $Script:configuration.contentTypeHeader,
 
-        [String] $InstanceName = $script:configuration.instanceName,
+        [String] $InstanceName = $Script:configuration.instanceName,
 
-        [UInt16] $InstancePort = $script:configuration.instancePort,
+        [UInt16] $InstancePort = $Script:configuration.instancePort,
 
-        [String] $InstancePortocol = $script:configuration.instanceProtocol,
+        [String] $InstancePortocol = $Script:configuration.instanceProtocol,
 
-        [switch] $Login,
+        [Switch] $Login,
 
-        [String[]] $MethodContainsBody = $script:configuration.methodContainsBody,
+        [System.Collections.ArrayList] $MethodContainsBody = $Script:configuration.methodContainsBody,
 
-        [String] $UserAgent = $script:configuration.userAgent
+        [String] $UserAgent = $Script:configuration.userAgent
     )
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
@@ -122,12 +122,12 @@
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
         # Check to see if there is a valid authentication cookie and if not exit early.
-        if ($script:configuration.authenticationCookie.Name -eq 'INVALID') {
+        if ($Script:configuration.authenticationCookie.Name -eq 'INVALID') {
             Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
-            $cookie = [System.Net.Cookie] $script:configuration.authenticationCookie
+            $cookie = [System.Net.Cookie] $Script:configuration.authenticationCookie
             $webSession.Cookies.Add($cookie)
         }
     }
@@ -146,7 +146,7 @@
     $params.Add('Uri', $uri)
     $params.Add('Method', $Method)
     $params.Add('Headers', $headers)
-    $params.Add('TimeoutSec', $script:configuration.webRequestTimeoutSec)
+    $params.Add('TimeoutSec', $Script:configuration.webRequestTimeoutSec)
 
     #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
     if ($Login) {
@@ -158,20 +158,20 @@
     Write-LockpathLog -Message $Description -Level Verbose
     if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
         $params.Add('Body', $Body)
-        if ($script:configuration.logRequestBody) {
+        if ($Script:configuration.logRequestBody) {
             Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
         } else {
             Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose
         }
     }
-    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($script:configuration.webRequestTimeoutSec)]" -Level Verbose
+    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:configuration.webRequestTimeoutSec)]" -Level Verbose
     try {
         $ProgressPreference = 'SilentlyContinue'
         $result = Invoke-WebRequest @params
         $ProgressPreference = 'Continue'
         if ($Login) {
             # capture the authentication cookie for reuse in subsequent requests
-            $script:configuration.authenticationCookie = [Hashtable] @{
+            $Script:configuration.authenticationCookie = [Hashtable] @{
                 'Domain' = $webSession.Cookies.GetCookies($uri).Domain
                 'Name'   = $webSession.Cookies.GetCookies($uri).Name
                 'Value'  = $webSession.Cookies.GetCookies($uri).Value
@@ -218,7 +218,7 @@
                 'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
                 'innerMessage'       = $_.ErrorDetails.Message
             }
-            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress) -Exception $_ -Level Error
+            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress) -Exception $_ -Level Error
         } else {
             Write-LockpathLog -Exception $_ -Level Error
             throw

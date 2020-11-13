@@ -20,7 +20,7 @@
         New-LockpathRecord -ComponentId 10066 -Attributes @{key = 1417; value = '_ API New Vendor'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}
 
     .INPUTS
-        String, System.Uint32
+        String, System.UInt32
 
     .OUTPUTS
         String
@@ -62,12 +62,12 @@
         $params = @{
             'UriFragment' = 'ComponentService/CreateRecord'
             'Method'      = 'POST'
-            'Description' = "Creating in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+            'Description' = "Creating in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
             'Body'        = [ordered]@{
                 'componentId'   = $ComponentId
                 'dynamicRecord' = @{'FieldValues' = $Attributes
                 }
-            } | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            } | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Creating record in: $([environment]::NewLine) component Id $ComponentId with attributes $($params.Body)", "component Id $ComponentId with attributes $($params.Body)", 'Creating record in:')) {

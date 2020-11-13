@@ -46,9 +46,9 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [switch] $Saved,
+        [Switch] $Saved,
 
-        [IO.FileInfo] $FilePath = $script:configuration.configurationFilePath
+        [IO.FileInfo] $FilePath = $Script:configuration.configurationFilePath
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -57,6 +57,6 @@
         Read-LockpathConfiguration -FilePath $FilePath
 
     } else {
-        return $script:configuration
+        return $Script:configuration
     }
 }

@@ -67,13 +67,12 @@ function Get-LockpathRecordCount {
     $params = @{
         'UriFragment' = 'ComponentService/GetRecordCount'
         'Method'      = 'POST'
-        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting record count for: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", "component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", 'Getting record count for:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

@@ -23,7 +23,7 @@
         If $recordObject has an property called ComponentId and RecordId those values are automatically passed as parameters.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String
@@ -70,7 +70,7 @@
             'Body'        = @{
                 'componentId' = $ComponentId
                 'recordId'    = $RecordId
-            } | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            } | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting record with: $([environment]::NewLine) record Id: $RecordId from component Id: $ComponentId", "record Id: $RecordId from component Id: $ComponentId", 'Deleting record with:')) {

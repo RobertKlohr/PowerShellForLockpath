@@ -28,7 +28,7 @@ function Get-LockpathField {
         If $fieldObject has an property called FieldId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

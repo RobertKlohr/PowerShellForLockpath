@@ -3,4 +3,4 @@
 # It will merged in the build process. This is for local development only.
 
 # region script variables
-# $script:resourcePath = "$PSScriptRoot\Resources"
+# $Script:resourcePath = "$PSScriptRoot\Resources"

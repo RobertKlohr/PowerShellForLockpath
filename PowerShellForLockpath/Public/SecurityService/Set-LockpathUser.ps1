@@ -62,8 +62,8 @@
         $params = @{
             'UriFragment' = 'SecurityService/UpdateUser'
             'Method'      = 'POST'
-            'Description' = "Updating user with Id: $UserId and values $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-            'Body'        = $Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+            'Description' = "Updating user with Id: $UserId and values $($Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
         }
         if ($PSCmdlet.ShouldProcess("Updating user with user with Id $($UserId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating user with user with Id $($UserId) and settings:")) {
             [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false

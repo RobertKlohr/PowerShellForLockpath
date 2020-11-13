@@ -44,7 +44,7 @@ function Remove-LockpathCredential {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [switch] $SessionOnly
+        [Switch] $SessionOnly
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -52,15 +52,15 @@ function Remove-LockpathCredential {
     if ($PSCmdlet.ShouldProcess('Cleared API credential (websession) from memory')) {
         if (-not $SessionOnly) {
             if ($PSCmdlet.ShouldProcess('Deleting API credential from the session and local file')) {
-                Remove-Item -Path $script:configuration.credentialFilePath, -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-                Write-LockpathLog -Message "Removed the API credential file $($script:configuration.credentialFilePath) from file system." -Level Warning -Exception $ev[0]
+                Remove-Item -Path $Script:configuration.credentialFilePath, -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+                Write-LockpathLog -Message "Removed the API credential file $($Script:configuration.credentialFilePath) from file system." -Level Warning -Exception $ev[0]
 
                 if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-                    Write-LockpathLog -Message "Experienced a problem trying to remove the API credential file $($script:configuration.credentialFilePath)." -Level Warning -Exception $ev[0]
+                    Write-LockpathLog -Message "Experienced a problem trying to remove the API credential file $($Script:configuration.credentialFilePath)." -Level Warning -Exception $ev[0]
                 }
             }
         }
-        $script:configuration.webSession = $null
+        $Script:configuration.webSession = $null
         Write-LockpathLog -Message 'Cleared API credential (websession) from memory.' -Level Verbose
     }
 }

@@ -25,7 +25,7 @@
         Set-LockpathRecordTransition -ComponentAlias 'Vendors' -RecordId 301 -TransitionId 61
 
     .INPUTS
-        String, System.Uint32
+        String, System.UInt32
 
     .OUTPUTS
         String
@@ -85,7 +85,7 @@
             'UriFragment' = 'ComponentService/TransitionRecord'
             'Method'      = 'POST'
             'Description' = "Transitioning record with Id: $RecordId in component with alias: $ComponentAlias using transition Id: $TransitionId"
-            'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Transitioning record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", 'Transitioning record with:')) {

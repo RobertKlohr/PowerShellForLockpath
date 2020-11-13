@@ -26,7 +26,7 @@ function Get-LockpathRecordDetail {
         Get-LockpathRecordDetail -ComponentId 2 -RecordId 1 -ExtractRichTextImages True
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String
@@ -62,7 +62,7 @@ function Get-LockpathRecordDetail {
 
         [Parameter(ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [switch] $ExtractRichTextImages
+        [Switch] $ExtractRichTextImages
     )
 
     begin {

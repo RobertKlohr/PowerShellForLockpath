@@ -22,7 +22,7 @@
         Get-LockpathComponent 2
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         {

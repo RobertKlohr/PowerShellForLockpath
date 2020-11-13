@@ -52,7 +52,7 @@ function Get-LockpathRecordsDetails {
         Get-LockpathRecordsDetails -ComponentId 10066 -FieldIds @(1417,1418,1430,9129) -Filter @{'FieldPath'= @(9129); 'FilterType'='5'; 'Value'='True'} -SortOrder @{'FieldPath'= @(1418); 'Ascending'='True'}
 
     .INPUTS
-        System.Array System.Uint32
+        System.Array System.UInt32
 
     .OUTPUTS
         String
@@ -81,10 +81,10 @@ function Get-LockpathRecordsDetails {
         [Int64] $ComponentId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:configuration.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $script:configuration.pageSize,
+        [Int32] $PageSize = $Script:configuration.pageSize,
 
         [Array] $Filters = @(),
 
@@ -107,13 +107,12 @@ function Get-LockpathRecordsDetails {
     $params = @{
         'UriFragment' = 'ComponentService/GetDetailRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting records from component with Id:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

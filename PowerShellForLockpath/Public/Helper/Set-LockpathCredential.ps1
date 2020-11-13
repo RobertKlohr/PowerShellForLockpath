@@ -75,7 +75,7 @@
     param(
         [PSCredential] $Credential,
 
-        [switch] $SessionOnly
+        [Switch] $SessionOnly
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -90,12 +90,12 @@
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 
-    $script:configuration | Add-Member NoteProperty -Name 'credential' -Value $Credential -Force
+    $Script:configuration | Add-Member NoteProperty -Name 'credential' -Value $Credential -Force
 
     if (-not $SessionOnly) {
         try {
             $null = New-Item -Path $FilePath -Force
-            $Credential | Export-Clixml -Path $script:configuration.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            $Credential | Export-Clixml -Path $Script:configuration.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             return ('Successfully saved credential to disk.')
         } catch {
             Write-LockpathLog -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level Warning

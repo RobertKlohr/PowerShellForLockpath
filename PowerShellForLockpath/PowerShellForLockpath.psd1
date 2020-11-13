@@ -54,6 +54,7 @@
     # use an empty array if there are no functions to export.
     FunctionsToExport    = @(
         'Find-LockpathField',
+        'Get-LockpathApiUserDetails'
         'Get-LockpathComponent',
         'Get-LockpathComponentByAlias',
         'Get-LockpathComponentList',
@@ -133,7 +134,7 @@
     FileList             = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData
-    # hashtable with additional module metadata used by PowerShell.
+    # Hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
 
         FromPSD = $true
@@ -154,9 +155,9 @@
             # ReleaseNotes of this module
             ReleaseNotes = 'Initial Release'
 
-        } # End of PSData hashtable
+        } # End of PSData Hashtable
 
-    } # End of PrivateData hashtable
+    } # End of PrivateData Hashtable
 
     # HelpInfo URI of this module HelpInfoURI = ''
 

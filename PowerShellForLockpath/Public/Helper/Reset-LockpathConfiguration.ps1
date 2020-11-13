@@ -46,20 +46,20 @@ function Reset-LockpathConfiguration {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [switch] $SessionOnly
+        [Switch] $SessionOnly
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess("Reseting configuration file: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {
-            $null = Remove-Item -Path $script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-            $null = New-Item -Path $script:configuration.configurationFilePath -Force
+            $null = Remove-Item -Path $Script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            $null = New-Item -Path $Script:configuration.configurationFilePath -Force
             $configuration | Set-LockpathConfiguration
         }
 
         if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-            Write-LockpathLog -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$script:configurationFilePath]." -Level Warning -Exception $ev[0]
+            Write-LockpathLog -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$Script:configurationFilePath]." -Level Warning -Exception $ev[0]
         }
     } else {
         Initialize-LockpathConfiguration

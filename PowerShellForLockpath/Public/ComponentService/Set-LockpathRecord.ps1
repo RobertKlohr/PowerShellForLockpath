@@ -21,7 +21,7 @@
         Set-LockpathRecord -ComponentId 10066 -RecordId 3 -Attributes @{key = 1418; value = 'API Update to Description'}, @{key = 8159; value = 'true'}, @{key = 9396; value = '12/25/2018'}, @{key = 7950; value = '999'}
 
     .INPUTS
-        String, System.Uint32
+        String, System.UInt32
 
     .OUTPUTS
         String
@@ -69,13 +69,13 @@
         $params = @{
             'UriFragment' = 'ComponentService/UpdateRecord'
             'Method'      = 'POST'
-            'Description' = "Updating fields in record Id: $RecordId in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
+            'Description' = "Updating fields in record Id: $RecordId in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
             'Body'        = [ordered]@{
                 'componentId'   = $ComponentId
                 'dynamicRecord' = [ordered]@{'Id' = $RecordId
                     'FieldValues'                 = $Attributes
                 }
-            } | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            } | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Updating fields with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId & attributes $($params.Body)", "component Id $ComponentId, record Id: $RecordId & attributes $($params.Body)", 'Updating fields with:')) {

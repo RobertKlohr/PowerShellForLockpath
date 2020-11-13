@@ -29,7 +29,7 @@
         If $userObject has an property called GroupId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

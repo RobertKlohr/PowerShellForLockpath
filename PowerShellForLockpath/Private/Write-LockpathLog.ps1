@@ -90,7 +90,7 @@
         [ValidateRange(1, 30)]
         [UInt16] $Indent = 0,
 
-        [IO.FileInfo] $FilePath = $script:configuration.logPath,
+        [IO.FileInfo] $FilePath = $Script:configuration.logPath,
 
         [System.Management.Automation.ErrorRecord] $Exception
     )
@@ -113,7 +113,7 @@
             if (Test-Json -Json $Exception.ErrorDetails.Message) {
                 $messages += $Exception.ErrorDetails.Message
             } else {
-                $messages += $Exception.ErrorDetails.Message | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+                $messages += $Exception.ErrorDetails.Message | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
             }
         } elseif ($messages.Count -eq 0) {
             # If no exception and no messages return early.
@@ -121,12 +121,12 @@
         }
 
         # Finalize the string to be logged.
-        $finalMessage = $messages -join [Environment]::NewLine | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+        $finalMessage = $messages -join [Environment]::NewLine | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
 
         # Build the console and log-specific messages.
         $date = Get-Date
         $dateString = $date.ToString('yyyy-MM-dd HH:mm:ss')
-        if ($script:configuration.logTimeAsUtc) {
+        if ($Script:configuration.logTimeAsUtc) {
             $dateString = $date.ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ssZ')
         }
 
@@ -134,7 +134,7 @@
         (' ' * $Indent),
         $finalMessage
 
-        if ($script:configuration.logProcessId) {
+        if ($Script:configuration.logProcessId) {
             $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
             $pidColumnLength = $maxPidDigits + '[]'.Length
             $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f

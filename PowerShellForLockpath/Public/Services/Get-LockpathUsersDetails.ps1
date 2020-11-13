@@ -37,7 +37,7 @@
         Get-LockpathUsersDetails -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 
     .INPUTS
-        System.Array System.Uint32
+        System.Array System.UInt32
 
     .OUTPUTS
         String
@@ -57,10 +57,10 @@
 
     param(
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:configuration.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $script:configuration.pageSize,
+        [Int32] $PageSize = $Script:configuration.pageSize,
 
         [Array] $Filters = @()
     )
@@ -79,12 +79,12 @@
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting Users with Filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+        'Description' = "Getting Users with Filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        $users = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
+        $users = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
         # Array
         # $result = @()
@@ -92,7 +92,7 @@
         $i = 1
         foreach ($user In $users) {
             try {
-                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
+                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
                 $result.Add($i, $userDetails)
                 # Array
                 # $result += $userDetails
@@ -102,7 +102,6 @@
             Write-Progress -Id 0 -Activity "Get details for $usersProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
             $i += 1
         }
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

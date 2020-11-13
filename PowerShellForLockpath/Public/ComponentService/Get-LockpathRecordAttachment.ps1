@@ -37,7 +37,7 @@
         Get-LockpathRecordAttachment -ComponentId 2 -RecordId 1 -FieldId 1 -DocumentId 1
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

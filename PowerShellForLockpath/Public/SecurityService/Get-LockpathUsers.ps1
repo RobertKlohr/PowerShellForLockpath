@@ -37,7 +37,7 @@ function Get-LockpathUsers {
         Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 
     .INPUTS
-        System.Array System.Uint32
+        System.Array System.UInt32
 
     .OUTPUTS
         String
@@ -59,10 +59,10 @@ function Get-LockpathUsers {
 
     param(
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:configuration.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $script:configuration.pageSize,
+        [Int32] $PageSize = $Script:configuration.pageSize,
 
         [Array] $Filters = @()
     )
@@ -81,13 +81,12 @@ function Get-LockpathUsers {
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting users with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+        'Description' = "Getting users with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting users with body:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

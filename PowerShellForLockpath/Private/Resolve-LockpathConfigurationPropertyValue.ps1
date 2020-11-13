@@ -24,9 +24,9 @@
         The value to return if Name doesn't exist on InputObject or is of an invalid type.
 
     .EXAMPLE
-        Resolve-function Resolve-LockpathConfigurationPropertyValue -InputObject $config -Name instancePort -Type unit -DefaultValue 4443
+        Resolve-function Resolve-LockpathConfigurationPropertyValue -InputObject $config -Name instancePort -Type UInt16 -DefaultValue 4443
 
-        Checks $config to see if it has a property named "instancePort".  If it does, and it's a unit, returns that Value, otherwise, returns 4443 (the DefaultValue).
+        Checks $config to see if it has a property named "instancePort".  If it does, and it's a UInt16, returns that Value, otherwise, returns 4443 (the DefaultValue).
 
     .INPUTS
         String
@@ -65,8 +65,6 @@
 
     #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    # Need to adjust the datatypes for some settings since we are storing the configuration in JSON. If the
-    # conversion fails in the switch statement then we have type mismatch.
     if ($null -eq $InputObject) {
         return $DefaultValue
     }
@@ -119,18 +117,18 @@
             ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties))
         ) {
             if ($InputObject.$Name -is $typeType) {
-                return $InputObject.$Name
+                return $true
             } else {
                 Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
                 Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
-                return $DefaultValue
+                return $false
             }
         } else {
-            return $DefaultValue
+            return $false
         }
     } catch {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
         Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
-        return $DefaultValue
+        return $false
     }
 }

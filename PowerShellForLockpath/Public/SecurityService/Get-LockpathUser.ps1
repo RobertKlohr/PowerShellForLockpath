@@ -29,7 +29,7 @@ function Get-LockpathUser {
         If $userObject has an property called UserId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

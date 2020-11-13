@@ -54,15 +54,15 @@ function Get-LockpathUserCount {
     $params = @{
         'UriFragment' = 'SecurityService/GetUserCount'
         'Method'      = 'POST'
-        'Description' = "Getting user count with filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+        'Description' = "Getting user count with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 
     # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
     # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
     # and to then wrap it in a set of brackets.
     # When the bug is fixed we can delete the next line.
-    $params.Body = "[$($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth)]"
+    $params.Body = "[$($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth)]"
 
     if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false

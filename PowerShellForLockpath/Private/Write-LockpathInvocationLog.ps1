@@ -67,10 +67,10 @@
         if ($param.Key -in ($RedactParameter)) {
             $params += "-$($param.Key) <redacted>"
         } else {
-            if ($param.Value -is [switch]) {
+            if ($param.Value -is [Switch]) {
                 $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
             } else {
-                $params += "-$($param.Key) $(ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -InputObject $param.Value)"
+                $params += "-$($param.Key) $(ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress -InputObject $param.Value)"
             }
         }
     }

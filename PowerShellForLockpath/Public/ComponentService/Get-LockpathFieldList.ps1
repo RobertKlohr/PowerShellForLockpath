@@ -30,7 +30,7 @@ function Get-LockpathFieldList {
         If $componentObject has an property called ComponentId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

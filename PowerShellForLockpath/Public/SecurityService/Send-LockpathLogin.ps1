@@ -38,7 +38,7 @@
     [OutputType('System.String')]
 
     param(
-        [switch] $KeepAlive
+        [Switch] $KeepAlive
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -52,11 +52,11 @@
     $params = @{
         'UriFragment' = 'SecurityService/Login'
         'Method'      = 'POST'
-        'Description' = "Sending login to $($script:configuration.instanceName) with Username $($credential.username) and Password: <redacted>"
-        'Body'        = (ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress -InputObject $hashBody)
+        'Description' = "Sending login to $($Script:configuration.instanceName) with Username $($credential.username) and Password: <redacted>"
+        'Body'        = (ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress -InputObject $hashBody)
     }
 
-    if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($script:configuration.instanceName)", $script:configuration.instanceName, 'Login to:')) {
+    if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($Script:configuration.instanceName)", $Script:configuration.instanceName, 'Login to:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Login -Confirm:$false
         if ($KeepAlive) {
             Send-LockpathKeepAlive

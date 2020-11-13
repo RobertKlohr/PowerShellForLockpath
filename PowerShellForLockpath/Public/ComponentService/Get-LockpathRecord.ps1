@@ -19,7 +19,7 @@ function Get-LockpathRecord {
         Get-LockpathRecord -ComponentId 2 -RecordId 1
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

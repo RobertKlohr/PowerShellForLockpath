@@ -33,7 +33,7 @@
         Get-LockpathRecordsAvailableForLookup -FieldId 3 -RecordId 4 -PageIndex 0 -PageSize 10
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String
@@ -65,10 +65,10 @@
         [Int64] $RecordId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:configuration.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $script:configuration.pageSize
+        [Int32] $PageSize = $Script:configuration.pageSize
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -86,13 +86,12 @@
     $params = @{
         'UriFragment' = 'ComponentService/GetAvailableLookupRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filters | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting records from component with Id:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
         return $result
     } else {
         Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false

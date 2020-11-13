@@ -35,8 +35,8 @@
     param()
 
     # Create a configuration object with all the default values.
-    if ($null -eq $script:configuration) {
-        $script:configuration = [PSCustomObject]@{
+    if ($null -eq $Script:configuration) {
+        $Script:configuration = [PSCustomObject]@{
             'acceptHeader'          = [String] 'application/json'
             'authenticationCookie'  = [Hashtable] @{
                 'Domain' = '<empty>.keylightgrc.com'
@@ -56,8 +56,6 @@
             'logProcessId'          = [Boolean] $false
             'logRequestBody'        = [Boolean] $false
             'logTimeAsUtc'          = [Boolean] $false
-            # FIXME this is causing validation errors again but only on the 2nd time through?  maybe it is getting
-            # FIXME changed during the first assignment and the type is changing?
             'methodContainsBody'    = [System.Collections.ArrayList] ('Delete', 'Post')
             'pageIndex'             = [Int32] 0
             'pageSize'              = [Int32] 100

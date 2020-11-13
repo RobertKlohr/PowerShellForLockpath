@@ -23,7 +23,7 @@ function Get-LockpathWorkflow {
         If $workflowObject has an property called WorkflowId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String

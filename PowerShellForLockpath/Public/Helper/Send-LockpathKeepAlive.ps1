@@ -38,7 +38,7 @@
             Position = 0
         )]
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval = $script:configuration.keepAliveInterval
+        [Int32] $KeepAliveInterval = $Script:configuration.keepAliveInterval
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false

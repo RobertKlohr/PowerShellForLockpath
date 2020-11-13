@@ -6,7 +6,7 @@
     .DESCRIPTION
         Change the value of a configuration property for the module, for the session only, or saved to disk.
 
-        To change any of the boolean/switch properties to false, specify the switch, immediately followed by
+        To change any of the Boolean/switch properties to false, specify the switch, immediately followed by
         ":$false" with no space.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
@@ -129,7 +129,7 @@
 
         [String] $ContentTypetHeader,
 
-        [securestring] $Credential,
+        [SecureString] $Credential,
 
         [System.IO.Path] $CredentialFilePath,
 
@@ -147,17 +147,17 @@
         [Int32] $jsonConversionDepth,
 
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval = $script:configuration.keepAliveInterval,
+        [Int32] $KeepAliveInterval = $Script:configuration.keepAliveInterval,
 
         [String] $LogPath,
 
-        [switch] $LogProcessId,
+        [Switch] $LogProcessId,
 
-        [switch] $LogRequestBody,
+        [Switch] $LogRequestBody,
 
-        [switch] $LogTimeAsUtc,
+        [Switch] $LogTimeAsUtc,
 
-        [System.Collections] $MethodContainsBody,
+        [System.Collections.ArrayList] $MethodContainsBody,
 
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex,
@@ -167,7 +167,7 @@
 
         [Boolean] $RunAsSystem,
 
-        [switch] $SessionOnly,
+        [Switch] $SessionOnly,
 
         [Hashtable] $SystemFields,
 
@@ -182,30 +182,26 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $properties = Get-Member -InputObject $script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
+    $properties = Get-Member -InputObject $Script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {
         if ($PSBoundParameters.ContainsKey($name)) {
             $value = $PSBoundParameters.$name
-            if ($value -is [switch]) {
+            if ($value -is [Switch]) {
                 $value = $value.ToBool()
             }
             # If just the hostname is passed in $InstanceName then add '.keylightgrc.com' to the end of $InstanceName
             if ($name -eq 'instanceName' -and $InstanceName.IndexOf('.') -eq -1) {
                 $value = $value + '.keylightgrc.com'
             }
-            $script:configuration.$name = $value
+            $Script:configuration.$name = $value
         }
     }
 
     if (-not $SessionOnly) {
         try {
             # make a copy of the configuration without the credential property as that is saved to the local profile
-            $output = Select-Object -InputObject $configuration -ExcludeProperty credential, webSession
-            # $null = New-Item -Path $script:configuration.configurationFilePath -Force
-            # ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -InputObject $output | Set-Content -Path $script:configuration.configurationFilePath -Force
-
-            Export-Clixml -InputObject $output -Path $script:configuration.configurationFilePath -Depth 10 -Force
-
+            $output = Select-Object -InputObject $configuration -ExcludeProperty credential
+            Export-Clixml -InputObject $output -Path $Script:configuration.configurationFilePath -Depth 10 -Force
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
             Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning

@@ -56,8 +56,8 @@
         $params = @{
             'UriFragment' = 'SecurityService/CreateUser'
             'Method'      = 'POST'
-            'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress)"
-            'Body'        = $Attributes | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth
+            'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating user with attributes:')) {

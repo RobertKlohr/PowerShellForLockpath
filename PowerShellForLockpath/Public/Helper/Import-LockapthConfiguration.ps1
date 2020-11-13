@@ -39,7 +39,7 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [IO.FileInfo] $FilePath = $script:configuration.configurationFilePath
+        [IO.FileInfo] $FilePath = $Script:configuration.configurationFilePath
     )
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
@@ -51,15 +51,12 @@
         Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
         return
     }
-    Get-Member -InputObject $script:configuration -MemberType NoteProperty |
+    Get-Member -InputObject $Script:configuration -MemberType NoteProperty |
     ForEach-Object {
         $name = $_.Name
-        if ($name -ne 'credential' -AND $name -ne 'webSession') {
-            $type = $script:configuration.$name.GetType().Name
-            $script:configuration.$name = Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $script:configuration.$name
-        }
-        if ( $name -eq 'authenticatedCookie') {
-            $script:configuration.$name = $savedConfiguration.$name
+        $type = $Script:configuration.$name.GetType().Name
+        if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $Script:configuration.$name) {
+            $Script:configuration.$name = $savedConfiguration.$name
         }
     }
 }

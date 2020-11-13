@@ -30,7 +30,7 @@
         If $userObject has an property called UserId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String
@@ -71,7 +71,7 @@
             'UriFragment' = 'SecurityService/DeleteUser'
             'Method'      = 'DELETE'
             'Description' = "Deleting User with User Id: $UserId"
-            'Body'        = $UserId | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            'Body'        = $UserId | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Deleting user with Id:')) {

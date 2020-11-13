@@ -29,7 +29,7 @@
         If $groupObject has an property called GroupId that value is automatically passed as a parameter.
 
     .INPUTS
-        System.Uint32
+        System.UInt32
 
     .OUTPUTS
         String
@@ -68,7 +68,7 @@
             'UriFragment' = 'SecurityService/DeleteGroup'
             'Method'      = 'DELETE'
             'Description' = "Deleting group with Id: $GroupId"
-            'Body'        = $GroupId | ConvertTo-Json -Depth $script:configuration.jsonConversionDepth -Compress
+            'Body'        = $GroupId | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting group with Id: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {

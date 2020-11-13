@@ -57,22 +57,22 @@
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {
-        $ComponentIds = Get-LockpathComponentList | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
+        $ComponentIds = Get-LockpathComponentList | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
     }
 
     $result = @()
     $componentCounter = 1
     foreach ($componentId in $ComponentIds) {
         # get the component details
-        $componentDetails = Get-LockpathComponent -ComponentId $componentId | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
+        $componentDetails = Get-LockpathComponent -ComponentId $componentId | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
         # get the list of field Ids in the component
-        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
+        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
         Write-Progress -Id 0 -Activity "Getting fields for component $componentCounter of $($ComponentIds.Count)" -Status "Get fields for component: $($componentDetails.Name)" -PercentComplete ($componentCounter / $ComponentIds.Count * 100)
         $componentCounter += 1
         $fieldCounter = 1
         foreach ($fieldId in $fieldIds) {
             # get the field details
-            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $script:configuration.jsonConversionDepth -AsHashtable
+            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
             # combine field details and component details into a an ordered dictionary
             $fieldFullDetails = [ordered]@{
                 'FieldId'             = $fieldDetails.Id

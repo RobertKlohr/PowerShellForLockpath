@@ -26,7 +26,7 @@
         Get-LockpathReport -ReportId 2642 -FileType CSV -FilePath 'c:\temp\report.csv'
 
     .INPUTS
-        String, System.Uint32
+        String, System.UInt32
 
     .OUTPUTS
         System.Array
