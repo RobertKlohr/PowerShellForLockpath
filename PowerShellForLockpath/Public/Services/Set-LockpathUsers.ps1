@@ -57,7 +57,7 @@
 
     if ($PSCmdlet.ShouldProcess("Updating users with: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Updating users with:')) {
 
-        $users = Get-LockpathUsers | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
 
         foreach ($user In $users) {
