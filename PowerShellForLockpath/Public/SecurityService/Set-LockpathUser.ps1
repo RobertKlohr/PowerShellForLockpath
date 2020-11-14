@@ -4,7 +4,9 @@
         Updates a user account.
 
     .DESCRIPTION
-        Updates a user account.  All attributes that are updated are overwritten with the new value.
+        Updates a user account.
+
+        All attributes that are updated are overwritten with the new value.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
@@ -67,7 +69,11 @@
         }
         if ($PSCmdlet.ShouldProcess("Updating user with user with Id $($UserId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating user with user with Id $($UserId) and settings:")) {
             [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
+            #FIXME supressing the GetUser response; need to figure out what calls return what information
+            # TODO maybe suppress by default and with a -switch get the response
+            If ($false) {
+                return $result
+            }
         } else {
             Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
         }

@@ -84,6 +84,8 @@
     }
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+
+        #FIXME remove this and the paramters above and just call $users = Get-LockpathUsers
         $users = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
         # Array

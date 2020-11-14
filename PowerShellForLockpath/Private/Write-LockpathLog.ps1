@@ -163,7 +163,8 @@
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
                 Write-Error $consoleMessage -ErrorAction SilentlyContinue
-                Write-Error $Exception #-ErrorAction SilentlyContinue
+                # FIXME see if we need this next line or not for reporting errors to the console
+                # Write-Error $Exception #-ErrorAction SilentlyContinue
             }
             'Warning' {
                 Write-Warning $consoleMessage

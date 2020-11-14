@@ -167,7 +167,10 @@
     Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:configuration.webRequestTimeoutSec)]" -Level Verbose
     try {
         $ProgressPreference = 'SilentlyContinue'
+        #FIXME stopwatch testing
+        $stopWatch = [system.diagnostics.stopwatch]::StartNew()
         $result = Invoke-WebRequest @params
+        $stopWatch.Stop()
         $ProgressPreference = 'Continue'
         if ($Login) {
             # capture the authentication cookie for reuse in subsequent requests
@@ -177,6 +180,8 @@
                 'Value'  = $webSession.Cookies.GetCookies($uri).Value
             }
         }
+        # FIXME stopwatch testing
+        # Write-Warning -Message $StopWatch.Elapsed.ToString()
         Write-LockpathLog -Message 'API request successful.' -Level Verbose
         return $result.Content
     } catch {

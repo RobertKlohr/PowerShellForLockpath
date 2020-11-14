@@ -10,6 +10,11 @@ function Get-LockpathUsers {
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
+    .PARAMETER All
+        Get all users.
+
+        Sets -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filters = @()
+
     .PARAMETER PageIndex
         The index of the page of result to return.
 
@@ -21,20 +26,32 @@ function Get-LockpathUsers {
         If not set it defaults to the value set in the configuration.
 
     .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+        Filters to return only the users meeting the selected criteria.
 
     .EXAMPLE
         Get-LockpathUsers
 
+        Returns all users with the -PageIndex and -PageSize defaulting to the values in the module configuration.
+
+    .EXAMPLE
+        Get-LockpathUsers -All
+
+        Returns all users by setting -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filters = @()
+
     .EXAMPLE
         Get-LockpathUsers -PageIndex 0 -PageSize 100
+
+        Returns the first 100 users in the system.
 
     .EXAMPLE
         Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 
+        Returns a set of users matching the filter with the -PageIndex and -PageSize defaulting to the values in the module configuration.
+
     .EXAMPLE
         Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+
+        Returns the first 100 users in the system matching the filter.
 
     .INPUTS
         System.Array System.UInt32
@@ -54,28 +71,46 @@ function Get-LockpathUsers {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true,
+        DefaultParameterSetName = 'Default')]
     [OutputType('System.String')]
 
     param(
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = 'All')]
+        [Switch] $All,
+
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = 'Default')]
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex = $Script:configuration.pageIndex,
 
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = 'Default')]
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:configuration.pageSize,
 
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = 'Default')]
         [Array] $Filters = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
+    if ($All) {
+        $PageIndex = 0
+        $PageSize = Get-LockpathUserCount
+        $Filters = @()
+    }
+
     $Body = @{
         'pageIndex' = $PageIndex
         'pageSize'  = $PageSize
-    }
-
-    If ($Filters.Count -gt 0) {
-        $Body.Add('filters', $Filters)
+        'filters'   = $Filters
     }
 
     $params = @{

@@ -104,6 +104,7 @@
         'Set-LockpathRecordTransition',
         'Set-LockpathRecordVote',
         'Set-LockpathUser',
+        'Set-LockpathUsers',
         'Show-LockpathConfiguration',
         # FIXME The following private funcdtions are exported during development
         'Initialize-LockpathConfiguration'
