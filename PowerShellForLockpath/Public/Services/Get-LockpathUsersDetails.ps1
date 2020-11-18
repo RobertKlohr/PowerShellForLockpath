@@ -10,20 +10,6 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER PageIndex
-        The index of the page of result to return.
-
-        If not set it defaults to the value set in the configuration.
-
-    .PARAMETER PageSize
-        The size of the page results to return.
-
-        If not set it defaults to the value set in the configuration.
-
-    .PARAMETER Filters
-        The filter parameters the users must meet to be included. Must be an array. Use filters to return only the
-        users meeting the selected criteria. Remove all filters to return a list of all users.
-
     .EXAMPLE
         Get-LockpathUsersDetails
 
@@ -56,52 +42,49 @@
     [OutputType('System.String')]
 
     param(
-        [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:configuration.pageIndex,
+        # FIXME decide if there will be parameters on this call and how they will work
+        # [Parameter(
+        #     Mandatory = $true,
+        #     ParameterSetName = 'All')]
+        # [Switch] $All,
 
-        [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:configuration.pageSize,
+        # [Parameter(
+        #     Mandatory = $true,
+        #     ParameterSetName = 'Filter')]
+        # [Array] $Filter,
 
-        [Array] $Filters = @()
+        # [Parameter(
+        #     Mandatory = $false)]
+        # [Int32] $PageIndex = $Script:configuration.pageIndex,
+
+        # [Parameter(
+        #     Mandatory = $false)]
+        # [Int32] $PageSize = $Script:configuration.pageSize
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $Body = @{
-        'pageIndex' = $PageIndex
-        'pageSize'  = $PageSize
-    }
-
-    If ($Filters.Count -gt 0) {
-        $Body.Add('filters', $Filters)
-    }
-
-    $params = @{
-        'UriFragment' = 'SecurityService/GetUsers'
-        'Method'      = 'POST'
-        'Description' = "Getting Users with Filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
-    }
-
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
 
-        #FIXME remove this and the paramters above and just call $users = Get-LockpathUsers
-        $users = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
-        $usersProgress = $users.count
-        # Array
-        # $result = @()
-        $result = @{}
+        # FIXME not sure where to test for valid session yet
+        # Test-LockpathAuthentication
+
+        # Get-LockpathUsers -All will return vendor contacts without login account that we filter out
+        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
+
+        # TODO add paramters and logic to filter users after we get all users above
+
+        $userProgress = $users.count
+        $result = @()
         $i = 1
         foreach ($user In $users) {
             try {
                 $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
-                $result.Add($i, $userDetails)
-                # Array
-                # $result += $userDetails
+                $result += $userDetails
             } catch {
                 Write-LockpathLog -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -Exception $ev[0]
             }
-            Write-Progress -Id 0 -Activity "Get details for $usersProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
+            Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
             $i += 1
         }
         return $result

@@ -47,7 +47,7 @@
             $content = Import-Clixml -Path $Script:configuration.credentialFilePath
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
             Write-LockpathLog -Message 'Restoring login credentials from file. These values can be cleared by calling Remove-LockpathCredential.' -Level Verbose
-            $Script:configuration | Add-Member NoteProperty -Name 'credential' -Value $credential -Force
+            $Script:configuration.credential = $credential
             return $credential
         } catch {
             Write-LockpathLog -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning

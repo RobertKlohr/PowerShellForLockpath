@@ -48,7 +48,7 @@
     param(
         [Switch] $Saved,
 
-        [IO.FileInfo] $FilePath = $Script:configuration.configurationFilePath
+        [System.IO.FileInfo] $FilePath = $Script:configuration.configurationFilePath
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false

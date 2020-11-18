@@ -37,30 +37,31 @@
     # Create a configuration object with all the default values.
     if ($null -eq $Script:configuration) {
         $Script:configuration = [PSCustomObject]@{
-            'acceptHeader'          = [String] 'application/json'
-            'authenticationCookie'  = [Hashtable] @{
-                'Domain' = '<empty>.keylightgrc.com'
+            'acceptHeader'                 = [String] 'application/json'
+            'authenticationCookie'         = [Hashtable] @{
+                'Domain' = '<invalid>.keylightgrc.com'
                 'Name'   = 'INVALID'
                 'Value'  = 'THIS_IS_NOT_A_VALID_AUTHENTICATION_COOKIE'
             }
-            'configurationFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.xml')
-            'contentTypeHeader'     = [String] 'application/json'
-            'credential'            = [PSCredential]::Empty
-            'credentialFilePath'    = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
-            'instanceName'          = [String] '<empty>.keylightgrc.com'
-            'instancePort'          = [Int16] 4443
-            'instanceProtocol'      = [String] 'https'
-            'jsonConversionDepth'   = [Int32] 100
-            'keepAliveInterval'     = [Int32] 5
-            'logPath'               = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
-            'logProcessId'          = [Boolean] $false
-            'logRequestBody'        = [Boolean] $false
-            'logTimeAsUtc'          = [Boolean] $false
-            'methodContainsBody'    = [System.Collections.ArrayList] ('Delete', 'Post')
-            'pageIndex'             = [Int32] 0
-            'pageSize'              = [Int32] 100
-            'runAsSystem'           = [Boolean] $true
-            'systemFields'          = [Hashtable] @{
+            'authenticationCookieFilePath' = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathauthenticationCookies.xml')
+            'configurationFilePath'        = [System.IO.Path]::Combine([Environment]::GetFolderPath('ApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathConfiguration.xml')
+            'contentTypeHeader'            = [String] 'application/json'
+            'credential'                   = [PSCredential]::Empty
+            'credentialFilePath'           = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
+            'instanceName'                 = [String] '<invalid>.keylightgrc.com'
+            'instancePort'                 = [Int16] 4443
+            'instanceProtocol'             = [String] 'https'
+            'jsonConversionDepth'          = [Int32] 100
+            'keepAliveInterval'            = [Int32] 5
+            'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
+            'logProcessId'                 = [Boolean] $false
+            'logRequestBody'               = [Boolean] $false
+            'logTimeAsUtc'                 = [Boolean] $false
+            'methodContainsBody'           = [System.Collections.ArrayList] ('Delete', 'Post')
+            'pageIndex'                    = [Int32] 0
+            'pageSize'                     = [Int32] 100
+            'runAsSystem'                  = [Boolean] $true
+            'systemFields'                 = [Hashtable] @{
                 'Begin Date'         = 'BeginDate'
                 'Created At'         = 'CreatedAt'
                 'Created By'         = 'CreatedBy'
@@ -73,8 +74,8 @@
                 'Updated By'         = 'UpdatedBy'
                 'Workflow Stage'     = 'WorkflowStage'
             }
-            'UserAgent'             = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
-            'webRequestTimeoutSec'  = [Int32] 0
+            'UserAgent'                    = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
+            'webRequestTimeoutSec'         = [Int32] 0
         }
     }
 

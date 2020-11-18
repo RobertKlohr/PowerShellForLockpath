@@ -47,11 +47,7 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
-    param(
-        # [Parameter(
-        #     Mandatory = $true)]
-        # [Array] $Attributes
-    )
+    param()
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
@@ -59,6 +55,7 @@
 
         $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
+        $i = 1
 
         foreach ($user In $users) {
             try {

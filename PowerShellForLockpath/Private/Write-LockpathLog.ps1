@@ -90,7 +90,7 @@
         [ValidateRange(1, 30)]
         [UInt16] $Indent = 0,
 
-        [IO.FileInfo] $FilePath = $Script:configuration.logPath,
+        [System.IO.FileInfo] $FilePath = $Script:configuration.logPath,
 
         [System.Management.Automation.ErrorRecord] $Exception
     )
@@ -110,9 +110,11 @@
 
         if ($null -ne $Exception) {
             # If we have an exception, add it after the accumulated messages.
-            if (Test-Json -Json $Exception.ErrorDetails.Message) {
-                $messages += $Exception.ErrorDetails.Message
-            } else {
+            try {
+                if (Test-Json -Json $Exception.ErrorDetails.Message) {
+                    $messages += $Exception.ErrorDetails.Message
+                }
+            } catch {
                 $messages += $Exception.ErrorDetails.Message | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
             }
         } elseif ($messages.Count -eq 0) {
@@ -162,7 +164,8 @@
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
-                Write-Error $consoleMessage -ErrorAction SilentlyContinue
+                # FIXME need to clean up what info is written to console for web request errors
+                Write-Error $consoleMessage -ErrorAction Continue
                 # FIXME see if we need this next line or not for reporting errors to the console
                 # Write-Error $Exception #-ErrorAction SilentlyContinue
             }

@@ -5,7 +5,7 @@
 
     .DESCRIPTION
         Returns specified fields for a set of records within a chosen component. A list of fields may be applied to
-        specify which fields are returned. Filters may be applied to return only the records meeting selected
+        specify which fields are returned. A filter may be applied to return only the records meeting selected
         criteria. One or more sort orders may be applied to the results.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
@@ -86,7 +86,7 @@
     $params = @{
         'UriFragment' = 'ComponentService/GetAvailableLookupRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 

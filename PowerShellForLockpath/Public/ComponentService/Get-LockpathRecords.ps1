@@ -4,7 +4,7 @@ function Get-LockpathRecords {
         Return the title/default field for a set of records within a chosen component.
 
     .DESCRIPTION
-        Return the title/default field for a set of records within a chosen component. Filters may be applied to
+        Return the title/default field for a set of records within a chosen component. A filter may be applied to
         return only the records meeting selected criteria.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
@@ -22,9 +22,10 @@ function Get-LockpathRecords {
     .PARAMETER ComponentId
         Specifies the Id number of the component.
 
-    .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        records meeting the selected criteria. Remove all filters to return a list of all records.
+    .PARAMETER Filter
+        The filter parameter that a group must meet to be included in the results.
+
+        Remove the filter to return a list of all records.
 
     .EXAMPLE
         Get-LockpathRecords -ComponentId 3
@@ -70,7 +71,7 @@ function Get-LockpathRecords {
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:configuration.pageSize,
 
-        [Array]$Filters = @()
+        [Array]$Filter = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -81,14 +82,14 @@ function Get-LockpathRecords {
         'pageSize'    = $PageSize
     }
 
-    If ($Filters.Count -gt 0) {
-        $Body.Add('filters', $Filters)
+    If ($Filter.Count -gt 0) {
+        $Body.Add('filters', $Filter)
     }
 
     $params = @{
         'UriFragment' = 'ComponentService/GetRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 

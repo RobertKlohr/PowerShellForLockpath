@@ -77,7 +77,7 @@
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [IO.FileInfo] $FilePath
+        [System.IO.FileInfo] $FilePath
     )
 
     begin {

@@ -6,7 +6,7 @@
     .DESCRIPTION
         Returns a report for a given report Id.
 
-        Filters applied are retained for all reports except a chart report where only the grid exports.
+        Any filter applied to the report is retained for all reports except a chart report where only the grid report exports.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
@@ -60,7 +60,7 @@
         [ValidateSet('csv', 'xlsx', 'pdf')]
         [String] $FileType,
 
-        [IO.FileInfo] $FilePath
+        [System.IO.FileInfo] $FilePath
     )
 
     begin {

@@ -39,7 +39,7 @@
 
     param(
         [Parameter(Mandatory = $true)]
-        [IO.FileInfo] $FilePath
+        [System.IO.FileInfo] $FilePath
     )
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false

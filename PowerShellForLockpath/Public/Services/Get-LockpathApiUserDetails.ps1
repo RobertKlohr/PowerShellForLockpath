@@ -48,7 +48,7 @@
         $userCount = Get-LockpathUserCount
 
         # get a list of all users on the system  We can filter for only active accounts to speed things up
-        $users = Get-LockpathUsers -PageIndex 0 -PageSize $userCount -Filters @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'true' } | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+        $users = Get-LockpathUsers -PageIndex 0 -PageSize $userCount -Filter @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'true' } | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
 
         # find the Id of the user making this API call
         $apiUser = $users | Where-Object { $_.Username -eq $Script:configuration.credential.UserName }

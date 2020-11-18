@@ -5,7 +5,7 @@ function Get-LockpathRecordsDetails {
 
     .DESCRIPTION
         Returns specified fields for a set of records within a chosen component. A list of fields may be applied to
-        specify which fields are returned. Filters may be applied to return only the records meeting selected
+        specify which fields are returned. A filter may be applied to return only the records meeting selected
         criteria. One or more sort orders may be applied to the results.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
@@ -23,9 +23,10 @@ function Get-LockpathRecordsDetails {
     .PARAMETER ComponentId
         Specifies the Id number of the component.
 
-    .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        records meeting the selected criteria. Remove all filters to return a list of all records.
+    .PARAMETER Filter
+        The filter parameters the groups must meet to be included.
+
+        Remove the filter to return a list of all records.
 
     .PARAMETER FieldIds
         Specifies the Id numbers of the field as a an array of positive integers.
@@ -86,7 +87,7 @@ function Get-LockpathRecordsDetails {
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:configuration.pageSize,
 
-        [Array] $Filters = @(),
+        [Array] $Filter = @(),
 
         [Array] $FieldIds = @(),
 
@@ -99,7 +100,7 @@ function Get-LockpathRecordsDetails {
         'componentId' = $ComponentId
         'pageIndex'   = $PageIndex
         'pageSize'    = $PageSize
-        'filters'     = $Filters
+        'filters'     = $Filter
         'fieldIds'    = $FieldIds
         'sortOrder'   = $SortOrder
     }
@@ -107,7 +108,7 @@ function Get-LockpathRecordsDetails {
     $params = @{
         'UriFragment' = 'ComponentService/GetDetailRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 

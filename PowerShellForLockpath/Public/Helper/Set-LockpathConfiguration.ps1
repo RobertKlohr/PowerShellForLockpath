@@ -199,8 +199,8 @@
 
     if (-not $SessionOnly) {
         try {
-            # make a copy of the configuration without the credential property as that is saved to the local profile
-            $output = Select-Object -InputObject $configuration -ExcludeProperty credential
+            # make a copy of the configuration without the authenticationCookie or credential property that are saved to the local profile
+            $output = Select-Object -InputObject $configuration -ExcludeProperty authenticationCookie, credential
             Export-Clixml -InputObject $output -Path $Script:configuration.configurationFilePath -Depth 10 -Force
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {

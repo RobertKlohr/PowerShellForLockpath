@@ -90,11 +90,10 @@
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 
-    $Script:configuration | Add-Member NoteProperty -Name 'credential' -Value $Credential -Force
+    $Script:configuration.credential = $credential
 
     if (-not $SessionOnly) {
         try {
-            $null = New-Item -Path $FilePath -Force
             $Credential | Export-Clixml -Path $Script:configuration.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             return ('Successfully saved credential to disk.')
         } catch {

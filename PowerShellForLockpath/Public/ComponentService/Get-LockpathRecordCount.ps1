@@ -4,7 +4,7 @@ function Get-LockpathRecordCount {
         Return the number of records in a given component.
 
     .DESCRIPTION
-        Return the number of records in a given component. TFilters may be applied to return the count of records
+        Return the number of records in a given component. A filter may be applied to return the count of records
         meeting a given criteria. This function may be used to help determine the amount of records before
         retrieving the records themselves.
 
@@ -13,9 +13,10 @@ function Get-LockpathRecordCount {
     .PARAMETER ComponentId
         Specifies the Id number of the component.
 
-    .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+    .PARAMETER Filter
+        The filter parameters the groups must meet to be included.
+
+        Remove the filter to return a list of all groups.
 
     .EXAMPLE
         Get-LockpathRecordCount -ComponentId 3
@@ -54,20 +55,20 @@ function Get-LockpathRecordCount {
         [ValidateRange('Positive')]
         [Int64] $ComponentId,
 
-        [Array] $Filters = @()
+        [Array] $Filter = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     $Body = @{
         'componentId' = $ComponentId
-        'filters'     = $Filters
+        'filters'     = $Filter
     }
 
     $params = @{
         'UriFragment' = 'ComponentService/GetRecordCount'
         'Method'      = 'POST'
-        'Description' = "Getting record count with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting record count with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 

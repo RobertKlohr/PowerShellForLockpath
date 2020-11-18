@@ -55,7 +55,7 @@ function Reset-LockpathConfiguration {
         if ($PSCmdlet.ShouldProcess("Reseting configuration file: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {
             $null = Remove-Item -Path $Script:configuration.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             $null = New-Item -Path $Script:configuration.configurationFilePath -Force
-            $configuration | Set-LockpathConfiguration
+            $Script:configuration | Set-LockpathConfiguration
         }
 
         if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {

@@ -20,9 +20,10 @@
 
         If not set it defaults to the value set in the configuration.
 
-    .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+    .PARAMETER Filter
+        The filter parameters that a group must meet to be included in the result.
+
+        Remove the filter to return a list of all groups.
 
     .EXAMPLE
         Get-LockpathGroupsDetails
@@ -62,7 +63,7 @@
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:configuration.pageSize,
 
-        [Array] $Filters = @()
+        [Array] $Filter = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -72,14 +73,14 @@
         'pageSize'  = $PageSize
     }
 
-    If ($Filters.Count -gt 0) {
-        $Body.Add('filters', $Filters)
+    If ($Filter.Count -gt 0) {
+        $Body.Add('filters', $Filter)
     }
 
     $params = @{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
     }
 

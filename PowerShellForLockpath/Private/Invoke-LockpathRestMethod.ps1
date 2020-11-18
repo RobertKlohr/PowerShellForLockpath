@@ -179,6 +179,7 @@
                 'Name'   = $webSession.Cookies.GetCookies($uri).Name
                 'Value'  = $webSession.Cookies.GetCookies($uri).Value
             }
+            Export-Clixml -InputObject $Script:configuration.authenticationCookie -Path $Script:configuration.authenticationCookieFilePath -Depth 10 -Force
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()

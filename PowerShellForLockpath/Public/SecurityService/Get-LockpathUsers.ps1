@@ -5,15 +5,16 @@ function Get-LockpathUsers {
 
     .DESCRIPTION
         Returns a list of users and available fields. The list does not include Deleted users and can include
-        non-Lockpath user accounts. Use filters to return only the users meeting the selected criteria. Remove all
-        filters to return a list of all users including deleted non-Lockpath user accounts.
+        non-Lockpath user accounts. Use a filter to return only the users meeting the selected criteria.
+
+        Remove the filter to return a list of all users including deleted non-Lockpath user accounts.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .PARAMETER All
         Get all users.
 
-        Sets -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filters = @()
+        Sets -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filter = @()
 
     .PARAMETER PageIndex
         The index of the page of result to return.
@@ -25,8 +26,8 @@ function Get-LockpathUsers {
 
         If not set it defaults to the value set in the configuration.
 
-    .PARAMETER Filters
-        Filters to return only the users meeting the selected criteria.
+    .PARAMETER Filter
+        A filter used to return only the users meeting the selected criteria.
 
     .EXAMPLE
         Get-LockpathUsers
@@ -36,7 +37,7 @@ function Get-LockpathUsers {
     .EXAMPLE
         Get-LockpathUsers -All
 
-        Returns all users by setting -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filters = @()
+        Returns all users by setting -PageIndex = 0, -PageSize = Get-LockpathUserCount, and $Filter = @()
 
     .EXAMPLE
         Get-LockpathUsers -PageIndex 0 -PageSize 100
@@ -96,7 +97,7 @@ function Get-LockpathUsers {
         [Parameter(
             Mandatory = $false,
             ParameterSetName = 'Default')]
-        [Array] $Filters = @()
+        [Array] $Filter = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -104,19 +105,20 @@ function Get-LockpathUsers {
     if ($All) {
         $PageIndex = 0
         $PageSize = Get-LockpathUserCount
-        $Filters = @()
+        $Filter = @()
+        # $Filter = '[{"Field":{"ShortName":"AccountType"},"FilterType":"10002","Value":"1|2|4"}]'
     }
 
     $Body = @{
         'pageIndex' = $PageIndex
         'pageSize'  = $PageSize
-        'filters'   = $Filters
+        'filters'   = $Filter
     }
 
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting users with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting users with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
     }
 

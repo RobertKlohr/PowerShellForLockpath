@@ -9,9 +9,10 @@ function Get-LockpathUserCount {
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER Filters
-        The filter parameters the groups must meet to be included. Must be an array. Use filters to return only the
-        groups meeting the selected criteria. Remove all filters to return a list of all groups.
+    .PARAMETER Filter
+        The filter parameters the groups must meet to be included.
+
+        Remove the filter to return a list of all groups.
 
     .EXAMPLE
         Get-LockpathUserCount
@@ -41,20 +42,20 @@ function Get-LockpathUserCount {
     [OutputType('System.Int64')]
 
     param(
-        [Array] $Filters = @()
+        [Array] $Filter = @()
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    If ($Filters.Count -gt 0) {
+    If ($Filter.Count -gt 0) {
         $Body = @{}
-        $Body.Add('filters', $Filters)
+        $Body.Add('filters', $Filter)
     }
 
     $params = @{
         'UriFragment' = 'SecurityService/GetUserCount'
         'Method'      = 'POST'
-        'Description' = "Getting user count with filter: $($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
+        'Description' = "Getting user count with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
     }
 
@@ -62,7 +63,7 @@ function Get-LockpathUserCount {
     # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
     # and to then wrap it in a set of brackets.
     # When the bug is fixed we can delete the next line.
-    $params.Body = "[$($Filters | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth)]"
+    $params.Body = "[$($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth)]"
 
     if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false

@@ -50,7 +50,7 @@
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [IO.FileInfo] $FilePath,
+        [System.IO.FileInfo] $FilePath,
 
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
     )
