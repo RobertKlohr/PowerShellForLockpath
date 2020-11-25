@@ -178,6 +178,7 @@
             'Debug' {
                 Write-Debug $consoleMessage
             }
+            # FIXME this should be "Information"
             'Informational' {
                 Write-Information $consoleMessage -InformationAction Continue
             }
