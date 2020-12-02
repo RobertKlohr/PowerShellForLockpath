@@ -59,5 +59,5 @@
             $Script:configuration.$name = $savedConfiguration.$name
         }
     }
-    $Script:configuration.authenticationCookie = Read-LockpathAuthenticationCookie
+    $Script:configuration.authenticationCookie = Import-LockpathAuthenticationCookie
 }

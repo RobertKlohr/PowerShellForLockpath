@@ -1,4 +1,7 @@
 ﻿function Save-LockpathAuthenticationCookie {
+
+    #FIXME rename function to Export-LockpathAuthenticationCookie
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,

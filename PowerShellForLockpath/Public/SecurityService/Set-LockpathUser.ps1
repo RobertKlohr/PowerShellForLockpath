@@ -1,4 +1,8 @@
 ﻿function Set-LockpathUser {
+
+    #TODO update parameters to be individual values. This will help with client-side syntax checking
+    # EXAMPLE: Set-LockpathUser -Id 6 -EmailAddress 'user@test.com' -Manager 6857 -Department 54
+
     <#
     .SYNOPSIS
         Updates a user account.

@@ -1,15 +1,15 @@
-﻿function Read-LockpathAuthenticationCookie {
+﻿function Import-LockpathAuthenticationCookie {
     <#
     .SYNOPSIS
-        Attempts to read the API authentication cookie saved to the local file system.
+        Attempts to import the API authentication cookie from the local file system.
 
     .DESCRIPTION
-        Attempts to read the API authentication cookie saved to the local file system.
+        Attempts to import the API authentication cookie from the local file system.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .EXAMPLE
-        Read-LockpathAuthenticationCookie
+        Import-LockpathAuthenticationCookie
 
     .INPUTS
         IO.FileInfo
@@ -40,6 +40,6 @@
         $Script:configuration.authenticationCookie = $cookie
         return $cookie
     } catch {
-        Write-LockpathLog -Message 'Unable to read the authentication cookie from the local file storage.  Use Send-LockpathLogin to reset.' -Level Warning
+        Write-LockpathLog -Message 'Unable to import the authentication cookie from the local file storage.' -Level Warning
     }
 }

@@ -1,4 +1,7 @@
 ﻿function Read-LockpathCredential {
+
+    #FIXME rename function to Import-LockpathCredential
+
     <#
     .SYNOPSIS
         Loads the API credentials for use in the rest of the module.
