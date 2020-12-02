@@ -44,20 +44,19 @@
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
 
-    # Update the values with any that we find in the configuration file.
-
-    $savedConfiguration = Import-LockpathConfiguration -FilePath $FilePath
-    If ($null -eq $savedConfiguration) {
-        Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
-        return
-    }
-    Get-Member -InputObject $Script:configuration -MemberType NoteProperty |
-    ForEach-Object {
-        $name = $_.Name
-        $type = $Script:configuration.$name.GetType().Name
-        if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $Script:configuration.$name) {
+    try {
+        $savedConfiguration = Import-Clixml -Path $FilePath
+        Get-Member -InputObject $Script:configuration -MemberType NoteProperty |
+        ForEach-Object {
+            $name = $_.Name
+            $type = $Script:configuration.$name.GetType().Name
+            if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $Script:configuration.$name) {
             $Script:configuration.$name = $savedConfiguration.$name
+            }
         }
+        $Script:configuration.authenticationCookie = Import-LockpathAuthenticationCookie
+        Write-LockpathLog -Message 'Successfully imported configuration settings from file.' -Level Verbose
+    } catch {
+        Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
     }
-    $Script:configuration.authenticationCookie = Import-LockpathAuthenticationCookie
 }
