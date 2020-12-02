@@ -54,7 +54,7 @@
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     if ($Saved) {
-        Read-LockpathConfiguration -FilePath $FilePath
+        Import-LockpathConfiguration -FilePath $FilePath
 
     } else {
         return $Script:configuration

@@ -1,12 +1,10 @@
-﻿function Read-LockpathConfiguration {
-    #FIXME rename function to Import-LockpathConfiguration
-
+﻿function Import-LockpathConfiguration {
     <#
     .SYNOPSIS
-        Loads in the default configuration values and returns the deserialized object.
+        Attempts to import the configuration from the local file system and returns the deserialized object.
 
     .DESCRIPTION
-        Loads in the default configuration values and returns the deserialized object.
+        Attempts to import the configuration from the local file system and returns the deserialized object.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
@@ -17,7 +15,7 @@
         PSCustomObject
 
     .EXAMPLE
-        Read-LockpathConfiguration -FilePath 'c:\Temp\PowerShellForLockpath.json'
+        Import-LockpathConfiguration -FilePath 'c:\Temp\PowerShellForLockpath.json'
 
     .INPUTS
         System.IO.FileInfo
@@ -48,7 +46,7 @@
 
     try {
         $content = Import-Clixml -Path $FilePath
-        Write-LockpathLog -Message 'Restoring configuration settings from file.' -Level Verbose
+        Write-LockpathLog -Message 'Importing configuration settings from file.' -Level Verbose
         return $content
     } catch {
         Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning

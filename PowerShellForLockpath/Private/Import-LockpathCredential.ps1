@@ -1,13 +1,10 @@
-﻿function Read-LockpathCredential {
-
-    #FIXME rename function to Import-LockpathCredential
-
+﻿function Import-LockpathCredential {
     <#
     .SYNOPSIS
-        Loads the API credentials for use in the rest of the module.
+        Attempts to import the API credential from the local file system.
 
     .DESCRIPTION
-        Loads the API credentials for use in the rest of the module.
+        Attempts to import the API credential from the local file system.
 
         First the will try to use the credential already cached in memory. If not found, will look to see if there
         is a file with the API credential stored as a SecureString.
@@ -15,7 +12,7 @@
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
     .EXAMPLE
-        Get-LockpathCredential
+        Import-LockpathCredential
 
     .INPUTS
         IO.FileInfo
@@ -49,7 +46,7 @@
         try {
             $content = Import-Clixml -Path $Script:configuration.credentialFilePath
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
-            Write-LockpathLog -Message 'Restoring login credentials from file. These values can be cleared by calling Remove-LockpathCredential.' -Level Verbose
+            Write-LockpathLog -Message 'Importing API credential from file. This value can be cleared by calling Remove-LockpathCredential.' -Level Verbose
             $Script:configuration.credential = $credential
             return $credential
         } catch {

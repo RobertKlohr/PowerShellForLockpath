@@ -46,7 +46,7 @@
 
     # Update the values with any that we find in the configuration file.
 
-    $savedConfiguration = Read-LockpathConfiguration -FilePath $FilePath
+    $savedConfiguration = Import-LockpathConfiguration -FilePath $FilePath
     If ($null -eq $savedConfiguration) {
         Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
         return

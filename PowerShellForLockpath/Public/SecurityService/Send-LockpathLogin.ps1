@@ -43,7 +43,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $credential = Read-LockpathCredential
+    $credential = Import-LockpathCredential
     $hashBody = [ordered]@{
         'username' = $credential.username
         'password' = $credential.GetNetworkCredential().Password
