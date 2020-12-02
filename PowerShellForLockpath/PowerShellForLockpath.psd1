@@ -109,10 +109,10 @@
         'Test-LockpathAuthentication',
         # FIXME The following private funcdtions are exported during development
         'Import-LockpathAuthenticationCookie',
+        'Import-LockpathConfiguration',
+        'Import-LockpathCredential',
         'Initialize-LockpathConfiguration',
         'Invoke-LockpathRestMethod',
-        'Read-LockpathConfiguration',
-        'Read-LockpathCredential',
         'Resolve-LockpathConfigurationPropertyValue',
         'Write-LockpathInvocationLog',
         'Write-LockpathLog'

@@ -216,7 +216,7 @@
             }
             $exceptionOutput = [ordered]@{
                 'statusCode'         = $statusCode
-                #'exceptionMessage'   = $_.Exception.Message
+                'exceptionMessage'   = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message
                 'exceptionDetails'   = $httpResponseDetails
                 'scriptName'         = $_.InvocationInfo.ScriptName
                 'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
