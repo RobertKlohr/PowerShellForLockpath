@@ -38,7 +38,7 @@
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
         # check to see if the username is set in the login credential and exit early if it is null
-        Read-LockpathCredential
+        Import-LockpathCredential
         if ($null -eq $Script:configuration.credential.UserName) {
             Write-LockpathLog -Message 'No API username is present in the configuration. Use Set-LockpathCredential to set the API credential.' -Level Warning -Confirm:$false -WhatIf:$false
             return
