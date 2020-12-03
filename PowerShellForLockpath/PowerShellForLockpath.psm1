@@ -1,4 +1,4 @@
-# this psm1 is for local testing and development use only
+# FIXME this psm1 is for local testing and development use only
 
 # dot source the parent import for local development variables
 . $PSScriptRoot\Imports.ps1
@@ -27,7 +27,6 @@ foreach ($file in @($public + $private)) {
 
     }
 }
-# FIXME I think this can be removed once development is complete
 # function Get-PD {
 #     [CmdletBinding()]
 #     Param()
