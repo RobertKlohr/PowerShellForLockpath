@@ -35,8 +35,8 @@
     param()
 
     # Create a configuration object with all the default values.
-    if ($null -eq $Script:configuration) {
-        $Script:configuration = [PSCustomObject]@{
+    if ($null -eq $Script:LockpathConfig) {
+        $Script:LockpathConfig = [PSCustomObject]@{
             'acceptHeader'                 = [String] 'application/json'
             'authenticationCookie'         = [Hashtable] @{
                 'Domain' = '<invalid>.keylightgrc.com'

@@ -66,10 +66,10 @@ function Get-LockpathRecords {
         [Int64] $ComponentId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:configuration.pageSize,
+        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Array]$Filter = @()
     )
@@ -89,8 +89,8 @@ function Get-LockpathRecords {
     $params = @{
         'UriFragment' = 'ComponentService/GetRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting records from component with Id:')) {

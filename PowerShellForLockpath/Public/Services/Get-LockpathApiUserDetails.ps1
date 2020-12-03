@@ -39,7 +39,7 @@
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
         # check to see if the username is set in the login credential and exit early if it is null
         Import-LockpathCredential
-        if ($null -eq $Script:configuration.credential.UserName) {
+        if ($null -eq $Script:LockpathConfig.credential.UserName) {
             Write-LockpathLog -Message 'No API username is present in the configuration. Use Set-LockpathCredential to set the API credential.' -Level Warning -Confirm:$false -WhatIf:$false
             return
         }
@@ -48,10 +48,10 @@
         $userCount = Get-LockpathUserCount
 
         # get a list of all users on the system  We can filter for only active accounts to speed things up
-        $users = Get-LockpathUsers -PageIndex 0 -PageSize $userCount -Filter @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'true' } | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+        $users = Get-LockpathUsers -PageIndex 0 -PageSize $userCount -Filter @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'true' } | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
 
         # find the Id of the user making this API call
-        $apiUser = $users | Where-Object { $_.Username -eq $Script:configuration.credential.UserName }
+        $apiUser = $users | Where-Object { $_.Username -eq $Script:LockpathConfig.credential.UserName }
 
         # get details for the user account matching the one used to authenticate this API call
         $apiUserDetails = Get-LockpathUser -UserId $apiUser.Id

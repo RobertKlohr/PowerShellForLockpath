@@ -65,10 +65,10 @@
         [Int64] $RecordId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:configuration.pageSize
+        [Int32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -86,8 +86,8 @@
     $params = @{
         'UriFragment' = 'ComponentService/GetAvailableLookupRecords'
         'Method'      = 'POST'
-        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting records from component with Id:')) {

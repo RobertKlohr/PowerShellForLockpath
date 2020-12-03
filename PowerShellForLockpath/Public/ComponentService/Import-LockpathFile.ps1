@@ -79,7 +79,7 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $RunAsSystem = $Script:configuration.runAsSystem
+        [Switch] $RunAsSystem = $Script:LockpathConfig.runAsSystem
     )
 
     begin {
@@ -101,7 +101,7 @@
             'UriFragment' = 'ComponentService/ImportFile'
             'Method'      = 'POST'
             'Description' = "Importing file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName"
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Importing: $([environment]::NewLine) file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", "file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName", 'Importing:')) {

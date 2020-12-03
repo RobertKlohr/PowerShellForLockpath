@@ -70,7 +70,7 @@
             if ($param.Value -is [Switch]) {
                 $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
             } else {
-                $params += "-$($param.Key) $(ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress -InputObject $param.Value)"
+                $params += "-$($param.Key) $(ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $param.Value)"
             }
         }
     }

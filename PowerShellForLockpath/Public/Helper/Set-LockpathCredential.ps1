@@ -86,15 +86,15 @@
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = 'The API Password was not provided in the password field.'
-        Write-LockpathLog -Message $message -Level Error
+        Write-LockpathLog -Message $message -Level Warning
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 
-    $Script:configuration.credential = $credential
+    $Script:LockpathConfig.credential = $credential
 
     if (-not $SessionOnly) {
         try {
-            $Credential | Export-Clixml -Path $Script:configuration.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+            $Credential | Export-Clixml -Path $Script:LockpathConfig.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             return ('Successfully saved credential to disk.')
         } catch {
             Write-LockpathLog -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level Warning

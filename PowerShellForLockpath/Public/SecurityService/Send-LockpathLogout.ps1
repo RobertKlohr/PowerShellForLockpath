@@ -39,10 +39,10 @@ function Send-LockpathLogout {
     $params = @{
         'UriFragment' = 'SecurityService/Logout'
         'Method'      = 'GET'
-        'Description' = "Sending logout to $($Script:configuration.instanceName)"
+        'Description' = "Sending logout to $($Script:LockpathConfig.instanceName)"
     }
 
-    if ($PSCmdlet.ShouldProcess("Logout from: $([environment]::NewLine) $($Script:configuration.instanceName)", $($Script:configuration.instanceName), 'Logout from:')) {
+    if ($PSCmdlet.ShouldProcess("Logout from: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Logout from:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {

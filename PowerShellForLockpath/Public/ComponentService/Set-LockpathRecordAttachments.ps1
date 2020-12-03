@@ -104,7 +104,7 @@
             'UriFragment' = 'ComponentService/UpdateRecordAttachments'
             'Method'      = 'POST'
             'Description' = "Updating attachment from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)"
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Updating attachments with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", "component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", 'Updating attachments with:')) {

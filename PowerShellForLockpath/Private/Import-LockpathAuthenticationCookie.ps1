@@ -36,8 +36,8 @@
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
     try {
-        $cookie = Import-Clixml -Path $Script:configuration.authenticationCookieFilePath
-        $Script:configuration.authenticationCookie = $cookie
+        $cookie = Import-Clixml -Path $Script:LockpathConfig.authenticationCookieFilePath
+        $Script:LockpathConfig.authenticationCookie = $cookie
         return $cookie
     } catch {
         Write-LockpathLog -Message 'Unable to import the authentication cookie from the local file storage.' -Level Warning

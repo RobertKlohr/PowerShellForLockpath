@@ -93,23 +93,23 @@
         [Parameter(Mandatory = $true)]
         [String] $Description,
 
-        [String] $AcceptHeader = $Script:configuration.acceptHeader,
+        [String] $AcceptHeader = $Script:LockpathConfig.acceptHeader,
 
         [String] $Body = $null,
 
-        [String] $ContentTypeHeader = $Script:configuration.contentTypeHeader,
+        [String] $ContentTypeHeader = $Script:LockpathConfig.contentTypeHeader,
 
-        [String] $InstanceName = $Script:configuration.instanceName,
+        [String] $InstanceName = $Script:LockpathConfig.instanceName,
 
-        [UInt16] $InstancePort = $Script:configuration.instancePort,
+        [UInt16] $InstancePort = $Script:LockpathConfig.instancePort,
 
-        [String] $InstancePortocol = $Script:configuration.instanceProtocol,
+        [String] $InstancePortocol = $Script:LockpathConfig.instanceProtocol,
 
         [Switch] $Login,
 
-        [System.Collections.ArrayList] $MethodContainsBody = $Script:configuration.methodContainsBody,
+        [System.Collections.ArrayList] $MethodContainsBody = $Script:LockpathConfig.methodContainsBody,
 
-        [String] $UserAgent = $Script:configuration.userAgent
+        [String] $UserAgent = $Script:LockpathConfig.userAgent
     )
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
@@ -122,12 +122,12 @@
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
         # Check to see if there is a valid authentication cookie and if not exit early.
-        if ($Script:configuration.authenticationCookie.Name -eq 'INVALID') {
+        if ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
             Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
-            $cookie = [System.Net.Cookie] $Script:configuration.authenticationCookie
+            $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
             $webSession.Cookies.Add($cookie)
         }
     }
@@ -146,7 +146,7 @@
     $params.Add('Uri', $uri)
     $params.Add('Method', $Method)
     $params.Add('Headers', $headers)
-    $params.Add('TimeoutSec', $Script:configuration.webRequestTimeoutSec)
+    $params.Add('TimeoutSec', $Script:LockpathConfig.webRequestTimeoutSec)
 
     #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
     if ($Login) {
@@ -158,13 +158,13 @@
     Write-LockpathLog -Message $Description -Level Verbose
     if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
         $params.Add('Body', $Body)
-        if ($Script:configuration.logRequestBody) {
+        if ($Script:LockpathConfig.logRequestBody) {
             Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
         } else {
             Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose
         }
     }
-    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:configuration.webRequestTimeoutSec)]" -Level Verbose
+    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose
     try {
         $ProgressPreference = 'SilentlyContinue'
         #FIXME stopwatch testing
@@ -174,12 +174,12 @@
         $ProgressPreference = 'Continue'
         if ($Login) {
             # capture the authentication cookie for reuse in subsequent requests
-            $Script:configuration.authenticationCookie = [Hashtable] @{
+            $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
                 'Domain' = $webSession.Cookies.GetCookies($uri).Domain
                 'Name'   = $webSession.Cookies.GetCookies($uri).Name
                 'Value'  = $webSession.Cookies.GetCookies($uri).Value
             }
-            Export-Clixml -InputObject $Script:configuration.authenticationCookie -Path $Script:configuration.authenticationCookieFilePath -Depth 10 -Force
+            Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth 10 -Force
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()
@@ -214,19 +214,21 @@
                     $httpResponseDetails = "Other Status Code $($_.Exception.Response.StatusCode.value__)."
                 }
             }
-            $exceptionOutput = [ordered]@{
-                'statusCode'         = $statusCode
-                'exceptionMessage'   = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message
-                'exceptionDetails'   = $httpResponseDetails
-                'scriptName'         = $_.InvocationInfo.ScriptName
-                'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
-                'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
-                'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
-                'innerMessage'       = $_.ErrorDetails.Message
-            }
-            Write-LockpathLog -Message $($exceptionOutput | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress) -Exception $_ -Level Error
+
+            Write-LockpathLog -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Error
+
+            # TODO the following will be more useful once the conversion to CEF format
+            # $exceptionOutput = [ordered]@{
+            #     'statusCode'         = $statusCode
+            #     'exceptionMessage'   = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message
+            #     'exceptionDetails'   = $httpResponseDetails
+            #     'scriptName'         = $_.InvocationInfo.ScriptName
+            #     'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
+            #     'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
+            #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
+            # }
         } else {
-            Write-LockpathLog -Exception $_ -Level Error
+            Write-LockpathLog -ErrorRecord $_ -Level Error
             throw
         }
     }

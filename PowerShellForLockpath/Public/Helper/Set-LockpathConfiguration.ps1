@@ -147,7 +147,7 @@
         [Int32] $jsonConversionDepth,
 
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval = $Script:configuration.keepAliveInterval,
+        [Int32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval,
 
         [String] $LogPath,
 
@@ -182,7 +182,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $properties = Get-Member -InputObject $Script:configuration -MemberType NoteProperty | Select-Object -ExpandProperty Name
+    $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {
         if ($PSBoundParameters.ContainsKey($name)) {
             $value = $PSBoundParameters.$name
@@ -193,15 +193,15 @@
             if ($name -eq 'instanceName' -and $InstanceName.IndexOf('.') -eq -1) {
                 $value = $value + '.keylightgrc.com'
             }
-            $Script:configuration.$name = $value
+            $Script:LockpathConfig.$name = $value
         }
     }
 
     if (-not $SessionOnly) {
         try {
             # make a copy of the configuration without the authenticationCookie or credential property that are saved to the local profile
-            $output = Select-Object -InputObject $configuration -ExcludeProperty authenticationCookie, credential
-            Export-Clixml -InputObject $output -Path $Script:configuration.configurationFilePath -Depth 10 -Force
+            $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential
+            Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth 10 -Force
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
             Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning

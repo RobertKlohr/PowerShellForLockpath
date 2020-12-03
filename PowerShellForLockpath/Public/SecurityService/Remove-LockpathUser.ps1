@@ -71,7 +71,7 @@
             'UriFragment' = 'SecurityService/DeleteUser'
             'Method'      = 'DELETE'
             'Description' = "Deleting User with User Id: $UserId"
-            'Body'        = $UserId | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
+            'Body'        = $UserId | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting user with Id: $([environment]::NewLine) $UserId", $UserId, 'Deleting user with Id:')) {

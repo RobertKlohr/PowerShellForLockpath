@@ -4,9 +4,20 @@
         Creates a user account.
 
     .DESCRIPTION
-        Creates a user account. The following attributes are required when creating an user account: AccountType,
-        EmailAddress, FirstName, LastName, Password, Username, SecurityConfiguration, SecurityRoles. The password
-        set must meet the criteria of the settings in the selected SecurityConfiguration.
+        Creates a user account.
+
+        The following attributes are required when creating an user account:
+
+        AccountType
+        EmailAddress
+        FirstName
+        LastName
+        Password
+        SecurityConfiguration
+        SecurityRoles
+        Username
+
+        The password set must meet the criteria of the settings in the selected SecurityConfiguration.
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
@@ -56,8 +67,8 @@
         $params = @{
             'UriFragment' = 'SecurityService/CreateUser'
             'Method'      = 'POST'
-            'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-            'Body'        = $Attributes | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+            'Description' = "Creating user with attributes $($Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
+            'Body'        = $Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Creating user with attributes: $([environment]::NewLine) $($params.Body)", "$($params.Body)", 'Creating user with attributes:')) {

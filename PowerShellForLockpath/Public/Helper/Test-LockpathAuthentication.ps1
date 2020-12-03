@@ -39,7 +39,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    if ($PSCmdlet.ShouldProcess("Test API authentication: $([environment]::NewLine) $($Script:configuration.instanceName)", $($Script:configuration.instanceName), 'Test API authentication:')) {
+    if ($PSCmdlet.ShouldProcess("Test API authentication: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Test API authentication:')) {
         if (Send-LockpathPing) {
             return $true
         } elseif (Send-LockpathPing) {

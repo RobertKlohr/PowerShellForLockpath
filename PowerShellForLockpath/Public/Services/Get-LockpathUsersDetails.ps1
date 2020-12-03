@@ -55,11 +55,11 @@
 
         # [Parameter(
         #     Mandatory = $false)]
-        # [Int32] $PageIndex = $Script:configuration.pageIndex,
+        # [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         # [Parameter(
         #     Mandatory = $false)]
-        # [Int32] $PageSize = $Script:configuration.pageSize
+        # [Int32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
@@ -70,7 +70,7 @@
         # Test-LockpathAuthentication
 
         # Get-LockpathUsers -All will return vendor contacts without login account that we filter out
-        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
+        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
 
         # TODO add paramters and logic to filter users after we get all users above
 
@@ -79,10 +79,10 @@
         $i = 1
         foreach ($user In $users) {
             try {
-                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
                 $result += $userDetails
             } catch {
-                Write-LockpathLog -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -Exception $ev[0]
+                Write-LockpathLog -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0]
             }
             Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
             $i += 1

@@ -86,13 +86,13 @@ function Get-LockpathUsers {
             Mandatory = $false,
             ParameterSetName = 'Default')]
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [Parameter(
             Mandatory = $false,
             ParameterSetName = 'Default')]
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:configuration.pageSize,
+        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Parameter(
             Mandatory = $false,
@@ -118,8 +118,8 @@ function Get-LockpathUsers {
     $params = @{
         'UriFragment' = 'SecurityService/GetUsers'
         'Method'      = 'POST'
-        'Description' = "Getting users with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
+        'Description' = "Getting users with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting users with body:')) {

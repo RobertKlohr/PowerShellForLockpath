@@ -82,17 +82,19 @@
         [AllowEmptyCollection()]
         [AllowEmptyString()]
         [AllowNull()]
+        # FIXME does this need to be an array or will it always be just a string?
         [string[]] $Message = @(),
 
-        [ValidateSet('Error', 'Warning', 'Informational', 'Verbose', 'Debug')]
-        [String] $Level = 'Informational',
+        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
+        [String] $Level = 'Information',
 
         [ValidateRange(1, 30)]
         [UInt16] $Indent = 0,
 
-        [System.IO.FileInfo] $FilePath = $Script:configuration.logPath,
+        [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
 
-        [System.Management.Automation.ErrorRecord] $Exception
+        [System.Management.Automation.ErrorRecord] $ErrorRecord
+
     )
 
     begin {
@@ -108,27 +110,21 @@
 
     end {
 
-        if ($null -ne $Exception) {
+        if ($null -ne $ErrorRecord) {
             # If we have an exception, add it after the accumulated messages.
-            try {
-                if (Test-Json -Json $Exception.ErrorDetails.Message) {
-                    $messages += $Exception.ErrorDetails.Message
-                }
-            } catch {
-                $messages += $Exception.ErrorDetails.Message | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
-            }
+            $messages += $ErrorRecord.Exception.Message
         } elseif ($messages.Count -eq 0) {
             # If no exception and no messages return early.
             return
         }
 
         # Finalize the string to be logged.
-        $finalMessage = $messages -join [Environment]::NewLine | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
+        $finalMessage = $messages -join ' ' | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
 
         # Build the console and log-specific messages.
         $date = Get-Date
         $dateString = $date.ToString('yyyy-MM-dd HH:mm:ss')
-        if ($Script:configuration.logTimeAsUtc) {
+        if ($Script:LockpathConfig.logTimeAsUtc) {
             $dateString = $date.ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ssZ')
         }
 
@@ -136,7 +132,7 @@
         (' ' * $Indent),
         $finalMessage
 
-        if ($Script:configuration.logProcessId) {
+        if ($Script:LockpathConfig.logProcessId) {
             $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
             $pidColumnLength = $maxPidDigits + '[]'.Length
             $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f
@@ -164,10 +160,7 @@
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
-                # FIXME need to clean up what info is written to console for web request errors
-                Write-Error $consoleMessage -ErrorAction Continue
-                # FIXME see if we need this next line or not for reporting errors to the console
-                # Write-Error $Exception #-ErrorAction SilentlyContinue
+                Write-Error $consoleMessage
             }
             'Warning' {
                 Write-Warning $consoleMessage
@@ -178,8 +171,7 @@
             'Debug' {
                 Write-Debug $consoleMessage
             }
-            # FIXME this should be "Information"
-            'Informational' {
+            'Information' {
                 Write-Information $consoleMessage -InformationAction Continue
             }
         }

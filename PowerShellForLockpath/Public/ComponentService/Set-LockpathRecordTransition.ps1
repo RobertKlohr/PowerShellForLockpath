@@ -85,7 +85,7 @@
             'UriFragment' = 'ComponentService/TransitionRecord'
             'Method'      = 'POST'
             'Description' = "Transitioning record with Id: $RecordId in component with alias: $ComponentAlias using transition Id: $TransitionId"
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
         }
 
         if ($PSCmdlet.ShouldProcess("Transitioning record with: $([environment]::NewLine) component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", "component alias $ComponentAlias, record Id: $RecordId using transition Id: $TransitionId", 'Transitioning record with:')) {

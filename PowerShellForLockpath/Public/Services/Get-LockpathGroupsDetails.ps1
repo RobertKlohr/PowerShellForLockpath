@@ -58,10 +58,10 @@
 
     param(
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:configuration.pageIndex,
+        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:configuration.pageSize,
+        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Array] $Filter = @()
     )
@@ -80,12 +80,12 @@
     $params = @{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
+        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
+        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+        $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $groupsProgress = $groups.count
         # Array
         # $result = @()
@@ -93,12 +93,12 @@
         $i = 1
         foreach ($group In $groups) {
             try {
-                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
                 $result.Add($i, $groupDetails)
                 # Array
                 # $result += $userDetails
             } catch {
-                Write-LockpathLog -Message "There was a problem retriving details group Id: $($group.Id)." -Level Warning -Exception $ev[0]
+                Write-LockpathLog -Message "There was a problem retriving details group Id: $($group.Id)." -Level Warning -ErrorRecord $ev[0]
             }
             Write-Progress -Id 0 -Activity "Get details for $groupsProgress groups:" -CurrentOperation "Getting details for group: $i $($group.Name)" -PercentComplete ($i / $groupsProgress * 100)
             $i += 1

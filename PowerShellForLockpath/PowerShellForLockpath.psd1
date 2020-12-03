@@ -45,8 +45,7 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules        = @(
-        # Ideally this list would be kept completely alphabetical, but other scripts (like GitHubConfiguration.ps1)
-        # depend on some of the code in Helpers being around at load time.
+        # Ideally this list would be kept completely alphabetical, but other scripts depend on some of the code in Helpers being around at load time.
         # TODO: See if helpers needs to be loaded first and edit the comments and order as necessary.
     )
 
@@ -109,7 +108,6 @@
         'Test-LockpathAuthentication',
         # FIXME The following private funcdtions are exported during development
         'Import-LockpathAuthenticationCookie',
-        'Import-LockpathConfiguration',
         'Import-LockpathCredential',
         'Initialize-LockpathConfiguration',
         'Invoke-LockpathRestMethod',

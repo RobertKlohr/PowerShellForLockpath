@@ -70,7 +70,7 @@
             'Body'        = @{
                 'componentId' = $ComponentId
                 'recordId'    = $RecordId
-            } | ConvertTo-Json -Depth $Script:configuration.jsonConversionDepth -Compress
+            } | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
         }
 
         if ($PSCmdlet.ShouldProcess("Deleting record with: $([environment]::NewLine) record Id: $RecordId from component Id: $ComponentId", "record Id: $RecordId from component Id: $ComponentId", 'Deleting record with:')) {

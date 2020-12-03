@@ -53,7 +53,7 @@
 
     if ($PSCmdlet.ShouldProcess("Updating users with: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Updating users with:')) {
 
-        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:configuration.jsonConversionDepth -AsHashtable
+        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
         $i = 1
 
@@ -66,7 +66,7 @@
                     $ProgressPreference = 'Continue'
                 }
             } catch {
-                Write-LockpathLog -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level Warning -Exception $ev[0]
+                Write-LockpathLog -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0]
             }
             Write-Progress -Id 0 -Activity "Updating $usersProgress users:" -CurrentOperation "Updating user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
             $i += 1

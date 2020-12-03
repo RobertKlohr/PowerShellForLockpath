@@ -39,22 +39,22 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [System.IO.FileInfo] $FilePath = $Script:configuration.configurationFilePath
+        [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
     Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
 
     try {
-        $savedConfiguration = Import-Clixml -Path $FilePath
-        Get-Member -InputObject $Script:configuration -MemberType NoteProperty |
+        $savedLockpathConfig = Import-Clixml -Path $FilePath
+        Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty |
         ForEach-Object {
             $name = $_.Name
-            $type = $Script:configuration.$name.GetType().Name
-            if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedConfiguration -Name $name -Type $type -DefaultValue $Script:configuration.$name) {
-            $Script:configuration.$name = $savedConfiguration.$name
+            $type = $Script:LockpathConfig.$name.GetType().Name
+            if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedLockpathConfig -Name $name -Type $type -DefaultValue $Script:LockpathConfig.$name) {
+                $Script:LockpathConfig.$name = $savedLockpathConfig.$name
             }
         }
-        $Script:configuration.authenticationCookie = Import-LockpathAuthenticationCookie
+        $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
         Write-LockpathLog -Message 'Successfully imported configuration settings from file.' -Level Verbose
     } catch {
         Write-LockpathLog -Message 'Failed to load configuration file.  Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning

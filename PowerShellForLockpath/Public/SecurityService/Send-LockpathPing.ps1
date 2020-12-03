@@ -51,11 +51,11 @@ function Send-LockpathPing {
     $params = @{
         'UriFragment' = 'SecurityService/Ping'
         'Method'      = 'GET'
-        'Description' = "Sending Ping API request to $($Script:configuration.instanceName) to extend session."
+        'Description' = "Sending Ping API request to $($Script:LockpathConfig.instanceName) to extend session."
     }
 
-    # if ($PSCmdlet.ShouldProcess("Refresh session for: $([environment]::NewLine) $($Script:configuration.instanceName)", $($Script:configuration.instanceName), 'Refresh session for:')) {
-    if ($PSCmdlet.ShouldProcess("Refresh session for: $($Script:configuration.instanceName)", $($Script:configuration.instanceName), 'Refresh session for:')) {
+    # if ($PSCmdlet.ShouldProcess("Refresh session for: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Refresh session for:')) {
+    if ($PSCmdlet.ShouldProcess("Refresh session for: $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Refresh session for:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         Write-Information $result
         return

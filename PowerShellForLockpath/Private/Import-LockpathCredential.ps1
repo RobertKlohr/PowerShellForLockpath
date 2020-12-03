@@ -38,16 +38,16 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
 
-    $credential = $Script:configuration.credential
+    $credential = $Script:LockpathConfig.credential
 
     if ($null -ne $credential.UserName) {
         return $credential
     } else {
         try {
-            $content = Import-Clixml -Path $Script:configuration.credentialFilePath
+            $content = Import-Clixml -Path $Script:LockpathConfig.credentialFilePath
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
             Write-LockpathLog -Message 'Importing API credential from file. This value can be cleared by calling Remove-LockpathCredential.' -Level Verbose
-            $Script:configuration.credential = $credential
+            $Script:LockpathConfig.credential = $credential
             return $credential
         } catch {
             Write-LockpathLog -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning
