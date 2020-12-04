@@ -52,13 +52,12 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no functions to export.
     FunctionsToExport    = @(
-        'Find-LockpathField',
-        'Get-LockpathApiUserDetails'
         'Get-LockpathComponent',
         'Get-LockpathComponentByAlias',
         'Get-LockpathComponentList',
         'Get-LockpathField',
         'Get-LockpathFieldList',
+        'Get-LockpathFields',
         'Get-LockpathFieldLookupReportColumns',
         'Get-LockpathGroup',
         'Get-LockpathGroups',

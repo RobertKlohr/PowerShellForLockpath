@@ -1,4 +1,4 @@
-﻿function Find-LockpathField {
+﻿function Get-LockpathFields {
     <#
     .SYNOPSIS
         Returns all field details for selected fields based on the applied filter.
@@ -66,30 +66,31 @@
         # get the component details
         $componentDetails = Get-LockpathComponent -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         # get the list of field Ids in the component
-        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
+        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+        | Select-Object -ExpandProperty Id
         Write-Progress -Id 0 -Activity "Getting fields for component $componentCounter of $($ComponentIds.Count)" -Status "Get fields for component: $($componentDetails.Name)" -PercentComplete ($componentCounter / $ComponentIds.Count * 100)
         $componentCounter += 1
         $fieldCounter = 1
         foreach ($fieldId in $fieldIds) {
             # get the field details
-            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
             # combine field details and component details into a an ordered dictionary
             $fieldFullDetails = [ordered]@{
                 'FieldId'             = $fieldDetails.Id
                 'FiledName'           = $fieldDetails.Name
-                'FieldShortName'      = $fieldDetails.ShortName
+                # Currently the following line is redundant with FieldSystemName
+                #'FieldShortName'      = $fieldDetails.ShortName
                 'FieldSystemName'     = $fieldDetails.SystemName
                 'FieldReadOnly'       = $fieldDetails.ReadOnly
                 'FieldRequired'       = $fieldDetails.Required
                 'FieldFieldType'      = $fieldDetails.FieldType
                 'FieldOneToMany'      = $fieldDetails.OneToMany
-                'FieldMatrixRows'     = $fieldDetails.MatrixRows.ForEach(
-                    { Param($Id, $Name)
-                        [ordered]@{Id = $_.$Id; Name = $_.$Name }
-                    }, 'Id', 'Name')
+                # Convert the matrixrows into a single string that uses ';' & '|' to delimit values and rows
+                'FieldMatrixRows'     = ($fieldDetails.MatrixRows | ConvertTo-Csv -UseQuotes Never -Delimiter ';') -join '|'
                 'ComponentId'         = $componentDetails.Id
                 'ComponentName'       = $componentDetails.Name
-                'ComponentShortName'  = $componentDetails.ShortName
+                # Currently the following line is redundant with ComponentSystemName
+                #'ComponentShortName'  = $componentDetails.ShortName
                 'ComponentSystemName' = $componentDetails.SystemName
             }
             # add all the details into an array object
@@ -98,7 +99,6 @@
             $fieldCounter += 1
         }
     }
-    # Write-Progress -Completed
-    # TODO fix the above line
+    Write-Progress -Activity 'Complete' -Completed
     return $result
 }
