@@ -181,6 +181,9 @@
         [ValidateLength(1, 256)]
         [String] $UserAgent,
 
+        [ValidateLength(1, 1024)]
+        [String] $VendorName,
+
         [ValidateRange('NonNegative')]
         [Int64] $WebRequestTimeoutSec,
 

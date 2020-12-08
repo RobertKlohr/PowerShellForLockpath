@@ -63,9 +63,8 @@
             'pageSize'                     = [Int32] 100
             'ProcessId'                    = [String] $global:PID.ToString()
             'productName'                  = [String] 'PowerShellForLockpath'
-            # The module version is not present until after the module is loaded therefore we need to parse the
-            # manifest and manually extract the module version number to use it in logging before the module is
-            # fully loaded.
+            # The module version is not present until after the module is loaded therefore we need to manually parse the
+            # manifest and extract the module version number to use it in logging before the module is fully loaded.
             'productVersion'               = [String] (Select-String -Path .\PowerShellForLockpath.psd1 -Pattern moduleversion -List -Raw -SimpleMatch).Split("'")[1]
             'runAsSystem'                  = [Boolean] $true
             'systemFields'                 = [Hashtable] @{
