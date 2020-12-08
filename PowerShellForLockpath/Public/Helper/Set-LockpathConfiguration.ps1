@@ -187,7 +187,7 @@
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )
 
-    Write-LockpathInvocationLog -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
 
     $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {
@@ -209,9 +209,9 @@
             # make a copy of the configuration exceluding non-persistent properties
             $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
             Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth 10 -Force
-            Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {
-            Write-LockpathLog -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level Warning
         }
     }
     Show-LockpathConfiguration

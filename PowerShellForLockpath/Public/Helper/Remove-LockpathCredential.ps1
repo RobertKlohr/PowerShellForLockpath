@@ -47,20 +47,20 @@ function Remove-LockpathCredential {
         [Switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
 
     if ($PSCmdlet.ShouldProcess('Cleared API credential (websession) from memory')) {
         if (-not $SessionOnly) {
             if ($PSCmdlet.ShouldProcess('Deleting API credential from the session and local file')) {
                 Remove-Item -Path $Script:LockpathConfig.credentialFilePath, -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-                Write-LockpathLog -Message "Removed the API credential file $($Script:LockpathConfig.credentialFilePath) from file system." -Level Warning -ErrorRecord $ev[0]
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Removed the API credential file $($Script:LockpathConfig.credentialFilePath) from file system." -Level Warning -ErrorRecord $ev[0]
 
                 if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-                    Write-LockpathLog -Message "Experienced a problem trying to remove the API credential file $($Script:LockpathConfig.credentialFilePath)." -Level Warning -ErrorRecord $ev[0]
+                    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Experienced a problem trying to remove the API credential file $($Script:LockpathConfig.credentialFilePath)." -Level Warning -ErrorRecord $ev[0]
                 }
             }
         }
         $Script:LockpathConfig.webSession = $null
-        Write-LockpathLog -Message 'Cleared API credential (websession) from memory.' -Level Verbose
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Cleared API credential (websession) from memory.' -Level Verbose
     }
 }

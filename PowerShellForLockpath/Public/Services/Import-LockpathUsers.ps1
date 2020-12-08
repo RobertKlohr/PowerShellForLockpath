@@ -49,20 +49,20 @@
         [System.IO.FileInfo] $FilePath
     )
 
-    Write-LockpathInvocationLog -ExcludeParameter FilePath -Service SecurityService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -ExcludeParameter FilePath -Service SecurityService
 
     try {
         $content = Import-Clixml -Path $FilePath
-        Write-LockpathLog -Message 'Restoring configuration settings from file.' -Level Verbose -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Restoring configuration settings from file.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
         return $content
     } catch {
-        Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
     }
 
     # try {
     #     $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
     #     return ($content | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth)
     # } catch {
-    #     Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
+    #     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
     # }
 }

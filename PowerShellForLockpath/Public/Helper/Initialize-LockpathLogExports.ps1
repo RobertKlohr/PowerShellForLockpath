@@ -55,7 +55,7 @@
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
     )
 
-    Write-LockpathInvocationLog -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
 
     ForEach ($Directory in $Directories) {
         New-Item -ItemType Directory -Path [FilePath]\$Directory

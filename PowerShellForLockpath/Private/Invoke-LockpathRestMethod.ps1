@@ -117,13 +117,13 @@
 
     # If the REST call is the login then redact the username and password sent in the body from the logs
     if ($Login) {
-        Write-LockpathInvocationLog -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -RedactParameter Body -Service PrivateHelper
     } else {
-        Write-LockpathInvocationLog -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
 
         # Check to see if there is a valid authentication cookie and if not exit early.
         if ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
-            Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
@@ -155,16 +155,21 @@
     } else {
         $params.Add('WebSession', $webSession)
     }
-    Write-LockpathLog -Message $Description -Level Verbose -Service PrivateHelper
+
+    # FIXME combine the multiple logging calls into a single log entry that show the call and the results (S or F)
+
+    # FIXME add write-versbose or write-debug lines to replace the intermediate logging that is now written to file
+
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $Description -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
     if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
         $params.Add('Body', $Body)
         if ($Script:LockpathConfig.logRequestBody) {
-            Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
         } else {
-            Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
         }
     }
-    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose -Service PrivateHelper
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
     try {
         $ProgressPreference = 'SilentlyContinue'
         #FIXME stopwatch testing
@@ -183,11 +188,14 @@
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()
-        Write-LockpathLog -Message 'API request successful.' -Level Verbose -Service PrivateHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'API request successful.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
         return $result.Content
     } catch {
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
             $statusCode = $_.Exception.Response.StatusCode.value__
+            # FIXME update the switch with use information
+            # FIXME comment out the status codes not currently implemented by the API as place holders (need to
+            # test and validate)
             switch ($statusCode) {
                 '400' {
                     $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error.'
@@ -215,7 +223,7 @@
                 }
             }
 
-            Write-LockpathLog -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Error -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
 
             # TODO the following will be more useful once the conversion to CEF format
             # $exceptionOutput = [ordered]@{
@@ -228,7 +236,7 @@
             #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
             # }
         } else {
-            Write-LockpathLog -ErrorRecord $_ -Level Error -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -ErrorRecord $_ -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
             throw
         }
     }

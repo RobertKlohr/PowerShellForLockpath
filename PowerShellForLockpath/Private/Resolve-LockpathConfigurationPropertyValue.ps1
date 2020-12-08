@@ -63,7 +63,7 @@
         $DefaultValue
     )
 
-    #Write-LockpathInvocationLog -Service PrivateHelper
+    #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
 
     if ($null -eq $InputObject) {
         return $DefaultValue
@@ -119,16 +119,16 @@
             if ($InputObject.$Name -is $typeType) {
                 return $true
             } else {
-                Write-LockpathInvocationLog -Service PrivateHelper
-                Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -Service PrivateHelper
+                Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
                 return $false
             }
         } else {
             return $false
         }
     } catch {
-        Write-LockpathInvocationLog -Service PrivateHelper
-        Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
         return $false
     }
 }

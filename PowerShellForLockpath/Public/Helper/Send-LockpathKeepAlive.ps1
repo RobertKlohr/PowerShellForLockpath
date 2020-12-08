@@ -41,7 +41,7 @@
         [Int32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval
     )
 
-    Write-LockpathInvocationLog -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
 
     # clean up any existing jobs
     $jobs = Get-Job
@@ -54,7 +54,7 @@
         Send-LockpathPing
         Set-LockpathConfiguration
     } catch {
-        Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie and Set-LockpathConfiguration to save it to disk to run Send-LockpathKeepAlive.' -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie and Set-LockpathConfiguration to save it to disk to run Send-LockpathKeepAlive.' -Level Warning
     }
 
     # the value in the configuration file is minutes so we need to multiple by 60 to get seconds

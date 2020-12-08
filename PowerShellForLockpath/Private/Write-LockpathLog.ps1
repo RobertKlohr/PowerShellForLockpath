@@ -25,12 +25,12 @@
         The actual string that is logged is obtained by passing this object to Out-String.
 
     .EXAMPLE
-        Write-LockpathLog -Message "Everything worked." -Path "c:\Temp\PowerShellForLockpath.log"
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Everything worked." -Path "c:\Temp\PowerShellForLockpath.log"
 
         Writes the message "Everything worked." to the screen as well as to a log file at "c:\Temp\PowerShellForLockpath.log", with the caller's username and a date/time stamp prepended to the message.
 
     .EXAMPLE
-        Write-LockpathLog -Message ("Everything worked.", "No cause for alarm.") -Path "c:\Temp\PowerShellForLockpath.log"
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message ("Everything worked.", "No cause for alarm.") -Path "c:\Temp\PowerShellForLockpath.log"
 
         Writes the following message to the screen as well as to a log file at "c:\Temp\PowerShellForLockpath.log",
         with the caller's username and a date/time stamp prepended to the message:
@@ -39,7 +39,7 @@
         No cause for alarm.
 
     .EXAMPLE
-        Write-LockpathLog -Message "There may be a problem..." -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There may be a problem..." -Level Warning
 
         Writes the message "There may be a problem..." to the warning pipeline,
         as well as to the default log file with the caller's username and a date/time stamp
@@ -85,6 +85,8 @@
             ValueFromPipelineByPropertyName = $true)]
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service,
+
+        [String] $FunctionName,
 
         [System.Management.Automation.ErrorRecord] $ErrorRecord,
 
@@ -194,7 +196,7 @@
         $deviceProduct = $Script:LockpathConfig.productName
         $deviceVendor = $Script:LockpathConfig.vendorName
         $deviceVersion = $Script:LockpathConfig.productVersion
-        $name = $Message
+        $name = $FunctionName
 
         $cefLogEntry = $cefVersion, $deviceVendor, $deviceProduct, $deviceVersion, $deviceEventClassID, $Name, $Severity, $extension -join '|'
 

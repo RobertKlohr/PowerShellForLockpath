@@ -53,7 +53,7 @@
         [Array] $ComponentIds
     )
 
-    Write-LockpathInvocationLog -Service ComponentService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {

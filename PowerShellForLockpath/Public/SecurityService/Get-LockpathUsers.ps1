@@ -100,7 +100,7 @@ function Get-LockpathUsers {
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Service SecurityService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
 
     if ($All) {
         $PageIndex = 0
@@ -126,6 +126,6 @@ function Get-LockpathUsers {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ReportService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
     }
 }

@@ -41,9 +41,9 @@
         [Switch] $KeepAlive
     )
 
-    Write-LockpathInvocationLog -Service SecurityService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
 
-    $credential = Import-LockpathCredential
+    $credential = $Script:LockpathConfig.credential
     $hashBody = [ordered]@{
         'username' = $credential.username
         'password' = $credential.GetNetworkCredential().Password
@@ -63,6 +63,6 @@
         }
         return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
     }
 }

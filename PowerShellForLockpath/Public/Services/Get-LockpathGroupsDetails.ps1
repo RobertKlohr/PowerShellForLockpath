@@ -66,7 +66,7 @@
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Service ComponentService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
 
     $Body = @{
         'pageIndex' = $PageIndex
@@ -98,13 +98,13 @@
                 # Array
                 # $result += $userDetails
             } catch {
-                Write-LockpathLog -Message "There was a problem retriving details group Id: $($group.Id)." -Level Warning -ErrorRecord $ev[0] -Service ComponentService
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details group Id: $($group.Id)." -Level Warning -ErrorRecord $ev[0] -Service ComponentService
             }
             Write-Progress -Id 0 -Activity "Get details for $groupsProgress groups:" -CurrentOperation "Getting details for group: $i $($group.Name)" -PercentComplete ($i / $groupsProgress * 100)
             $i += 1
         }
         return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ComponentService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
     }
 }

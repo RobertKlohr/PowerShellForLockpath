@@ -94,7 +94,7 @@ function Get-LockpathRecordsDetails {
         [Array] $SortOrder = @()
     )
 
-    Write-LockpathInvocationLog -Service ComponentService
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
 
     $Body = @{
         'componentId' = $ComponentId
@@ -116,6 +116,6 @@ function Get-LockpathRecordsDetails {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
         return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ComponentService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
     }
 }

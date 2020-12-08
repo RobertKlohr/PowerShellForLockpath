@@ -64,7 +64,7 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -ExcludeParameter FilePath -Service ReportService
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -ExcludeParameter FilePath -Service ReportService
     }
 
     process {
@@ -82,7 +82,7 @@
                 return $result
             }
         } else {
-            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ReportService
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
         }
     }
 

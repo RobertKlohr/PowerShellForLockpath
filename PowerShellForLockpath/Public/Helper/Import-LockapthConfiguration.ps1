@@ -42,7 +42,7 @@
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
-    Write-LockpathInvocationLog -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
 
     try {
         $savedLockpathConfig = Import-Clixml -Path $FilePath
@@ -55,7 +55,8 @@
             }
         }
         $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
+        $Script:LockpathConfig.credential = Import-LockpathCredential
     } catch {
-        Write-LockpathLog -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
     }
 }

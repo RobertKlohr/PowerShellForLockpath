@@ -36,7 +36,7 @@
 
     param()
 
-    Write-LockpathInvocationLog -Service PrivateHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
 
     $credential = $Script:LockpathConfig.credential
 
@@ -46,11 +46,11 @@
         try {
             $content = Import-Clixml -Path $Script:LockpathConfig.credentialFilePath
             $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
-            Write-LockpathLog -Message 'Importing API credential from file. This value can be cleared by calling Remove-LockpathCredential.' -Level Verbose -Service PrivateHelper
+            Write-Information -Message 'Importing API credential from file. This value can be cleared by calling Remove-LockpathCredential.'
             $Script:LockpathConfig.credential = $credential
             return $credential
         } catch {
-            Write-LockpathLog -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
         }
     }
 }

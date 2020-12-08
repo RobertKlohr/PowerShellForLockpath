@@ -20,10 +20,10 @@
         An optional array of parameter names that should simply not be logged.
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
 
     .INPUTS
         Management.Automation.InvocationInfo, String
@@ -79,5 +79,5 @@
             }
         }
     }
-    Write-LockpathLog -Message "Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Level Verbose -Service $Service
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $Invocation.MyCommand -Level Verbose -Message "Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Service $Service
 }
