@@ -14,9 +14,6 @@
     .PARAMETER Level
         The type of message to be logged.
 
-    .PARAMETER Indent
-        The number of spaces to indent the line in the log file.
-
     .PARAMETER FilePath
         The log file path.
 
@@ -42,9 +39,9 @@
         No cause for alarm.
 
     .EXAMPLE
-        Write-LockpathLog -Message "There may be a problem..." -Level Warning -Indent 2
+        Write-LockpathLog -Message "There may be a problem..." -Level Warning
 
-        Writes the message "There may be a problem..." to the warning pipeline indented two spaces,
+        Writes the message "There may be a problem..." to the warning pipeline,
         as well as to the default log file with the caller's username and a date/time stamp
         prepended to the message.
 
@@ -73,9 +70,6 @@
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be
-    # able to access the PID for logging purposes, and it is accessed via a global variable.')]
-
     param(
         [Parameter(ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
@@ -83,18 +77,38 @@
         [AllowEmptyString()]
         [AllowNull()]
         # FIXME does this need to be an array or will it always be just a string?
-        [string[]] $Message = @(),
+        # [String[]] $Message = @(),
+        # Switching to string to test
+        [String] $Message,
 
-        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
-        [String] $Level = 'Information',
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
+        [String] $Service,
 
-        [ValidateRange(1, 30)]
-        [UInt16] $Indent = 0,
+        [System.Management.Automation.ErrorRecord] $ErrorRecord,
 
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
 
-        [System.Management.Automation.ErrorRecord] $ErrorRecord
+        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
+        [String] $Level = $Script:LockpathConfig.loggingLevel
 
+        # #Possible CEF Extension Message Values
+        # [Int32] $dpdt,
+        # [String] $duser,
+        # [DateTime] $end,
+        # #[String] $filePath,
+        # [String] $fname,
+        # [Int32] $fsize,
+        # [Int32] $in,
+        # [Int32] $out,
+        # [String] $outcome,
+        # [String] $reason,
+        # [String] $request,
+        # [String] $requestClientApplication,
+        # [String] $requestContext,
+        # [String] $requestMethod,
+        # [DateTime] $start
     )
 
     begin {
@@ -118,64 +132,73 @@
             return
         }
 
-        # Finalize the string to be logged.
-        $finalMessage = $messages -join ' ' | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
+        $consoleMessage = $messages -join '||'
 
-        # Build the console and log-specific messages.
-        $date = Get-Date
-        $dateString = $date.ToString('yyyy-MM-dd HH:mm:ss')
+        # Build the CEF extension message
+
+        # msg: An arbitrary message giving more details about the event.
+        $msg = 'msg=' + $Message
+
+        # rt: The time at which the event related to the activity was received.
         if ($Script:LockpathConfig.logTimeAsUtc) {
-            $dateString = $date.ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ssZ')
-        }
-
-        $consoleMessage = '{0}{1}' -f
-        (' ' * $Indent),
-        $finalMessage
-
-        if ($Script:LockpathConfig.logProcessId) {
-            $maxPidDigits = 10 # This is an estimate (see https://stackoverflow.com/questions/17868218/what-is-the-maximum-process-id-on-windows)
-            $pidColumnLength = $maxPidDigits + '[]'.Length
-            $logFileMessage = "{0}{1} : {2, -$pidColumnLength} : {3} : {4} : {5}" -f
-            (' ' * $Indent),
-            $dateString,
-            "[$global:PID]",
-            $env:username,
-            $Level.ToUpper(),
-            $finalMessage
+            $rt = 'rt=' + (Get-Date -AsUTC -Format 'MMM dd yyyy HH:mm:ss.fff zzz')
         } else {
-            $logFileMessage = '{0}{1} : {2} : {3} : {4}' -f
-            (' ' * $Indent),
-            $dateString,
-            $env:username,
-            $Level.ToUpper(),
-            $finalMessage
+            $rt = 'rt=' + (Get-Date -Format 'MMM dd yyyy HH:mm:ss.fff zzz')
         }
 
-        # Write the message to screen/log. Note that the below logic could easily be moved to a separate helper
-        # function, but a conscious decision was made to leave it here. When this function is called with -Level
-        # Error, Write-Error will generate a WriteErrorException with the origin being Write-LockpathLog. If this
-        # call  is moved to a helper function, the origin of the WriteErrorException will be the helper function,
-        # which could confuse an end user.
+        # shost: The format should be a fully qualified domain name (FQDN) associated with the source node.
+        $shost = 'shost=' + ("$env:computername.$env:userdnsdomain").ToLower()
+
+        # sourceServiceName: The service that is responsible for generating this event.
+        $sourceServiceName = 'sourceServiceName=PowerShell'
+
+        # spid: The ID of the source process associated with the event.
+        $spid = 'spid=' + ($Script:LockpathConfig.ProcessId)
+
+        # suser: Identifies the source user by name.
+        $suser = 'suser=' + ($env:username)
+
+        $extension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
+
+        # Write the message to screen and set severity for logging.
         switch ($Level) {
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
+                $severity = 'High'
+                # FIXME validate the ErrorAction setting and the above script-level setting
+                # Write-Error $consoleMessage -ErrorAction SilentlyContinue
                 Write-Error $consoleMessage
             }
             'Warning' {
+                $severity = 'Medium'
                 Write-Warning $consoleMessage
             }
             'Verbose' {
+                $severity = 'Low'
                 Write-Verbose $consoleMessage
             }
             'Debug' {
+                $severity = 'Low'
                 Write-Debug $consoleMessage
             }
             'Information' {
+                $severity = 'Low'
                 Write-Information $consoleMessage -InformationAction Continue
             }
         }
 
+        # Set build CEF log entry
+        $cefVersion = 'CEF:0'
+        $DeviceEventClassID = $Service
+        $deviceProduct = $Script:LockpathConfig.productName
+        $deviceVendor = $Script:LockpathConfig.vendorName
+        $deviceVersion = $Script:LockpathConfig.productVersion
+        $name = $Message
+
+        $cefLogEntry = $cefVersion, $deviceVendor, $deviceProduct, $deviceVersion, $deviceEventClassID, $Name, $Severity, $extension -join '|'
+
+        # Write CEF log entry to file.
         try {
             if ([String]::IsNullOrWhiteSpace($FilePath)) {
                 Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
@@ -183,7 +206,7 @@
                 if (-not (Test-Path $FilePath)) {
                     New-Item -Path $FilePath -ItemType File -Force
                 }
-                $logFileMessage | Out-File -FilePath $FilePath -Append
+                $cefLogEntry | Out-File -FilePath $FilePath -Append
             }
         } catch {
             $output = @()

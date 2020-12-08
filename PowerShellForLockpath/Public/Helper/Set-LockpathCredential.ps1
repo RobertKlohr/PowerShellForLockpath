@@ -78,7 +78,7 @@
         [Switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     if (-not $PSBoundParameters.ContainsKey('Credential')) {
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'

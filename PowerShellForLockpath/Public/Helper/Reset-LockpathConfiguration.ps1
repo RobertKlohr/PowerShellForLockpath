@@ -49,7 +49,7 @@ function Reset-LockpathConfiguration {
         [Switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess("Reseting configuration file: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {

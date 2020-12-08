@@ -43,13 +43,11 @@
     .PARAMETER KeepAliveInterval
         The interval of the background job in minutes.
 
+    .PARAMETER LoggingLevel
+        The level of logging to write to the log file.  This is independent of console messages.
+
     .PARAMETER LogPath
         The location of the log file where all activity will be written.
-
-    .PARAMETER LogProcessId
-        If specified, the Process ID of the current PowerShell session will be included in each log entry.  This
-        can be useful if you have concurrent PowerShell sessions all logging to the same file, as it would then be
-        possible to filter results based on ProcessId.
 
     .PARAMETER LogRequestBody
         If specified, the JSON body of the REST request will be logged to verbose output. This can be helpful for
@@ -66,6 +64,12 @@
 
     .PARAMETER PageSize
         The size of the page results to return.
+
+    .PARAMETER ProcessId
+        The Process ID of the current PowerShell session that will be included in each log entry.  This
+        can be useful if you have concurrent PowerShell sessions all logging to the same file, as it would then be
+        possible to filter results based on ProcessId. This value can be manually overwritten using
+        Set-LockpathConfiguration to add a reusable tag to each PowerShell session.
 
     .PARAMETER RunAsSystem
         Specifies if the records being imported or updated will show the created by and/or updated by attributes as
@@ -147,11 +151,12 @@
         [Int32] $jsonConversionDepth,
 
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval,
+        [Int32] $KeepAliveInterval,
+
+        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
+        [String] $LoggingLevel,
 
         [String] $LogPath,
-
-        [Switch] $LogProcessId,
 
         [Switch] $LogRequestBody,
 
@@ -164,6 +169,8 @@
 
         [ValidateRange('Positive')]
         [Int32] $PageSize,
+
+        [String] $ProcessId,
 
         [Boolean] $RunAsSystem,
 
@@ -180,7 +187,7 @@
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {
@@ -199,8 +206,8 @@
 
     if (-not $SessionOnly) {
         try {
-            # make a copy of the configuration without the authenticationCookie or credential property that are saved to the local profile
-            $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential
+            # make a copy of the configuration exceluding non-persistent properties
+            $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
             Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth 10 -Force
             Write-LockpathLog -Message 'Successfully saved configuration to disk.' -Level Verbose
         } catch {

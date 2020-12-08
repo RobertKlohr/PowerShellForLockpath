@@ -117,13 +117,13 @@
 
     # If the REST call is the login then redact the username and password sent in the body from the logs
     if ($Login) {
-        Write-LockpathInvocationLog -RedactParameter Body -Confirm:$false -WhatIf:$false
+        Write-LockpathInvocationLog -Service PrivateHelper
     } else {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+        Write-LockpathInvocationLog -Service PrivateHelper
 
         # Check to see if there is a valid authentication cookie and if not exit early.
         if ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
-            Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning
+            Write-LockpathLog -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning -Service PrivateHelper
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
@@ -155,16 +155,16 @@
     } else {
         $params.Add('WebSession', $webSession)
     }
-    Write-LockpathLog -Message $Description -Level Verbose
+    Write-LockpathLog -Message $Description -Level Verbose -Service PrivateHelper
     if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
         $params.Add('Body', $Body)
         if ($Script:LockpathConfig.logRequestBody) {
-            Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose
+            Write-LockpathLog -Message "Request includes a body: $Body" -Level Verbose -Service PrivateHelper
         } else {
-            Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose
+            Write-LockpathLog -Message 'Request includes a body: <request body logging disabled>' -Level Verbose -Service PrivateHelper
         }
     }
-    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose
+    Write-LockpathLog -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose -Service PrivateHelper
     try {
         $ProgressPreference = 'SilentlyContinue'
         #FIXME stopwatch testing
@@ -183,7 +183,7 @@
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()
-        Write-LockpathLog -Message 'API request successful.' -Level Verbose
+        Write-LockpathLog -Message 'API request successful.' -Level Verbose -Service PrivateHelper
         return $result.Content
     } catch {
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
@@ -215,7 +215,7 @@
                 }
             }
 
-            Write-LockpathLog -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Error
+            Write-LockpathLog -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Error -Service PrivateHelper
 
             # TODO the following will be more useful once the conversion to CEF format
             # $exceptionOutput = [ordered]@{
@@ -228,7 +228,7 @@
             #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
             # }
         } else {
-            Write-LockpathLog -ErrorRecord $_ -Level Error
+            Write-LockpathLog -ErrorRecord $_ -Level Error -Service PrivateHelper
             throw
         }
     }

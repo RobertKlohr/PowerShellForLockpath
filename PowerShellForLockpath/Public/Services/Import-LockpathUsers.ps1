@@ -49,14 +49,14 @@
         [System.IO.FileInfo] $FilePath
     )
 
-    Write-LockpathInvocationLog -ExcludeParameter FilePath -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -ExcludeParameter FilePath -Service SecurityService
 
     try {
         $content = Import-Clixml -Path $FilePath
-        Write-LockpathLog -Message 'Restoring configuration settings from file.' -Level Verbose
+        Write-LockpathLog -Message 'Restoring configuration settings from file.' -Level Verbose -Service SecurityService
         return $content
     } catch {
-        Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
+        Write-LockpathLog -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning -Service SecurityService
     }
 
     # try {

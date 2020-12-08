@@ -49,7 +49,7 @@
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service SecurityService
 
     if ($PSCmdlet.ShouldProcess("Updating users with: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Updating users with:')) {
 
@@ -66,12 +66,12 @@
                     $ProgressPreference = 'Continue'
                 }
             } catch {
-                Write-LockpathLog -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0]
+                Write-LockpathLog -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0] -Service SecurityService
             }
             Write-Progress -Id 0 -Activity "Updating $usersProgress users:" -CurrentOperation "Updating user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
             $i += 1
         }
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service SecurityService
     }
 }

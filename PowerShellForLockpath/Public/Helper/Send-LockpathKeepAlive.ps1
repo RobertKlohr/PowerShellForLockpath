@@ -41,7 +41,7 @@
         [Int32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     # clean up any existing jobs
     $jobs = Get-Job

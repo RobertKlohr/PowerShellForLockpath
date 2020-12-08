@@ -32,7 +32,11 @@
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
+
     param()
+    # FIXME update this to be just configuration and not environmental (host) properties
+    # FIXME maybe create a separate variable for the environmental session information
 
     # Create a configuration object with all the default values.
     if ($null -eq $Script:LockpathConfig) {
@@ -53,13 +57,17 @@
             'instanceProtocol'             = [String] 'https'
             'jsonConversionDepth'          = [Int32] 100
             'keepAliveInterval'            = [Int32] 5
+            'loggingLevel'                 = [String] 'Information'
             'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
-            'logProcessId'                 = [Boolean] $false
             'logRequestBody'               = [Boolean] $false
             'logTimeAsUtc'                 = [Boolean] $false
             'methodContainsBody'           = [System.Collections.ArrayList] ('Delete', 'Post')
+            'moduleVersion'                = [String] (Get-Module -ListAvailable -Name PowerShellForLockpath | Select-Object -ExpandProperty Version)
             'pageIndex'                    = [Int32] 0
             'pageSize'                     = [Int32] 100
+            'ProcessId'                    = [String] $global:PID.ToString()
+            'productName'                  = [String] 'PowerShellForLockpath'
+            'productVersion'               = [String] '0.0.1'
             'runAsSystem'                  = [Boolean] $true
             'systemFields'                 = [Hashtable] @{
                 'Begin Date'         = 'BeginDate'
@@ -75,13 +83,14 @@
                 'Workflow Stage'     = 'WorkflowStage'
             }
             'UserAgent'                    = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
+            'vendorName'                   = [String] 'git.io/powershellforlockpath'
             'webRequestTimeoutSec'         = [Int32] 0
         }
     }
 
-    # Normally Write-LockpathInvocationLog is the first call in a function except here since the location of the
+    # Normally Write-LockpathInvocationLog -Service PrivateHelper
     # log file is only set in the previous line.
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PrivateHelper
 
     # Load the persistant configuration file if it exists and overwrite any default values set in this function.
     Import-LockpathConfiguration

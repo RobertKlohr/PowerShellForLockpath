@@ -47,7 +47,7 @@ function Remove-LockpathCredential {
         [Switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     if ($PSCmdlet.ShouldProcess('Cleared API credential (websession) from memory')) {
         if (-not $SessionOnly) {

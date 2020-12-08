@@ -26,13 +26,13 @@
     CompanyName          = 'Robert Klohr'
 
     # Copyright statement for this module
-    Copyright            = '(c) 2020 Robert Klohr. All rights reserved.'
+    Copyright            = '(c) 2020-2021 Robert Klohr. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description          = 'PowerShell wrapper for the Lockpath platform API.'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion    = '7.0'
+    PowerShellVersion    = '7.1.0'
 
     # Name of the Windows PowerShell host required by this module PowerShellHostName     = ''
 
@@ -145,7 +145,7 @@
             Tags         = @('Lockpath', 'API', 'PowerShell')
 
             # A URL to the license for this module.
-            LicenseUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath/blob/master/LICENSE'
+            LicenseUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath/blob/master/.github/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath'

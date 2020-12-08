@@ -45,7 +45,7 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+        Write-LockpathInvocationLog -Service SecurityService
     }
 
     process {
@@ -61,7 +61,7 @@
             [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
             return $result
         } else {
-            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+            Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ReportService
         }
     }
 

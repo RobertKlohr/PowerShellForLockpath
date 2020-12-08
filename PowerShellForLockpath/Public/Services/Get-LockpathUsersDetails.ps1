@@ -62,7 +62,7 @@
         # [Int32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service SecurityService
 
     if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
 
@@ -82,13 +82,13 @@
                 $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
                 $result += $userDetails
             } catch {
-                Write-LockpathLog -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0]
+                Write-LockpathLog -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0] -Service SecurityService
             }
             Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
             $i += 1
         }
         return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service SecurityService
     }
 }

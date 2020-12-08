@@ -33,13 +33,13 @@
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PrivateHelper
 
     try {
         $cookie = Import-Clixml -Path $Script:LockpathConfig.authenticationCookieFilePath
         $Script:LockpathConfig.authenticationCookie = $cookie
         return $cookie
     } catch {
-        Write-LockpathLog -Message 'Unable to import the authentication cookie from the local file storage.' -Level Warning
+        Write-LockpathLog -Message 'Unable to import the authentication cookie from the local file storage.' -Level Warning -Service PrivateHelper
     }
 }

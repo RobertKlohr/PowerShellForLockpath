@@ -51,7 +51,7 @@
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service PublicHelper
 
     if ($Saved) {
         Import-LockpathConfiguration -FilePath $FilePath

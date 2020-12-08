@@ -27,6 +27,8 @@ foreach ($file in @($public + $private)) {
 
     }
 }
+
+# FIXME clean up before deployment
 # function Get-PD {
 #     [CmdletBinding()]
 #     Param()
@@ -42,6 +44,4 @@ foreach ($file in @($public + $private)) {
 # Export-ModuleMember -Function $public.Basename
 
 Initialize-LockpathConfiguration
-
-# FIXME is there a need or value to exporting the configuration variable after development?
 Export-ModuleMember -Variable 'LockpathConfig'

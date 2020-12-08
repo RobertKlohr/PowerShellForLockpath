@@ -63,7 +63,7 @@
         $DefaultValue
     )
 
-    #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    #Write-LockpathInvocationLog -Service PrivateHelper
 
     if ($null -eq $InputObject) {
         return $DefaultValue
@@ -119,16 +119,16 @@
             if ($InputObject.$Name -is $typeType) {
                 return $true
             } else {
-                Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
-                Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
+                Write-LockpathInvocationLog -Service PrivateHelper
+                Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -Service PrivateHelper
                 return $false
             }
         } else {
             return $false
         }
     } catch {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
-        Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning
+        Write-LockpathInvocationLog -Service PrivateHelper
+        Write-LockpathLog -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -Service PrivateHelper
         return $false
     }
 }

@@ -34,19 +34,7 @@ function Send-LockpathPing {
 
     param()
 
-    # [string] $functionName = $MyInvocation.MyCommand
-
-    # Write-Debug -Message "Debug $functionName" -
-
-    # Write-Error -Message "Error $functionName"
-
-    # Write-Warning -Message "Warning $functionName"
-
-    # Write-Verbose -Message "Verbose $functionName"
-
-    # Write-Information -MessageData "Verbose $functionName"
-
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false
+    Write-LockpathInvocationLog -Service SecurityService
 
     $params = @{
         'UriFragment' = 'SecurityService/Ping'
@@ -54,12 +42,10 @@ function Send-LockpathPing {
         'Description' = "Sending Ping API request to $($Script:LockpathConfig.instanceName) to extend session."
     }
 
-    # if ($PSCmdlet.ShouldProcess("Refresh session for: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Refresh session for:')) {
     if ($PSCmdlet.ShouldProcess("Refresh session for: $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Refresh session for:')) {
         [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        Write-Information $result
-        return
+        return $result
     } else {
-        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Confirm:$false -WhatIf:$false
+        Write-LockpathLog -Message "$($PSCmdlet.CommandRuntime.ToString()) ShouldProcess confirmation was denied." -Level Verbose -Service ReportService
     }
 }

@@ -20,10 +20,10 @@
         An optional array of parameter names that should simply not be logged.
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Invocation $MyInvocation
+        Write-LockpathInvocationLog -Service PrivateHelper
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Invocation $MyInvocation -ExcludeParameter @('Properties', 'Metrics')
+        Write-LockpathInvocationLog -Service PrivateHelper
 
     .INPUTS
         Management.Automation.InvocationInfo, String
@@ -51,6 +51,11 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
+        [String] $Service,
+
         [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
 
         [string[]] $RedactParameter,
@@ -74,5 +79,5 @@
             }
         }
     }
-    Write-LockpathLog -Message "[$($Invocation.MyCommand.Module.Version)] Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Level Verbose
+    Write-LockpathLog -Message "Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Level Verbose -Service $Service
 }
