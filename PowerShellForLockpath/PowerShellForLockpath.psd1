@@ -89,8 +89,8 @@
         'Remove-LockpathRecordAttachments',
         'Remove-LockpathUser',
         'Reset-LockpathConfiguration',
-        # See todo comment in function file as to why this is not implemented
-        # 'Send-LockpathAssessments',
+        # See todo comment in function file as to why Send-LockpathAssessments is not working
+        'Send-LockpathAssessments',
         'Send-LockpathKeepAlive',
         'Send-LockpathLogin',
         'Send-LockpathLogout',

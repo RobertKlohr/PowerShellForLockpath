@@ -61,21 +61,38 @@ function Get-LockpathFieldList {
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = "ComponentService/GetFieldList?componentId=$ComponentId"
+            'Description' = 'Getting Field List By Component Id'
             'Method'      = 'GET'
-            'Description' = "Getting fields from component with Id: $ComponentId"
+            'Query'       = "?ComponentId=$ComponentId"
+            'Service'     = $service
+            'UriFragment' = 'GetFieldList'
         }
 
-        if ($PSCmdlet.ShouldProcess("Getting field list from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting field list from component with Id:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $target = "ComponentId=$ComponentId"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

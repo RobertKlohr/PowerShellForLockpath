@@ -37,9 +37,13 @@
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
 
-    if ($PSCmdlet.ShouldProcess("Test API authentication: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Test API authentication:')) {
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+    if ($PSCmdlet.ShouldProcess("Test API authentication:  $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Test API authentication:')) {
         if (Send-LockpathPing) {
             return $true
         } elseif (Send-LockpathPing) {
@@ -48,6 +52,6 @@
             return $false
         }
     } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PublicHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
     }
 }

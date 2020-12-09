@@ -21,12 +21,16 @@
         [System.IO.FileInfo] $FilePath
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PrivateHelper'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     $null = New-Item -Path $FilePath -Force
     $Credential | Export-Clixml -Path $FilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
 
     if (($null -ne $ev) -and ($ev.Count -gt 0)) {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to persist credentials disk.  They will remain for this PowerShell session only.' -Level Warning -ErrorRecord $ev[0] -Service PrivateHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message 'Failed to persist credentials disk.  They will remain for this PowerShell session only.' -ErrorRecord $ev[0]
     }
 }

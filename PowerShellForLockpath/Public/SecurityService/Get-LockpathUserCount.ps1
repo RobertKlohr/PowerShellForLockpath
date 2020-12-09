@@ -45,30 +45,55 @@ function Get-LockpathUserCount {
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    If ($Filter.Count -gt 0) {
-        $Body = @{}
-        $Body.Add('filters', $Filter)
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    $params = @{
-        'UriFragment' = 'SecurityService/GetUserCount'
-        'Method'      = 'POST'
-        'Description' = "Getting user count with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        If ($Filter.Count -gt 0) {
+            $Body = [ordered]@{}
+            $Body.Add('filters', $Filter)
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting User Count By Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetUserCount'
+        }
+
+        # FIXME check all functions with filters
+
+        # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
+        # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
+        # and to then wrap it in a set of brackets.
+        # When the bug is fixed we can delete the next line.
+        $params.Body = "[$($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth)]"
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
-    # To compensate for this bug we need to edit the JSON in $params.body so that it does not use the filters key
-    # and to then wrap it in a set of brackets.
-    # When the bug is fixed we can delete the next line.
-    $params.Body = "[$($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth)]"
-
-    if ($PSCmdlet.ShouldProcess("Getting user count with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting user count with body:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+    end {
     }
 }

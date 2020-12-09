@@ -66,9 +66,13 @@
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'SecurityService'
 
-    $Body = @{
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+    $Body = [ordered]@{
         'pageIndex' = $PageIndex
         'pageSize'  = $PageSize
     }
@@ -84,7 +88,7 @@
         'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
     }
 
-    if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    if ($PSCmdlet.ShouldProcess("Getting groups with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
         $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $groupsProgress = $groups.count
         # Array
@@ -98,13 +102,13 @@
                 # Array
                 # $result += $userDetails
             } catch {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details group Id: $($group.Id)." -Level Warning -ErrorRecord $ev[0] -Service ComponentService
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details group Id: $($group.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
             }
             Write-Progress -Id 0 -Activity "Get details for $groupsProgress groups:" -CurrentOperation "Getting details for group: $i $($group.Name)" -PercentComplete ($i / $groupsProgress * 100)
             $i += 1
         }
         return $result
     } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
     }
 }

@@ -55,21 +55,38 @@ function Get-LockpathWorkflow {
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = "ComponentService/GetWorkflow?Id=$WorkflowId"
+            'Description' = 'Getting Workflow By Id'
             'Method'      = 'GET'
-            'Description' = "Getting Workflow with Workflow Id: $WorkflowId"
+            'Query'       = "?Id=$WorkflowId"
+            'Service'     = $service
+            'UriFragment' = 'GetWorkflow'
         }
 
-        if ($PSCmdlet.ShouldProcess("Getting workflow with Id: $([environment]::NewLine) $WorkflowId", $WorkflowId, 'Getting workflow with Id:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

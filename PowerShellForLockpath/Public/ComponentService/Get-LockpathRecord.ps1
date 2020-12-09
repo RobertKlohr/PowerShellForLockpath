@@ -55,21 +55,38 @@ function Get-LockpathRecord {
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = "ComponentService/GetRecord?componentId=$ComponentId&recordId=$RecordId"
+            'Description' = 'Getting Record By Component Id'
             'Method'      = 'GET'
-            'Description' = "Getting record with component Id: $ComponentId & record Id: $RecordId"
+            'Query'       = "ComponentId=$ComponentId&RecordId=$RecordId"
+            'Service'     = $service
+            'UriFragment' = 'GetRecord'
         }
 
-        if ($PSCmdlet.ShouldProcess("Getting record with: $([environment]::NewLine) component Id $ComponentId & record Id: $RecordId", "component Id $ComponentId & record Id: $RecordId", 'Getting record with:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $target = "ComponentId=$ComponentId & RecordId=$RecordId"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

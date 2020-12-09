@@ -51,7 +51,11 @@
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if ($Saved) {
         Import-LockpathConfiguration -FilePath $FilePath

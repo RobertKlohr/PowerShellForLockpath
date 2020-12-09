@@ -34,13 +34,17 @@
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'SecurityService'
 
-    if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
         # check to see if the username is set in the login credential and exit early if it is null
         Import-LockpathCredential
         if ($null -eq $Script:LockpathConfig.credential.UserName) {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'No API username is present in the configuration. Use Set-LockpathCredential to set the API credential.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'No API username is present in the configuration. Use Set-LockpathCredential to set the API credential.' -FunctionName $functionName -Level $level -Service $service
             return
         }
 
@@ -59,6 +63,6 @@
         Return $apiUserDetails
 
     } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
     }
 }

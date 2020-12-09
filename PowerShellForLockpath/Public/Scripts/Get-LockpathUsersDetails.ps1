@@ -62,9 +62,13 @@
         # [Int32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'SecurityService'
 
-    if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
 
         # FIXME not sure where to test for valid session yet
         # Test-LockpathAuthentication
@@ -82,13 +86,13 @@
                 $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
                 $result += $userDetails
             } catch {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0] -Service SecurityService
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
             }
             Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
             $i += 1
         }
         return $result
     } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
     }
 }

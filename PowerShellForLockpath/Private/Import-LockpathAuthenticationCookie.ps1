@@ -32,14 +32,18 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param()
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     try {
         $cookie = Import-Clixml -Path $Script:LockpathConfig.authenticationCookieFilePath
         $Script:LockpathConfig.authenticationCookie = $cookie
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service -Message "Imported authentication cookie from $($Script:LockpathConfig.authenticationCookieFilePath)"
         return $cookie
     } catch {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Unable to import the authentication cookie from the local file storage.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message 'Unable to import the authentication cookie from the local file storage.'
     }
 }

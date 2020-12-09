@@ -66,21 +66,38 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = "ComponentService/GetLookupReportColumnFields?lookupFieldId=$FieldId&fieldPathId=$FieldPathId"
+            'Description' = 'Getting Lookup Report Column Fields By Field Id & Field Path'
             'Method'      = 'GET'
-            'Description' = "Getting fields from field Id: $FieldId & field path Id: $FieldPathId"
+            'Query'       = "?LookupFieldId=$FieldId&FieldPathId=$FieldPathId"
+            'Service'     = $service
+            'UriFragment' = 'GetLookupReportColumnFields'
         }
 
-        if ($PSCmdlet.ShouldProcess("Getting fields from lookupfield with: $([environment]::NewLine) field Id: $FieldId & field path Id: $FieldPathId", "field Id: $FieldId & field path Id: $FieldPathId", 'Getting fields from lookupfield with:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $target = "LookupFieldId=$FieldId & FieldPathId=$FieldPathId"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

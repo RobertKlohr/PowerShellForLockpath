@@ -1,6 +1,8 @@
 ﻿function Set-LockpathUsers {
 
-    #FIXME Need to configure parameters and filtering
+    # FIXME Need to configure parameters and filtering
+    # FIXME Check and update all help sections
+    # FIXME check and update all parameter sections
 
     <#
     .SYNOPSIS
@@ -49,9 +51,13 @@
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'SecurityService'
 
-    if ($PSCmdlet.ShouldProcess("Updating users with: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Updating users with:')) {
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+    if ($PSCmdlet.ShouldProcess("Updating users with:  $($params.Body)", $($params.Body), 'Updating users with:')) {
 
         $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
@@ -66,12 +72,12 @@
                     $ProgressPreference = 'Continue'
                 }
             } catch {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level Warning -ErrorRecord $ev[0] -Service SecurityService
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
             }
             Write-Progress -Id 0 -Activity "Updating $usersProgress users:" -CurrentOperation "Updating user: $i $($user.Fullname)" -PercentComplete ($i / $usersProgress * 100)
             $i += 1
         }
     } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
     }
 }

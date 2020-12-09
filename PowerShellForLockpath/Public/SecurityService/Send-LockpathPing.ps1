@@ -34,18 +34,41 @@ function Send-LockpathPing {
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    $params = @{
-        'UriFragment' = 'SecurityService/Ping'
-        'Method'      = 'GET'
-        'Description' = "Sending Ping API request to $($Script:LockpathConfig.instanceName) to extend session."
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    if ($PSCmdlet.ShouldProcess("Refresh session for: $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Refresh session for:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $params = @{
+            'Description' = 'Sending Ping'
+            'Method'      = 'GET'
+            'Service'     = $service
+            'UriFragment' = 'Ping'
+        }
+
+        $target = $params.Description
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
+    }
+
+    end {
     }
 }

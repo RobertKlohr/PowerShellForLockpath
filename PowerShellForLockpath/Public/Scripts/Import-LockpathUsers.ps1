@@ -49,20 +49,24 @@
         [System.IO.FileInfo] $FilePath
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -ExcludeParameter FilePath -Service SecurityService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'SecurityService'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     try {
         $content = Import-Clixml -Path $FilePath
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Restoring configuration settings from file.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Restoring configuration settings from file.' -FunctionName $functionName -Level $level -Service $service
         return $content
     } catch {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -FunctionName $functionName -Level $level -Service $service
     }
 
     # try {
     #     $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
     #     return ($content | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth)
     # } catch {
-    #     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level Warning
+    #     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level $level
     # }
 }

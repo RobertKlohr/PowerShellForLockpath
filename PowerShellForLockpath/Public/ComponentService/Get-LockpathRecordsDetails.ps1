@@ -94,28 +94,51 @@ function Get-LockpathRecordsDetails {
         [Array] $SortOrder = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
-
-    $Body = @{
-        'componentId' = $ComponentId
-        'pageIndex'   = $PageIndex
-        'pageSize'    = $PageSize
-        'filters'     = $Filter
-        'fieldIds'    = $FieldIds
-        'sortOrder'   = $SortOrder
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
-    $params = @{
-        'UriFragment' = 'ComponentService/GetDetailRecords'
-        'Method'      = 'POST'
-        'Description' = "Getting records from component with Id: $ComponentId & filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $Body = [ordered]@{
+            'componentId' = $ComponentId
+            'pageIndex'   = $PageIndex
+            'pageSize'    = $PageSize
+            'filters'     = $Filter
+            'fieldIds'    = $FieldIds
+            'sortOrder'   = $SortOrder
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Records By Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetDetailRecords'
+        }
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $ComponentId", $ComponentId, 'Getting records from component with Id:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+    end {
     }
 }

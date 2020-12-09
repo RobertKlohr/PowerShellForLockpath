@@ -20,10 +20,10 @@
         An optional array of parameter names that should simply not be logged.
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
 
     .INPUTS
         Management.Automation.InvocationInfo, String
@@ -56,11 +56,16 @@
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service,
 
+        [String[]] $ExcludeParameter,
+
+        [String] $FunctionName = ($PSCmdlet.CommandRuntime.ToString()),
+
         [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
 
-        [string[]] $RedactParameter,
+        [String] $Level = 'Verbose',
 
-        [string[]] $ExcludeParameter
+        [String[]] $RedactParameter
+
     )
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
@@ -79,5 +84,5 @@
             }
         }
     }
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $Invocation.MyCommand -Level Verbose -Message "Executing: $($Invocation.MyCommand) $($params -join ' ')".Trim() -Service $Service
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($params -join ' ')".Trim()
 }

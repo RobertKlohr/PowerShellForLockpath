@@ -62,8 +62,11 @@
         [Parameter(Mandatory = $true)]
         $DefaultValue
     )
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PrivateHelper'
 
-    #Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if ($null -eq $InputObject) {
         return $DefaultValue
@@ -119,16 +122,14 @@
             if ($InputObject.$Name -is $typeType) {
                 return $true
             } else {
-                Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue."
                 return $false
             }
         } else {
             return $false
         }
     } catch {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue." -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue."
         return $false
     }
 }

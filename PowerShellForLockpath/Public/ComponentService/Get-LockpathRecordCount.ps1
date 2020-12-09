@@ -58,24 +58,47 @@ function Get-LockpathRecordCount {
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
-
-    $Body = @{
-        'componentId' = $ComponentId
-        'filters'     = $Filter
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
-    $params = @{
-        'UriFragment' = 'ComponentService/GetRecordCount'
-        'Method'      = 'POST'
-        'Description' = "Getting record count with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $Body = [ordered]@{
+            'componentId' = $ComponentId
+            'filters'     = $Filter
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Record County By Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetRecordCount'
+        }
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    if ($PSCmdlet.ShouldProcess("Getting record count for: $([environment]::NewLine) component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", "component Id: $ComponentId, record Id: $RecordId & filter $($params.Body)", 'Getting record count for:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+    end {
     }
 }

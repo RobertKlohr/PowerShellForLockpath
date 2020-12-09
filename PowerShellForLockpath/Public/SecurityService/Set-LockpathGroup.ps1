@@ -50,24 +50,38 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
     process {
-
-        $GroupId = $Attributes.Id
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
         $params = @{
-            'UriFragment' = 'SecurityService/UpdateGroup'
-            'Method'      = 'POST'
-            'Description' = "Updating group with Id: $GroupId and values $($Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Updating Group'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'UpdateGroup'
         }
-        if ($PSCmdlet.ShouldProcess("Updating group with group Id $($GroupId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating group with group with Id $($GroupId) and settings:")) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+
+        $target = "Properties=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

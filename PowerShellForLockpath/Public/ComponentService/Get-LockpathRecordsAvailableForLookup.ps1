@@ -71,29 +71,52 @@
         [Int32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
-
-    $Body = @{
-        'pageIndex' = $PageIndex
-        'pageSize'  = $PageSize
-        'fieldId'   = $FieldId
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
-    If ($RecordId) {
-        $Body.Add('recordId', $RecordId)
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $Body = [ordered]@{
+            'pageIndex' = $PageIndex
+            'pageSize'  = $PageSize
+            'fieldId'   = $FieldId
+        }
+
+        If ($RecordId) {
+            $Body.Add('recordId', $RecordId)
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Record Available For Lookup By Field Id & Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetAvailableLookupRecords'
+        }
+
+        $target = "FieldId=$FieldId & Filter=$RecordId"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    $params = @{
-        'UriFragment' = 'ComponentService/GetAvailableLookupRecords'
-        'Method'      = 'POST'
-        'Description' = "Getting records available for lookup from field with: $FieldId & filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-    }
-
-    if ($PSCmdlet.ShouldProcess("Getting records from component with Id: $([environment]::NewLine) $FieldId", $FieldId, 'Getting records from component with Id:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+    end {
     }
 }

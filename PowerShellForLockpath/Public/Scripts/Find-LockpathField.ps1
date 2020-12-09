@@ -1,10 +1,10 @@
-﻿function Get-LockpathFields {
+﻿function Find-LockpathField {
     <#
     .SYNOPSIS
-        Returns all field details for all fields or a subset of fields based on the provided componet Ids.
+        Returns all field details for selected fields based on the applied filter.
 
     .DESCRIPTION
-        Returns all field details for all fields or a subset of fields based on the provided componet Ids.
+        Returns all field details for selected fields based on the applied filter.
 
         Combines Get-LpComponentList, Get-LockpathComponent, Get-LpFieldList and Get-LockpathField.
 
@@ -21,12 +21,12 @@
         This can be used to limit the components used in retrieving the field details thereby increaseing performance.
 
     .EXAMPLE
-        Get-LockpathFields
+        Find-LockpathField
 
         Returns all field details from all fields in all components.
 
     .EXAMPLE
-        Get-LockpathFields -ComponentId @(10066,10031)
+        Find-LockpathField -ComponentId @(10066,10031)
 
         Returns all field details from all fields in components with Id 10066 and 10013.
 
@@ -53,7 +53,11 @@
         [Array] $ComponentIds
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+    $level = 'Information'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'ComponentService'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {

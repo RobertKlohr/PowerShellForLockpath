@@ -100,32 +100,55 @@ function Get-LockpathUsers {
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    if ($All) {
-        $PageIndex = 0
-        $PageSize = Get-LockpathUserCount
-        $Filter = @()
-        # $Filter = '[{"Field":{"ShortName":"AccountType"},"FilterType":"10002","Value":"1|2|4"}]'
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    $Body = @{
-        'pageIndex' = $PageIndex
-        'pageSize'  = $PageSize
-        'filters'   = $Filter
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        if ($All) {
+            $PageIndex = 0
+            $PageSize = Get-LockpathUserCount
+            $Filter = @()
+            #$Filter = '[{"Field":{"ShortName":"AccountType"},"FilterType":"10002","Value":"1|2|4"}]'
+        }
+
+        $Body = [ordered]@{
+            'pageIndex' = $PageIndex
+            'pageSize'  = $PageSize
+            'filters'   = $Filter
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
+            'Description' = 'Getting Users By Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetUsers'
+        }
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    $params = @{
-        'UriFragment' = 'SecurityService/GetUsers'
-        'Method'      = 'POST'
-        'Description' = "Getting users with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
-    }
-
-    if ($PSCmdlet.ShouldProcess("Getting users with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting users with body:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+    end {
     }
 }

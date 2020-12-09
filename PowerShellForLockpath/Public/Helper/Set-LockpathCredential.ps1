@@ -78,7 +78,11 @@
         [Switch] $SessionOnly
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if (-not $PSBoundParameters.ContainsKey('Credential')) {
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
@@ -86,7 +90,7 @@
 
     if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
         $message = 'The API Password was not provided in the password field.'
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -Level $level
         $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
     }
 
@@ -97,7 +101,7 @@
             $Credential | Export-Clixml -Path $Script:LockpathConfig.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             return ('Successfully saved credential to disk.')
         } catch {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level Warning
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level $level
         }
     }
 }

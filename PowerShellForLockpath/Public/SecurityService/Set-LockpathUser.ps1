@@ -58,28 +58,38 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
     process {
-
-        $UserId = $Attributes.Id
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
         $params = @{
-            'UriFragment' = 'SecurityService/UpdateUser'
-            'Method'      = 'POST'
-            'Description' = "Updating user with Id: $UserId and values $($Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
             'Body'        = $Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Updating User'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'UpdateUser'
         }
-        if ($PSCmdlet.ShouldProcess("Updating user with user with Id $($UserId) and settings: $([environment]::NewLine) $($params.Body)", "$($params.Body)", "Updating user with user with Id $($UserId) and settings:")) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            #FIXME supressing the GetUser response; need to figure out what calls return what information
-            # TODO maybe suppress by default and with a -switch get the response
-            If ($false) {
+
+        $target = "Properties=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
                 return $result
             }
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
         }
     }
 

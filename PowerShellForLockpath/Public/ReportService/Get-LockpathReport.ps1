@@ -64,25 +64,48 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -ExcludeParameter FilePath -Service ReportService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ReportService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = "ReportService/ExportReport?id=$ReportId&fileExtension=$FileType"
+            'Description' = 'Getting Report'
             'Method'      = 'GET'
-            'Description' = "Getting $FileType report with report Id: $ReportId"
+            'Query'       = "?id=$ReportId&fileExtension=$FileType"
+            'Service'     = $service
+            'UriFragment' = 'ExportReport'
         }
 
-        if ($PSCmdlet.ShouldProcess("Getting $([environment]::NewLine) $FileType report with report Id: $ReportId", "$FileType report with report Id: $ReportId", 'Getting:')) {
-            [byte[]] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            if ($null -ne $FilePath) {
+        $target = "Id=$ReportId"
+
+        # TODO determine if we are going to provide file save function here or just return bytes
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                # [byte[]]  $result = Invoke-LockpathRestMethod @params
+                # if ($null -ne $FilePath) {
+                #     Set-Content -Path $FilePath -AsByteStream -Value $result
+                # } else {
+                #     return $result
+                # }
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } elseif ($null -ne $FilePath) {
                 Set-Content -Path $FilePath -AsByteStream -Value $result
             } else {
                 return $result
             }
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
         }
     }
 

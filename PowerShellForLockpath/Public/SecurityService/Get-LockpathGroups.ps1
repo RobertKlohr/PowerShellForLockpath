@@ -56,6 +56,14 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
+
+    [Parameter(
+        Mandatory = $true,
+        Position = 0,
+        ValueFromPipeline = $true,
+        ValueFromPipelineByPropertyName = $true)]
+
+
     param(
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
@@ -63,31 +71,59 @@
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:LockpathConfig.pageSize,
 
+        [Parameter(
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
         [Array] $Filter = @()
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    $Body = @{
-        'pageIndex' = $PageIndex
-        'pageSize'  = $PageSize
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    If ($Filter.Count -gt 0) {
-        $Body.Add('filters', $Filter)
+    process {
+
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $Body = [ordered]@{
+            'pageIndex' = $PageIndex
+            'pageSize'  = $PageSize
+        }
+
+        If ($Filter.Count -gt 0) {
+            $Body.Add('filters', $Filter)
+        }
+
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Groups By Filter'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'GetGroups'
+        }
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
     }
 
-    $params = @{
-        'UriFragment' = 'SecurityService/GetGroups'
-        'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-    }
-
-    if ($PSCmdlet.ShouldProcess("Getting groups with body: $([environment]::NewLine) $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+    end {
     }
 }

@@ -34,18 +34,41 @@ function Send-LockpathLogout {
 
     param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    $params = @{
-        'UriFragment' = 'SecurityService/Logout'
-        'Method'      = 'GET'
-        'Description' = "Sending logout to $($Script:LockpathConfig.instanceName)"
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    if ($PSCmdlet.ShouldProcess("Logout from: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Logout from:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ReportService
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $params = @{
+            'Description' = 'Sending Logout'
+            'Method'      = 'GET'
+            'Service'     = $service
+            'UriFragment' = 'Logout'
+        }
+
+        $target = $params.Description
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
+    }
+
+    end {
     }
 }

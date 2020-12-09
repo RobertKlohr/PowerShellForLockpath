@@ -51,22 +51,38 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service AssessmentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'AssessmentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $params = @{
-            'UriFragment' = 'AssessmentService/IssueAssessment'
-            'Method'      = 'POST'
-            'Description' = "Issuing Assessment with attributes $($AssessmentRequest | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
             'Body'        = $AssessmentRequest
+            'Description' = 'Issuing Assessment'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'IssueAssessment'
         }
 
-        if ($PSCmdlet.ShouldProcess("Issuing Assessment with attributes: $([environment]::NewLine) $($params.Body)", "attributes $($params.Body)", 'Issuing Assessment with attributes:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service AssessmentService
+        $target = "Id=$AssessmentRequest"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

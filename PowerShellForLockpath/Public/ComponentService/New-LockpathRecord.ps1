@@ -55,26 +55,44 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
-        $params = @{
-            'UriFragment' = 'ComponentService/CreateRecord'
-            'Method'      = 'POST'
-            'Description' = "Creating in component Id: $ComponentId with attributes $($Attributes | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-            'Body'        = [ordered]@{
-                'componentId'   = $ComponentId
-                'dynamicRecord' = @{'FieldValues' = $Attributes
-                }
-            } | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+        $Body = [ordered]@{
+            'componentId'   = $ComponentId
+            'dynamicRecord' = @{'FieldValues' = $Attributes
+            }
         }
 
-        if ($PSCmdlet.ShouldProcess("Creating record in: $([environment]::NewLine) component Id $ComponentId with attributes $($params.Body)", "component Id $ComponentId with attributes $($params.Body)", 'Creating record in:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $params = @{
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Creating Record'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'CreateRecord'
+        }
+
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

@@ -83,15 +83,19 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+
         [Parameter(Mandatory = $true)]
-        [String] $UriFragment,
+        [String] $Description,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Delete', 'Get', 'Post')]
         [String] $Method,
 
         [Parameter(Mandatory = $true)]
-        [String] $Description,
+        [String] $Service,
+
+        [Parameter(Mandatory = $true)]
+        [String] $UriFragment,
 
         [String] $AcceptHeader = $Script:LockpathConfig.acceptHeader,
 
@@ -109,21 +113,32 @@
 
         [System.Collections.ArrayList] $MethodContainsBody = $Script:LockpathConfig.methodContainsBody,
 
+        [String] $Query = $null,
+
         [String] $UserAgent = $Script:LockpathConfig.userAgent
     )
+
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    # FIXME need to reconcile this variable
+    # $service = 'PrivateHelper'
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     # If the REST call is the login then redact the username and password sent in the body from the logs
     if ($Login) {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -RedactParameter Body -Service PrivateHelper
+        # FIXME only have verbose logging in private functions (add write-verbose)
+        # FIXME set all calls to Invoke-LockpathRestMethod from functions be Information level and logged by default
+        # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper' -RedactParameter Body
+        Write-Verbose 'Executing Invoke-LockpathRestMethod'
     } else {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+        Write-Verbose 'Executing Invoke-LockpathRestMethod'
+        # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper'
 
         # Check to see if there is a valid authentication cookie and if not exit early.
         if ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level $level -FunctionName $functionName -Service PrivateHelper
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
@@ -140,7 +155,10 @@
         $headers.Add('Content-Type', $ContentTypeHeader)
     }
 
-    $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
+    # FIXME remove once all functions are updated and tested
+    # $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
+
+    $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$Service/$UriFragment$Query"
 
     $params = [Hashtable]@{ }
     $params.Add('Uri', $uri)
@@ -156,25 +174,30 @@
         $params.Add('WebSession', $webSession)
     }
 
-    # FIXME combine the multiple logging calls into a single log entry that show the call and the results (S or F)
 
     # FIXME add write-versbose or write-debug lines to replace the intermediate logging that is now written to file
 
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $Description -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
-    if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
-        $params.Add('Body', $Body)
-        if ($Script:LockpathConfig.logRequestBody) {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
-        }
-    }
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
     try {
         $ProgressPreference = 'SilentlyContinue'
         #FIXME stopwatch testing
         $stopWatch = [system.diagnostics.stopwatch]::StartNew()
-        $result = Invoke-WebRequest @params
+
+
+        if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
+            $params.Add('Body', $Body)
+            if ($Script:LockpathConfig.logRequestBody) {
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
+            } else {
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+            }
+        }
+
+
+        [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
+
+
+
+
         $stopWatch.Stop()
         $ProgressPreference = 'Continue'
         if ($Login) {
@@ -188,7 +211,24 @@
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'API request successful.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+
+        # FIXME combine the 4 log entries below into a single log CEF entry
+
+        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $Description -Level $level -FunctionName $functionName -Service PrivateHelper
+
+        # if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
+        #     $params.Add('Body', $Body)
+        #     if ($Script:LockpathConfig.logRequestBody) {
+        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
+        #     } else {
+        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+        #     }
+        # }
+
+        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level $level -FunctionName $functionName -Service PrivateHelper
+
+        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'API request successful.' -Level $level -FunctionName $functionName -Service PrivateHelper
+
         return $result.Content
     } catch {
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
@@ -223,7 +263,8 @@
                 }
             }
 
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+            # FIXME pass this information back to the calling function to where the write-lockpathlog call will be made
+            # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level $level -FunctionName $functionName -Service 'PrivateHelper'
 
             # TODO the following will be more useful once the conversion to CEF format
             # $exceptionOutput = [ordered]@{
@@ -235,8 +276,9 @@
             #     'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
             #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
             # }
+            throw
         } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -ErrorRecord $_ -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Level $level -FunctionName $functionName -Service PrivateHelper -ErrorRecord $_
             throw
         }
     }

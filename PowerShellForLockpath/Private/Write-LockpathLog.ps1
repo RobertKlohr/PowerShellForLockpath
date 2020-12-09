@@ -39,7 +39,7 @@
         No cause for alarm.
 
     .EXAMPLE
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There may be a problem..." -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There may be a problem..." -Level $level
 
         Writes the message "There may be a problem..." to the warning pipeline,
         as well as to the default log file with the caller's username and a date/time stamp
@@ -134,7 +134,7 @@
             return
         }
 
-        $consoleMessage = $messages -join '||'
+        $consoleMessage = $messages -join ' '
 
         # Build the CEF extension message
 
@@ -186,8 +186,12 @@
             }
             'Information' {
                 $severity = 'Low'
-                Write-Information $consoleMessage -InformationAction Continue
+                Write-Information $consoleMessage
             }
+        }
+        # Only write verbose entries to the log file based on configuration setting
+        if ($Level -eq 'Verbose' -and $Script:LockpathConfig.loggingLevel -ne 'Verbose') {
+            return
         }
 
         # Set build CEF log entry

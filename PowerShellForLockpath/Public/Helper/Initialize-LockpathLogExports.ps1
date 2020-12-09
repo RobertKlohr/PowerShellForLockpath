@@ -55,7 +55,11 @@
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
+
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     ForEach ($Directory in $Directories) {
         New-Item -ItemType Directory -Path [FilePath]\$Directory

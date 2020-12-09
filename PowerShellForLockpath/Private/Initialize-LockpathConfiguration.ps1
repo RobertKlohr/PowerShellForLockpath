@@ -35,6 +35,10 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
 
     param()
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PrivateHelper'
+
     # Create a configuration object with all the default configuration and session values.
     if ($null -eq $Script:LockpathConfig) {
         $Script:LockpathConfig = [PSCustomObject]@{
@@ -86,10 +90,12 @@
         }
     }
 
-    # Normally Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
-    # log file is only set in the previous line.
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
-
     # Load the persistant configuration file if it exists and overwrite any default values set in this function.
     Import-LockpathConfiguration
+
+    # Normally Write-LockpathInvocationLog is run first in a function but we need to import the configuration
+    # before using.
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
+
 }

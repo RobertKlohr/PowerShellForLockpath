@@ -48,22 +48,25 @@ function Reset-LockpathConfiguration {
     param(
         [Switch] $SessionOnly
     )
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if (-not $SessionOnly) {
-        if ($PSCmdlet.ShouldProcess("Reseting configuration file: $([environment]::NewLine) $GroupId", $GroupId, 'Deleting group with Id:')) {
+        if ($PSCmdlet.ShouldProcess("Reseting configuration file:  $GroupId", $GroupId, 'Deleting group with Id:')) {
             $null = Remove-Item -Path $Script:LockpathConfig.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
             $null = New-Item -Path $Script:LockpathConfig.configurationFilePath -Force
             $Script:LockpathConfig | Set-LockpathConfiguration
         }
 
         if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$Script:LockpathConfigFilePath]." -Level Warning -ErrorRecord $ev[0]
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$Script:LockpathConfigFilePath]." -Level $level -ErrorRecord $ev[0]
         }
     } else {
         Initialize-LockpathConfiguration
     }
 
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.' -Level Verbose
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.' -Level $level
 }

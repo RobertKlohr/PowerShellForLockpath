@@ -35,22 +35,20 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param()
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PrivateHelper
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    $credential = $Script:LockpathConfig.credential
-
-    if ($null -ne $credential.UserName) {
-        return $credential
+    if ($null -ne $Script:LockpathConfig.credential.UserName) {
+        return
     } else {
         try {
-            $content = Import-Clixml -Path $Script:LockpathConfig.credentialFilePath
-            $credential = New-Object System.Management.Automation.PSCredential $content.Username, $content.Password
-            Write-Information -Message 'Importing API credential from file. This value can be cleared by calling Remove-LockpathCredential.'
-            $Script:LockpathConfig.credential = $credential
-            return $credential
+            $Script:LockpathConfig.credential = Import-Clixml -Path $Script:LockpathConfig.credentialFilePath
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service -Message 'Importing API credential from file.'
         } catch {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The credential configuration file for this module is in an invalid state.  Use Set-LockpathCredential to reset.' -Level Warning -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service PrivateHelper
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message 'The credential configuration file for this module is in an invalid state.'
         }
     }
 }

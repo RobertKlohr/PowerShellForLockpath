@@ -8,11 +8,6 @@
 
         The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
 
-    .PARAMETER KeepAlive
-        After a successful login starts Send-LockpathPing as a background job that runs based on value of the parameter.
-
-        The default interval of the background job is set in minutes by using Set-LockpathConfiguration -KeepAlive 60.
-
     .EXAMPLE
         Send-LockpathLogin
 
@@ -37,32 +32,50 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
-    param(
-        [Switch] $KeepAlive
-    )
+    param()
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service SecurityService
-
-    $credential = $Script:LockpathConfig.credential
-    $hashBody = [ordered]@{
-        'username' = $credential.username
-        'password' = $credential.GetNetworkCredential().Password
+    begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'SecurityService'
     }
 
-    $params = @{
-        'UriFragment' = 'SecurityService/Login'
-        'Method'      = 'POST'
-        'Description' = "Sending login to $($Script:LockpathConfig.instanceName) with Username $($credential.username) and Password: <redacted>"
-        'Body'        = (ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $hashBody)
-    }
+    process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    if ($PSCmdlet.ShouldProcess("Login to: $([environment]::NewLine) $($Script:LockpathConfig.instanceName)", $Script:LockpathConfig.instanceName, 'Login to:')) {
-        [String] $result = Invoke-LockpathRestMethod @params -Login -Confirm:$false
-        if ($KeepAlive) {
-            Send-LockpathKeepAlive
+        $credential = $Script:LockpathConfig.credential
+        $hashBody = [ordered]@{
+            'username' = $credential.username
+            'password' = $credential.GetNetworkCredential().Password
         }
-        return $result
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service SecurityService
+
+        $params = @{
+            'Body'        = (ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $hashBody)
+            'Description' = 'Sending Login'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'Login'
+        }
+
+        $target = $params.Description
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
+        }
+    }
+
+    end {
     }
 }

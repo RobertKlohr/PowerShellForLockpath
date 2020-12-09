@@ -81,10 +81,14 @@
     )
 
     begin {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -ExcludeParameter FilePath -Service ComponentService
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'ComponentService'
     }
 
     process {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
         $fileData = [Convert]::ToBase64String([IO.File]::ReadAllBytes($FilePath))
 
         $Body = [ordered]@{
@@ -101,17 +105,29 @@
         }
 
         $params = @{
-            'UriFragment' = 'ComponentService/UpdateRecordAttachments'
-            'Method'      = 'POST'
-            'Description' = "Updating attachment from component Id: $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)"
             'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Updating Attachment'
+            'Method'      = 'POST'
+            'Service'     = $service
+            'UriFragment' = 'UpdateRecordAttachments'
         }
 
-        if ($PSCmdlet.ShouldProcess("Updating attachments with: $([environment]::NewLine) component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", "component Id $ComponentId, record Id: $RecordId, field Id: $FieldId & File: $($FilePath.Name)", 'Updating attachments with:')) {
-            [String] $result = Invoke-LockpathRestMethod @params -Confirm:$false
-            return $result
-        } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -Level Verbose -FunctionName ($PSCmdlet.CommandRuntime.ToString()) -Service ComponentService
+        $target = "Filter=$($params.Body)"
+
+        if ($PSCmdlet.ShouldProcess($target)) {
+            try {
+                $result = Invoke-LockpathRestMethod @params
+                $message = 'success'
+            } catch {
+                $message = 'failed'
+                $level = 'Warning'
+            }
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            If ($message -eq 'failed') {
+                return $message
+            } else {
+                return $result
+            }
         }
     }
 

@@ -42,7 +42,9 @@
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service PublicHelper
+    $level = 'Verbose'
+    $functionName = ($PSCmdlet.CommandRuntime.ToString())
+    $service = 'PublicHelper'
 
     try {
         $savedLockpathConfig = Import-Clixml -Path $FilePath
@@ -55,8 +57,14 @@
             }
         }
         $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
-        $Script:LockpathConfig.credential = Import-LockpathCredential
+        # $Script:LockpathConfig.credential = Import-LockpathCredential
+        Import-LockpathCredential
     } catch {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level Warning
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level $level
     }
+
+    # Normally Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
+    # configuration to be loaded first.
+    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+
 }
