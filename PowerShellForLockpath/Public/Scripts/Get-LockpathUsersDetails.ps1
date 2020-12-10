@@ -8,7 +8,7 @@
 
         Combines Get-LockpathUsers and Get-LockpathUser and uses the same filter as Get-LockpathUsers.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
         Get-LockpathUsersDetails
@@ -32,7 +32,7 @@
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -68,9 +68,9 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
 
-        # FIXME not sure where to test for valid session yet
+        # TODO not sure where to test for valid session yet
         # Test-LockpathAuthentication
 
         # Get-LockpathUsers -All will return vendor contacts without login account that we filter out

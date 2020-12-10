@@ -6,7 +6,7 @@
     .DESCRIPTION
         Refreshes a valid session.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER KeepAliveInterval
         The interval of the background job in minutes.
@@ -24,7 +24,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

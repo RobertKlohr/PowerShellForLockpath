@@ -6,7 +6,7 @@
     .DESCRIPTION
         Queues a job to import a file for a defined import template.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentAlias
         Specifies the system alias of the component.
@@ -45,7 +45,7 @@
         Create, and Update Administrative Access permissions to the defined table.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -101,7 +101,7 @@
             'runAsSystem'        = $RunAsSystem.IsPresent.ToString()
         }
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
             'Description' = 'Importing File'
             'Method'      = 'POST'
@@ -109,29 +109,29 @@
             'UriFragment' = 'ImportFile'
         }
 
-        $target = "Filter=$($params.Body)"
-
-        $params = @{
-            'UriFragment' = 'ComponentService/ImportFile'
-            'Method'      = 'POST'
-            'Description' = "Importing file: $($FilePath.Name) to component alias: $ComponentAlias, using import template: $ImportTemplateName"
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
         }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

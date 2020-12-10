@@ -6,7 +6,7 @@
     .DESCRIPTION
         Creates the folder structure used for extracting log files via the Ambassador service.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER FilePath
         File path to the directory where the log files will be created.
@@ -36,7 +36,7 @@
             Session
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

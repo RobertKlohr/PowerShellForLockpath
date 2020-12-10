@@ -6,7 +6,7 @@
     .DESCRIPTION
         Transitions a record in a workflow.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentAlias
         Specifies the system alias of the component.
@@ -39,7 +39,7 @@
         There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -87,7 +87,7 @@
             'transitionId' = $TransitionId
         }
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
             'Description' = 'Transitioning Record'
             'Method'      = 'POST'
@@ -95,22 +95,29 @@
             'UriFragment' = 'TransitionRecord'
         }
 
-        $target = "Filter=$($params.Body)"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

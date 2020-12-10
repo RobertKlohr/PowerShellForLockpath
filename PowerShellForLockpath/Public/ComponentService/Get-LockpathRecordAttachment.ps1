@@ -11,7 +11,7 @@
         The field Id may be found by using Get-LockpathFieldsList.
         The document Id may be found by using Get-LockpathRecordAttachment.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentId
         Specifies the Id number of the component.
@@ -49,7 +49,7 @@
         field.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -93,7 +93,7 @@
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Attachment By Component, Record, Field Id & Document Id'
             'Method'      = 'GET'
             'Query'       = "?ComponentId=$ComponentId&RecordId=$RecordId&FieldId=$FieldId&DocumentId=$DocumentId"
@@ -101,24 +101,31 @@
             'UriFragment' = 'GetRecordAttachment'
         }
 
-        $target = "ComponentId=$ComponentId, RecordId=$RecordId, FieldId=$FieldId & DocumentId=$DocumentId"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
+
+        $shouldProcessTarget = "ComponentId=$ComponentId, RecordId=$RecordId, FieldId=$FieldId & DocumentId=$DocumentId"
 
         # TODO possibly update to save file similar to Get-LockpathReport
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

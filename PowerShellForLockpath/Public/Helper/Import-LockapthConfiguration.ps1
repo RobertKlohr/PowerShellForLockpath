@@ -8,7 +8,7 @@
         Loads in the configuration file from the local file system and then updates the configuration in memory with
         values that may exist in the file.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER FilePath
         The file containing a JSON serialized version of the configuration values for this module.
@@ -28,7 +28,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

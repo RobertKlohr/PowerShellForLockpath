@@ -11,7 +11,7 @@
         to remove their authentication from the system, they simply need to call
         Remove-LockpathCredential.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Credential
         If provided, instead of prompting the user for their API credential, it will be extracted
@@ -61,7 +61,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -85,23 +85,22 @@
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if (-not $PSBoundParameters.ContainsKey('Credential')) {
-        $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
+        do {
+            $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
+        }
+        while ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password))
     }
 
-    if ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password)) {
-        $message = 'The API Password was not provided in the password field.'
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -Level $level
-        $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
-    }
+    $level = 'Information'
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+    $level = 'Verbose'
 
-    $Script:LockpathConfig.credential = $credential
+    $message = 'API credential set in session'
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+
+    $Script:Lockpathonfig.credential = $credential
 
     if (-not $SessionOnly) {
-        try {
-            $Credential | Export-Clixml -Path $Script:LockpathConfig.credentialFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-            return ('Successfully saved credential to disk.')
-        } catch {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to save credential to disk.  It will remain for this PowerShell session only.' -Level $level
-        }
+        Export-LockpathCredential -Credential $Credential
     }
 }

@@ -1,6 +1,6 @@
 ﻿function Import-LockpathUsers {
 
-    # FIXME loads locally saved copy of user database
+    # TODO loads locally saved copy of user database
     # TODO create function to refresh user database, run GetUsers and compare output to the versions loaded from
     # disk then run GetUser for any delta an add it to the locally stored user database. A secondary function
     # would be to prune users from the local database that are not returned from GetUsers
@@ -13,7 +13,7 @@
     .DESCRIPTION
         Loads in the default configuration values and returns the deserialized object.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER FilePath
         The file that may or may not exist with a serialized version of the configuration values for this module.
@@ -34,7 +34,7 @@
         Private helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

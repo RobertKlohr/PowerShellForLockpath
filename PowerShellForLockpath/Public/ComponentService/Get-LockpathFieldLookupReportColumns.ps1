@@ -10,7 +10,7 @@
         Get-LockpathFieldLookupReportColumns compliments Get-LockpathRecordDetail by adding additional details
         about the lookup report columns returned from Get-LockpathRecordDetail.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER FieldId
         Specifies the Id number of the field.
@@ -38,7 +38,7 @@
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -74,7 +74,7 @@
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Lookup Report Column Fields By Field Id & Field Path'
             'Method'      = 'GET'
             'Query'       = "?LookupFieldId=$FieldId&FieldPathId=$FieldPathId"
@@ -82,22 +82,29 @@
             'UriFragment' = 'GetLookupReportColumnFields'
         }
 
-        $target = "LookupFieldId=$FieldId & FieldPathId=$FieldPathId"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $shouldProcessTarget = "LookupFieldId=$FieldId & FieldPathId=$FieldPathId"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

@@ -8,7 +8,7 @@
 
         Combines Get-LockpathUserCount, Get-LockpathUsers and Get-LockpathUser.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
         Get-LockpathApiUser
@@ -23,7 +23,7 @@
         The authentication account must have Read Administrative Access permissions to administer users.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -40,7 +40,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
+    if ($PSCmdlet.ShouldProcess("Getting users with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
         # check to see if the username is set in the login credential and exit early if it is null
         Import-LockpathCredential
         if ($null -eq $Script:LockpathConfig.credential.UserName) {

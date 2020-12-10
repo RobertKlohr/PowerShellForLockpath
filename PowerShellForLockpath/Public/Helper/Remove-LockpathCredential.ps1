@@ -7,7 +7,7 @@ function Remove-LockpathCredential {
     .DESCRIPTION
         Allows the user to remove the API credential used for authentication.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER SessionOnly
         Removes the API credential from the session and does not delete the credential stored in the local file.
@@ -32,7 +32,7 @@ function Remove-LockpathCredential {
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

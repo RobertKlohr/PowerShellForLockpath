@@ -8,7 +8,7 @@
         Returns the requested property from the provided object, if it exists and is a valid
         value.  Otherwise, returns the default value.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER InputObject
         The object to check the value of the requested property.
@@ -38,7 +38,7 @@
         Private helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -62,6 +62,7 @@
         [Parameter(Mandatory = $true)]
         $DefaultValue
     )
+
     $level = 'Verbose'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'

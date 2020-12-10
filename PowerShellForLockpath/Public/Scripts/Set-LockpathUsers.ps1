@@ -13,7 +13,7 @@
 
         All attributes that are updated are overwritten with the new value.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Attributes
         The list of fields and values to change as an array.
@@ -40,7 +40,7 @@
         Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -57,7 +57,7 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    if ($PSCmdlet.ShouldProcess("Updating users with:  $($params.Body)", $($params.Body), 'Updating users with:')) {
+    if ($PSCmdlet.ShouldProcess("Updating users with:  $($restParameters.Body)", $($restParameters.Body), 'Updating users with:')) {
 
         $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count

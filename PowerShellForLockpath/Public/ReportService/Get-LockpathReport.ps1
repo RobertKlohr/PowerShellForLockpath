@@ -8,7 +8,7 @@
 
         Any filter applied to the report is retained for all reports except a chart report where only the grid report exports.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ReportId
         Specifies the Id number of the report.
@@ -38,7 +38,7 @@
         report.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -72,7 +72,7 @@
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Report'
             'Method'      = 'GET'
             'Query'       = "?id=$ReportId&fileExtension=$FileType"
@@ -80,32 +80,38 @@
             'UriFragment' = 'ExportReport'
         }
 
-        $target = "Id=$ReportId"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
+
+        $shouldProcessTarget = "Id=$ReportId"
 
         # TODO determine if we are going to provide file save function here or just return bytes
+        # Set-Content -Path $FilePath -AsByteStream -Value $result
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                # [byte[]]  $result = Invoke-LockpathRestMethod @params
+                # [byte[]]  $result = Invoke-LockpathRestMethod @restParameters
                 # if ($null -ne $FilePath) {
                 #     Set-Content -Path $FilePath -AsByteStream -Value $result
                 # } else {
                 #     return $result
                 # }
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } elseif ($null -ne $FilePath) {
-                Set-Content -Path $FilePath -AsByteStream -Value $result
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

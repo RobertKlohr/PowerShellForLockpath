@@ -8,7 +8,7 @@
 
         Returns the Id, Name, SystemName and ShortName for the component.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentId
         Specifies the Id number of the component.
@@ -37,7 +37,7 @@
         The authentication account must have Read General Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -65,30 +65,36 @@
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Component By Id'
             'Method'      = 'GET'
             'Query'       = "?Id=$ComponentId"
             'Service'     = $service
             'UriFragment' = 'GetComponent'
         }
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
 
-        $target = "Id=$ComponentId"
+        $shouldProcessTarget = "Id=$ComponentId"
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

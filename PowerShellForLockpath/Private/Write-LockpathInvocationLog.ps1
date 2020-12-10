@@ -6,7 +6,7 @@
     .DESCRIPTION
         Writes a log entry for the invoke command.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER InvocationInfo
         The '$MyInvocation' object from the calling function.
@@ -40,7 +40,7 @@
         https://aka.ms/PowerShellForGitHub
 
     .LINK
-    https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+    https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -69,20 +69,20 @@
     )
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
-    $params = @()
-    foreach ($param in $Invocation.BoundParameters.GetEnumerator()) {
-        if ($param.Key -in ($ExcludeParameter)) {
+    $restParameters = @()
+    foreach ($parameter in $Invocation.BoundParameters.GetEnumerator()) {
+        if ($parameter.Key -in ($ExcludeParameter)) {
             continue
         }
-        if ($param.Key -in ($RedactParameter)) {
-            $params += "-$($param.Key) <redacted>"
+        if ($parameter.Key -in ($RedactParameter)) {
+            $restParameters += "-$($parameter.Key) <redacted>"
         } else {
-            if ($param.Value -is [Switch]) {
-                $params += "-$($param.Key):`$$($param.Value.ToBool().ToString().ToLower())"
+            if ($parameter.Value -is [Switch]) {
+                $restParameters += "-$($parameter.Key):`$$($parameter.Value.ToBool().ToString().ToLower())"
             } else {
-                $params += "-$($param.Key) $(ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $param.Value)"
+                $restParameters += "-$($parameter.Key) $(ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $parameter.Value)"
             }
         }
     }
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($params -join ' ')".Trim()
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($restParameters -join ' ')".Trim()
 }

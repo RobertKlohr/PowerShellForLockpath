@@ -13,7 +13,7 @@
         this is that there is no performance advantage to applying filtering to this method and instead using
         PowerShell to manipulate the response object provides both better performance and capabilities.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentIds
         Specifies an array of component Id numbers.
@@ -40,7 +40,7 @@
         The authentication account must have Read Administrative Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

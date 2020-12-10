@@ -9,7 +9,7 @@
         To change any of the Boolean/switch properties to false, specify the switch, immediately followed by
         ":$false" with no space.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER AcceptHeader
         The Accept Header for the APi request.
@@ -113,7 +113,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -125,12 +125,14 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        [ValidateSet('application/json', 'application/xml')]
         [String] $AcceptHeader,
 
         [Hashtable] $AuthenticationCookie,
 
         [System.IO.Path] $ConfigurationFilePath,
 
+        [ValidateSet('application/json', 'application/xml')]
         [String] $ContentTypetHeader,
 
         [SecureString] $Credential,
@@ -148,6 +150,7 @@
         [ValidatePattern('^https?$')]
         [String] $InstanceProtocol,
 
+        [ValidateRange('Positive')]
         [Int32] $jsonConversionDepth,
 
         [ValidateRange('Positive')]

@@ -9,7 +9,7 @@
         By default returns the configuration for this session.  This may not be different than the configuration
         saved to file if the session configuration was updated using Set-LockpathConfiguration -SessionOnly.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Saved
         Shows the configuration saved to file instead of the session configuration.
@@ -34,7 +34,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

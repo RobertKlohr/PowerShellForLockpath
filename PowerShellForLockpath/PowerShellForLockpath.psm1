@@ -1,4 +1,6 @@
 # FIXME this psm1 is for local testing and development use only
+# FIXME check all functions with filters
+# TODO create credential file for each instance
 
 # dot source the parent import for local development variables
 . $PSScriptRoot\Imports.ps1

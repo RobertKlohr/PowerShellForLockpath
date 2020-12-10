@@ -7,7 +7,7 @@ function Get-LockpathWorkflow {
         Retrieves workflow details and all workflow stages specified by Id. The Id for a workflow may be found by
         using Get-LockpathWorkflows.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER WorkflowId
         Specifies the Id number of the workflow.
@@ -35,7 +35,7 @@ function Get-LockpathWorkflow {
         containing the workflow.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -63,7 +63,7 @@ function Get-LockpathWorkflow {
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Workflow By Id'
             'Method'      = 'GET'
             'Query'       = "?Id=$WorkflowId"
@@ -71,22 +71,29 @@ function Get-LockpathWorkflow {
             'UriFragment' = 'GetWorkflow'
         }
 
-        $target = "Filter=$($params.Body)"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

@@ -9,7 +9,7 @@ function Reset-LockpathConfiguration {
 
         This function can be used to fix a configuration file that is missing or corrupt.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER SessionOnly
         If this is specified then only the configuration values that were made during this session will be discarded and the configuration file will be reloaded.
@@ -34,7 +34,7 @@ function Reset-LockpathConfiguration {
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

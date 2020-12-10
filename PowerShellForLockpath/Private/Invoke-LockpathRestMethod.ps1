@@ -83,7 +83,6 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-
         [Parameter(Mandatory = $true)]
         [String] $Description,
 
@@ -92,31 +91,41 @@
         [String] $Method,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('AssessmentService', 'ComponentService', 'PrivateHelper', 'Public', 'ReportService', 'SecurityService')]
         [String] $Service,
 
         [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[a-zA-Z0-9]+$')]
         [String] $UriFragment,
 
+        [ValidateSet('application/json', 'application/xml')]
         [String] $AcceptHeader = $Script:LockpathConfig.acceptHeader,
 
         [String] $Body = $null,
 
+        [ValidateSet('application/json', 'application/xml')]
         [String] $ContentTypeHeader = $Script:LockpathConfig.contentTypeHeader,
 
+        [ValidatePattern('^(?!https?:).*')]
         [String] $InstanceName = $Script:LockpathConfig.instanceName,
 
+        [ValidateRange(0, 65535)]
         [UInt16] $InstancePort = $Script:LockpathConfig.instancePort,
 
+        [ValidatePattern('^https?$')]
         [String] $InstancePortocol = $Script:LockpathConfig.instanceProtocol,
-
-        [Switch] $Login,
 
         [System.Collections.ArrayList] $MethodContainsBody = $Script:LockpathConfig.methodContainsBody,
 
         [String] $Query = $null,
 
         [String] $UserAgent = $Script:LockpathConfig.userAgent
+
     )
+    # Check to see if the calling function was the login and set the Login flag
+    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Send-LockpathLogin') {
+        $Login = $true
+    }
 
     $level = 'Verbose'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
@@ -128,8 +137,6 @@
 
     # If the REST call is the login then redact the username and password sent in the body from the logs
     if ($Login) {
-        # FIXME only have verbose logging in private functions (add write-verbose)
-        # FIXME set all calls to Invoke-LockpathRestMethod from functions be Information level and logged by default
         # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper' -RedactParameter Body
         Write-Verbose 'Executing Invoke-LockpathRestMethod'
     } else {
@@ -195,19 +202,12 @@
 
         [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
 
-
-
+        Write-Verbose $result
 
         $stopWatch.Stop()
         $ProgressPreference = 'Continue'
         if ($Login) {
-            # capture the authentication cookie for reuse in subsequent requests
-            $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
-                'Domain' = $webSession.Cookies.GetCookies($uri).Domain
-                'Name'   = $webSession.Cookies.GetCookies($uri).Name
-                'Value'  = $webSession.Cookies.GetCookies($uri).Value
-            }
-            Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth 10 -Force
+            Export-LockpathAuthenticationCookie -Cookie $webSession.Cookies.GetCookies($uri) -Uri $uri
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()
@@ -263,7 +263,8 @@
                 }
             }
 
-            # FIXME pass this information back to the calling function to where the write-lockpathlog call will be made
+            # FIXME pass this information back to the calling function where the write-lockpathlog call will be made
+            # Write-Error -ErrorAction Stop -ErrorRecord $_
             # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level $level -FunctionName $functionName -Service 'PrivateHelper'
 
             # TODO the following will be more useful once the conversion to CEF format
@@ -276,10 +277,12 @@
             #     'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
             #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
             # }
-            throw
+            # Write-Error -ErrorAction stop -Exception $_.Exception
+            Write-Error -ErrorAction stop -ErrorRecord $_
         } else {
             Write-LockpathLog -Confirm:$false -WhatIf:$false -Level $level -FunctionName $functionName -Service PrivateHelper -ErrorRecord $_
-            throw
+            Write-Error 'non-webresponse error' -ErrorAction stop
+
         }
     }
 }

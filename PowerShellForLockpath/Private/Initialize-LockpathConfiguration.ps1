@@ -7,7 +7,7 @@
     .DESCRIPTION
         Populates the configuration of the module for this session, loading in any values that may have been saved to disk.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
         Initialize-LockpathConfiguration
@@ -22,7 +22,7 @@
         Private helper method. This function is automatically called when the module is loaded.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -35,6 +35,7 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
 
     param()
+
     $level = 'Verbose'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
@@ -66,7 +67,6 @@
             'pageIndex'                    = [Int32] 0
             'pageSize'                     = [Int32] 100
             'ProcessId'                    = [String] $global:PID.ToString()
-            'productName'                  = [String] 'PowerShellForLockpath'
             # The module version is not present until after the module is loaded therefore we need to manually parse the
             # manifest and extract the module version number to use it in logging before the module is fully loaded.
             'productVersion'               = [String] (Select-String -Path .\PowerShellForLockpath.psd1 -Pattern moduleversion -List -Raw -SimpleMatch).Split("'")[1]
@@ -85,7 +85,7 @@
                 'Workflow Stage'     = 'WorkflowStage'
             }
             'UserAgent'                    = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
-            'vendorName'                   = [String] 'git.io/powershellforlockpath'
+            'vendorName'                   = [String] 'PowerShellForLockpath'
             'webRequestTimeoutSec'         = [Int32] 0
         }
     }

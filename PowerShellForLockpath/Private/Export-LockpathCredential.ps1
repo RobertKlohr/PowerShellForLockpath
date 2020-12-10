@@ -6,7 +6,7 @@
     .DESCRIPTION
         Attempts to export the API credential to the local file system.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Cookie
         A .Net cookie object.
@@ -27,7 +27,7 @@
         Private helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(

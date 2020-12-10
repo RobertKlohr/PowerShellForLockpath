@@ -7,7 +7,7 @@ function Get-LockpathWorkflows {
         Retrieves all workflows for a component specified by its Alias. A component is a user-defined data object
         such as a custom content table. The component Alias may be found by using GetComponentList (ShortName).
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentAlias
         Specifies the system alias of the component.
@@ -40,7 +40,7 @@ function Get-LockpathWorkflows {
         The authentication account must have Read Administrative Access permissions for the specific component.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -70,7 +70,7 @@ function Get-LockpathWorkflows {
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Getting Workflows By Component Alias'
             'Method'      = 'GET'
             'Query'       = "?ComponentAlias=$ComponentAlias"
@@ -78,20 +78,29 @@ function Get-LockpathWorkflows {
             'UriFragment' = 'GetWorkflows'
         }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
+
+        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

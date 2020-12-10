@@ -6,7 +6,7 @@
     .DESCRIPTION
         Writes logging information to screen and log file simultaneously.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Message
         The message(s) to be logged. Each element of the array will be written to a separate line.
@@ -60,7 +60,7 @@
         https://aka.ms/PowerShellForGitHub
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -116,6 +116,9 @@
     begin {
         # Accumulate the list of Messages, whether by pipeline or parameter.
         $messages = @()
+        $cefHeaderDeviceVendor = $Script:LockpathConfig.vendorName
+        $cefHeaderDeviceVersion = $Script:LockpathConfig.productVersion
+        $cefHeaderVersion = 'CEF:0'
     }
 
     process {
@@ -160,32 +163,32 @@
         # suser: Identifies the source user by name.
         $suser = 'suser=' + ($env:username)
 
-        $extension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
+        $cefExtension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
 
         # Write the message to screen and set severity for logging.
         switch ($Level) {
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
-                $severity = 'High'
+                $cefHeaderSeverity = 'High'
                 # FIXME validate the ErrorAction setting and the above script-level setting
                 # Write-Error $consoleMessage -ErrorAction SilentlyContinue
                 Write-Error $consoleMessage
             }
             'Warning' {
-                $severity = 'Medium'
+                $cefHeaderSeverity = 'Medium'
                 Write-Warning $consoleMessage
             }
             'Verbose' {
-                $severity = 'Low'
+                $cefHeaderSeverity = 'Low'
                 Write-Verbose $consoleMessage
             }
             'Debug' {
-                $severity = 'Low'
+                $cefHeaderSeverity = 'Low'
                 Write-Debug $consoleMessage
             }
             'Information' {
-                $severity = 'Low'
+                $cefHeaderSeverity = 'Low'
                 Write-Information $consoleMessage
             }
         }
@@ -195,14 +198,11 @@
         }
 
         # Set build CEF log entry
-        $cefVersion = 'CEF:0'
-        $DeviceEventClassID = $Service
-        $deviceProduct = $Script:LockpathConfig.productName
-        $deviceVendor = $Script:LockpathConfig.vendorName
-        $deviceVersion = $Script:LockpathConfig.productVersion
-        $name = $FunctionName
+        $cefHeaderDeviceEventClassID = $FunctionName
+        $cefHeaderDeviceProduct = $Service
+        $cefHeaderName = $Message
 
-        $cefLogEntry = $cefVersion, $deviceVendor, $deviceProduct, $deviceVersion, $deviceEventClassID, $Name, $Severity, $extension -join '|'
+        $cefLogEntry = $cefHeaderVersion, $cefHeaderDeviceVendor, $cefHeaderDeviceProduct, $cefHeaderDeviceVersion, $cefHeaderDeviceEventClassID, $cefHeaderName, $cefHeaderSeverity, $cefExtension -join '|'
 
         # Write CEF log entry to file.
         try {

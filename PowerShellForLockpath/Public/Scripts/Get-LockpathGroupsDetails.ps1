@@ -8,7 +8,7 @@
 
         Combines Get-LockpathGroupsDetails and Get-LockpathGroup and uses the same filter as Get-LockpathGroups.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER PageIndex
         The index of the page of result to return.
@@ -47,7 +47,7 @@
         The authentication account must have Read Administrative Access permissions to administer groups.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -81,15 +81,15 @@
         $Body.Add('filters', $Filter)
     }
 
-    $params = @{
+    $restParameters = [ordered]@{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
         'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
         'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
     }
 
-    if ($PSCmdlet.ShouldProcess("Getting groups with body:  $($params.Body)", $($params.Body), 'Getting groups with body:')) {
-        $groups = Invoke-LockpathRestMethod @params -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+    if ($PSCmdlet.ShouldProcess("Getting groups with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
+        $groups = Invoke-LockpathRestMethod @restParameters -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $groupsProgress = $groups.count
         # Array
         # $result = @()

@@ -6,7 +6,7 @@ function Send-LockpathPing {
     .DESCRIPTION
         Refreshes a valid session.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
         Send-LockpathPing
@@ -23,7 +23,7 @@ function Send-LockpathPing {
         The authentication account must have access to the API.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -35,7 +35,7 @@ function Send-LockpathPing {
     param()
 
     begin {
-        $level = 'Information'
+        $level = 'Verbose'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
     }
@@ -43,29 +43,56 @@ function Send-LockpathPing {
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Description' = 'Sending Ping'
             'Method'      = 'GET'
             'Service'     = $service
             'UriFragment' = 'Ping'
         }
 
-        $target = $params.Description
+        $logParameters = [ordered]@{
+            'Confirm'               = $false
+            'WhatIf'                = $false
+            'CefName'               = $message
+            'CefDeviceEventClassId' = $functionName
+            'CefDeviceProduct'      = $service
+            'Level'                 = $level
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+
+            # #Possible CEF Extension Message Values
+            # [Int32] $dpdt,
+            # [String] $duser,
+            # [DateTime] $end,
+            # #[String] $filePath,
+            # [String] $fname,
+            # [Int32] $fsize,
+            # [Int32] $in,
+            # [Int32] $out,
+            # [String] $outcome,
+            # [String] $reason,
+            # [String] $request,
+            # [String] $requestClientApplication,
+            # [String] $requestContext,
+            # [String] $requestMethod,
+            # [DateTime] $start
+
+
+        }
+
+        $shouldProcessTarget = $restParameters.Description
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
-                $message = 'success'
+                $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 

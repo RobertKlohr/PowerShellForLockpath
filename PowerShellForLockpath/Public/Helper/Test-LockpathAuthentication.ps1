@@ -1,17 +1,14 @@
 ﻿function Test-LockpathAuthentication {
     <#
     .SYNOPSIS
-        Tests if the authentication cookie stored in the configuration is a valid. If not tries to authenticate and
+        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and
         set a new cookie.
 
     .DESCRIPTION
-        Tests if the authentication cookie stored in the configuration is a valid. If not tries to authenticate and
+        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and
         set a new cookie.
 
-        Calls Send-LockpathPing and returns either returns true or calls Send-LockpathLogin and then returns either
-        true or false.
-
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
         Test-LockpathAuthentication
@@ -26,7 +23,7 @@
         Public helper method.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -43,15 +40,19 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    if ($PSCmdlet.ShouldProcess("Test API authentication:  $($Script:LockpathConfig.instanceName)", $($Script:LockpathConfig.instanceName), 'Test API authentication:')) {
-        if (Send-LockpathPing) {
-            return $true
-        } elseif (Send-LockpathPing) {
-            return $true
-        } else {
-            return $false
+    $shouldProcessTarget = 'Testing Authentication'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            Send-LockpathPing
+            $message = 'success'
+        } catch {
+            Send-LockpathLogin
+            $message = 'failed'
+            $level = 'Warning'
+        } finally {
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
         }
-    } else {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'ShouldProcess confirmation was denied.' -FunctionName $functionName -Level $level -Service $service
+        return $message
     }
 }

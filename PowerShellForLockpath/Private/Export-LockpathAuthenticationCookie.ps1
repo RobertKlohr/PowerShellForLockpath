@@ -1,8 +1,34 @@
 ﻿function Export-LockpathAuthenticationCookie {
+    <#
+    .SYNOPSIS
+        Attempts to export the API authentication cookie to the local file system.
 
+    .DESCRIPTION
+        Attempts to export the API authentication cookie to the local file system.
 
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
+    .PARAMETER Cookie
+        A .Net cookie object.
 
+    .PARAMETER Uri
+        Uri of the cookie.
+
+    .EXAMPLE
+        Export-LockpathAuthenticationCookie
+
+    .INPUTS
+        System.Net.CookieCollection
+
+    .OUTPUTS
+        None
+
+    .NOTES
+        Private helper method.
+
+    .LINK
+        https://git.io/powershellforlockpathhelp
+    #>
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
@@ -14,13 +40,11 @@
     param(
         [Parameter(
             Mandatory = $true)]
-        [PSCustomObject] $Credential,
-        # [PSCredential]
+        [System.Net.CookieCollection] $Cookie,
 
         [Parameter(
             Mandatory = $true)]
-        [Alias('Path')]
-        [System.IO.FileInfo] $FilePath
+        [String] $Uri
     )
 
     $level = 'Verbose'
@@ -29,10 +53,19 @@
 
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-    $null = New-Item -Path $FilePath -Force
-    $Credential | Export-Clixml -Path $FilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+    $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
+        'Domain' = $webSession.Cookies.GetCookies($uri).Domain
+        'Name'   = $webSession.Cookies.GetCookies($uri).Name
+        'Value'  = $webSession.Cookies.GetCookies($uri).Value
+    }
 
-    if (($null -ne $ev) -and ($ev.Count -gt 0)) {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message 'Failed to persist credentials disk.  They will remain for this PowerShell session only.' -ErrorRecord $ev[0]
+    try {
+        Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth 10 -Force
+        $message = 'success'
+    } catch {
+        $message = 'failed'
+        $level = 'Warning'
+    } finally {
+        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
     }
 }

@@ -8,7 +8,7 @@
         enforce mandatory fields in a record. It is possible to pass an empty array for the attribute parameter to
         create an empty record.
 
-        The Git repo for this module can be found here: https://github.com/RobertKlohr/PowerShellForLockpath
+        The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER ComponentId
         Specifies the Id number of the component.
@@ -32,7 +32,7 @@
         and record along with Update General Access to the fields.
 
     .LINK
-        https://github.com/RobertKlohr/PowerShellForLockpath/wiki
+        https://git.io/powershellforlockpathhelp
     #>
 
     [CmdletBinding(
@@ -69,7 +69,7 @@
             }
         }
 
-        $params = @{
+        $restParameters = [ordered]@{
             'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
             'Description' = 'Creating Record'
             'Method'      = 'POST'
@@ -77,22 +77,29 @@
             'UriFragment' = 'CreateRecord'
         }
 
-        $target = "Filter=$($params.Body)"
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'WhatIf'       = $false
+            'Message'      = $message
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Service'      = $service
+        }
 
-        if ($PSCmdlet.ShouldProcess($target)) {
+        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+
+        if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @params
+                $result = Invoke-LockpathRestMethod @restParameters
                 $message = 'success'
             } catch {
-                $message = 'failed'
-                $level = 'Warning'
+                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $logParameters.message = 'failed'
+                $logParameters.level = 'Warning'
+            } finally {
+                Write-LockpathLog @logParameters
             }
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-            If ($message -eq 'failed') {
-                return $message
-            } else {
-                return $result
-            }
+            return $result
         }
     }
 
