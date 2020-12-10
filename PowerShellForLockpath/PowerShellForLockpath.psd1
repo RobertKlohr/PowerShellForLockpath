@@ -148,7 +148,7 @@
             Tags         = @('API', 'Keylight', 'Lockpath', 'PowerShell', 'Wrapper')
 
             # A URL to the license for this module.
-            LicenseUri   = 'https://github.com/RobertKlohr/PowerShellForLockpath/blob/master/.github/LICENSE'
+            LicenseUri   = 'https://git.io/powershellforlockpathlicense'
 
             # A URL to the main website for this project.
             ProjectUri   = 'https://git.io/powershellforlockpath'
@@ -162,7 +162,8 @@
 
     } # End of PrivateData Hashtable
 
-    # HelpInfo URI of this module HelpInfoURI = ''
+    # HelpInfo URI of this module
+    #HelpInfoURI          = ''
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module
     # -Prefix.
