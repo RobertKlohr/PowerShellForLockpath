@@ -1,10 +1,10 @@
-﻿function Add-LockpathUserToGroup {
+﻿function Add-LockpathGroupUser {
     <#
     .SYNOPSIS
         Add a user to a group.
 
     .DESCRIPTION
-        Add a user to a group.  Existing users in the group remain in the group.
+        Add a user to a group. Existing users in the group remain in the group.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
@@ -15,10 +15,7 @@
         Specifies the Id number of the user.
 
     .EXAMPLE
-        Set-LockpathGroup -Attributes @{'Id' = '7'; 'Name' = 'API Update Group'}
-
-    .EXAMPLE
-        Set-LockpathGroup -Attributes @{'Id' = '7'; 'Name' = 'API Update Group'; 'Users' = @(@{'Id'= '6'},@{'Id'= '10'}}
+        Add-LockpathGroupUser -GroupId 71 -UserId (6,10,11,12,13)
 
     .INPUTS
         System.Array
@@ -49,12 +46,14 @@
         [ValidateRange('NonNegative')]
         [Int64] $GroupId,
 
+        # FIXME add ability to use group name
+
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('NonNegative')]
-        [Int64[]] $UserIds
+        [Int64[]] $UserId
     )
 
     begin {
@@ -84,11 +83,11 @@
                 foreach ($user in $existingUsers) {
                     $users += $user.Id
                 }
-                foreach ($Id in $UserIds) {
+                foreach ($Id in $UserId) {
                     $users += $Id
                 }
-                Update-LockpathGroup -GroupId $GroupId -Users $users
-                $message = 'success'
+                Set-LockpathGroup -GroupId $GroupId -Users $users
+                $logParameters.message = 'success'
             } catch {
                 $result = $_.ErrorDetails.Message.Split('"')[3]
                 $logParameters.message = 'failed'

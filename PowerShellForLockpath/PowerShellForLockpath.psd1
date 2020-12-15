@@ -52,6 +52,7 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no functions to export.
     FunctionsToExport    = @(
+        'Add-LockpathGroupUser',
         'Find-LockpathField',
         'Get-LockpathComponent',
         'Get-LockpathComponentByAlias',
@@ -104,6 +105,7 @@
         'Set-LockpathRecordVote',
         'Set-LockpathUser',
         'Set-LockpathUsers',
+        'Set-LockpathVendorGroup',
         'Show-LockpathConfiguration',
         'Test-LockpathAuthentication',
         # FIXME The following private funcdtions are exported during development

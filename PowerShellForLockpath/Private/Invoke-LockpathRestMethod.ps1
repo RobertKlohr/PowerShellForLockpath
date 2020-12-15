@@ -125,7 +125,10 @@
     # Check to see if the calling function was the login and set the Login flag
     If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Send-LockpathLogin') {
         $Login = $true
+    } else {
+        $Login = $false
     }
+
 
     $level = 'Verbose'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())

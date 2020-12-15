@@ -18,7 +18,14 @@ function Get-LockpathUserCount {
         Get-LockpathUserCount
 
     .EXAMPLE
-        Get-LockpathUserCount -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+        Get-LockpathUserCount -Filter @(@{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='5'; 'Value'='2'})
+
+        Returns a set of users with the account type of Vendor.
+
+    .EXAMPLE
+        Get-LockpathUserCount -Filter @(@{'Field'= @{'ShortName'='Deleted'}; 'FilterType'='5'; 'Value'='true'},@{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='5'; 'Value'='1'})
+
+        Returns a set of users with the account type of vendor and status of Inactive.
 
     .INPUTS
         System.Array
@@ -60,17 +67,16 @@ function Get-LockpathUserCount {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsArray
             'Description' = 'Getting User Count By Filter'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetUserCount'
         }
         # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
-        # To compensate for this bug we need to edit the JSON in $restParameters.body so that it does not use the filters key
-        # and to then wrap it in a set of brackets.
-        # When the bug is fixed we can delete the next line.
-        $restParameters.Body = "[$($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth)]"
+        # To compensate for this bug we need to edit the JSON in $restParameters.body so that it does not use the
+        # filters key. When the bug is fixed we can delete the next line.
+        $restParameters.Body = $Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
 
         $logParameters = [ordered]@{
             'Confirm'      = $false
@@ -86,7 +92,7 @@ function Get-LockpathUserCount {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 $result = Invoke-LockpathRestMethod @restParameters
-                $message = 'success'
+                $logParameters.message = 'success'
             } catch {
                 $result = $_.ErrorDetails.Message.Split('"')[3]
                 $logParameters.message = 'failed'

@@ -47,12 +47,12 @@ function Get-LockpathUsers {
     .EXAMPLE
         Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 
-        Returns a set of users matching the filter with the -PageIndex and -PageSize defaulting to the values in the module configuration.
+        Returns a set of users with the account type of Vendor or Full User with the -PageIndex and -PageSize defaulting to the values in the module configuration.
 
     .EXAMPLE
-        Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
+        Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @(@{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='5'; 'Value'='2'},@{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'})
 
-        Returns the first 100 users in the system matching the filter.
+        Returns the first 100 users with the account type of vendor and status of Inactive.
 
     .INPUTS
         System.Array System.UInt32
@@ -144,7 +144,7 @@ function Get-LockpathUsers {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 $result = Invoke-LockpathRestMethod @restParameters
-                $message = 'success'
+                $logParameters.message = 'success'
             } catch {
                 $result = $_.ErrorDetails.Message.Split('"')[3]
                 $logParameters.message = 'failed'

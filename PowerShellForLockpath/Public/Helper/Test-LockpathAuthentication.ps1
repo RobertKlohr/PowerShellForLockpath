@@ -45,7 +45,7 @@
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             Send-LockpathPing
-            $message = 'success'
+            $logParameters.message = 'success'
         } catch {
             Send-LockpathLogin
             $message = 'failed'

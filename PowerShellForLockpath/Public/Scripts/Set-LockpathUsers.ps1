@@ -49,7 +49,22 @@
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
-    param()
+    param(
+        [Parameter(
+            Mandatory = $true
+        )]
+        [String] $UpdateField,
+
+        [Parameter(
+            Mandatory = $true
+        )]
+        [String] $UpdateValue,
+
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = 'Default')]
+        [Array] $Filter = @()
+    )
 
     $level = 'Information'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
@@ -59,18 +74,16 @@
 
     if ($PSCmdlet.ShouldProcess("Updating users with:  $($restParameters.Body)", $($restParameters.Body), 'Updating users with:')) {
 
-        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+        $userCount = Get-LockpathUserCount
+        $users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         $usersProgress = $users.count
         $i = 1
 
         foreach ($user In $users) {
             try {
-                #FIXME the update is currently hardcoded
-                if (!$user.Deleted -and $user.AccountType -eq 1) {
-                    $ProgressPreference = 'SilentlyContinue'
-                    Set-LockpathUser -Attributes @{'Id' = "$($user.Id)"; 'LDAPDirectory' = @{'Id' = '5' } } -Confirm:$false -WhatIf:$false
-                    $ProgressPreference = 'Continue'
-                }
+                $ProgressPreference = 'SilentlyContinue'
+                Set-LockpathUser -Attributes @{'Id' = "$($user.Id)"; $UpdateField = $UpdateValue } -Confirm:$false -WhatIf:$false
+                $ProgressPreference = 'Continue'
             } catch {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
             }

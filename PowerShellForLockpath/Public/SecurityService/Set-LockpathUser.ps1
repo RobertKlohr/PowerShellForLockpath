@@ -88,7 +88,7 @@
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 $result = Invoke-LockpathRestMethod @restParameters
-                $message = 'success'
+                $logParameters.message = 'success'
             } catch {
                 $result = $_.ErrorDetails.Message.Split('"')[3]
                 $logParameters.message = 'failed'

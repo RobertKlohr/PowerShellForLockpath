@@ -43,6 +43,8 @@
     https://git.io/powershellforlockpathhelp
     #>
 
+    # FIXME migrate this function to just use write-lockpathlog
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
