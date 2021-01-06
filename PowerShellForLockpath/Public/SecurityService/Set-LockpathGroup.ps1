@@ -116,12 +116,6 @@
     process {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
-        if ($BusinessUnit) {
-            [Boolean] $BusinessUnit = $true
-        } else {
-            [Boolean] $BusinessUnit = $false
-        }
-
         $Body = [ordered]@{}
         $Ids = @()
 
