@@ -1,8 +1,10 @@
 #-------------------------------------------------------------------------
+# FIXME figure out the location to set and how we do this for vscode unit testing
+# TODO figure out the location to set and how we do this for GitHub build testing
 Set-Location -Path $PSScriptRoot
 #-------------------------------------------------------------------------
 $ModuleName = 'PowerShellForLockpath'
-$PathToManifest = [System.IO.Path]::Combine('..', '..', $ModuleName, "$ModuleName.psd1")
+$PathToManifest = [System.IO.Path]::Combine('..', $ModuleName, "$ModuleName.psd1")
 #-------------------------------------------------------------------------
 if (Get-Module -Name $ModuleName -ErrorAction 'SilentlyContinue') {
     #if the module is already in memory, remove it

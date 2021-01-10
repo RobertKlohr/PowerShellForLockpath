@@ -21,3 +21,29 @@ This project has a [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Licensing
 
 See the [LICENSE](LICENSE.txt) file for our project's licensing.
+
+## Coding Style
+
+TODO Need to flush out this section
+### Functions
+
+#### Help
+
+- Synopsis
+- Description
+- Parameter
+- Example
+- Link
+
+#### Advanced Functions
+
+- param block
+- pipleline enabled
+
+#### Seprate File
+
+Function-[Verb-Noun].ps1
+
+ORBS
+
+Indentation

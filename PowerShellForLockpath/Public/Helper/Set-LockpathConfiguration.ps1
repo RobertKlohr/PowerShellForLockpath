@@ -94,9 +94,9 @@
         The WebSession object that it used to make subsequent API requests after the initial login.
 
     .EXAMPLE
-        Set-LockpathConfiguration -InstanceName <yourhost>.keylightgrc.com
+        Set-LockpathConfiguration -InstanceName [instance].keylightgrc.com
 
-        Changes the API instance name to <yourhost>.keylightgrc.com. These settings will be persisted across future PowerShell sessions.
+        Changes the API instance name to [instance].keylightgrc.com. These settings will be persisted across future PowerShell sessions.
 
     .EXAMPLE
         Set-LockpathConfiguration -PageSize 1000 -SessionOnly
