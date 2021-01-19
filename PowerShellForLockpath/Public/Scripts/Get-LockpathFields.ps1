@@ -57,7 +57,9 @@
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'ComponentService'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {

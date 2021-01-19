@@ -87,7 +87,9 @@
     }
 
     process {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         $Body = [ordered]@{
             'tableAlias'     = $ComponentAlias # There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.

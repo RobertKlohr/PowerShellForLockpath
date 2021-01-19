@@ -77,7 +77,9 @@
     }
 
     process {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         # TODO update so this can take the component ID as well as the alias see also Set-LockpathRecordVote
 

@@ -8,10 +8,11 @@
 
         Combines Get-LpComponentList, Get-LockpathComponent, Get-LpFieldList and Get-LockpathField.
 
-        There is no filtering provided in this function (beyond limiting the list of components) as the API does
-        not support filtering for retrieving any of the information used in this method meaning.  The impact of
-        this is that there is no performance advantage to applying filtering to this method and instead using
-        PowerShell to manipulate the response object provides both better performance and capabilities.
+        There is no filtering provided in this function (beyond limiting the list of components) as
+        the  API does not support filtering for retrieving any of the information used in this
+        method meaning. The impact of this is that there is no performance advantage to applying
+        filtering to this method and instead using PowerShell to manipulate the response object
+        provides both better performance and capabilities.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
@@ -57,7 +58,9 @@
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'ComponentService'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {

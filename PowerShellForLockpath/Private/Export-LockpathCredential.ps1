@@ -43,7 +43,7 @@
         [PSCredential]  $Credential
     )
 
-    $level = 'Verbose'
+    $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 

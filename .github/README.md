@@ -13,9 +13,12 @@
   - [Usage](#usage)
   - [Logging](#logging)
   - [Developing and Contributing](#developing-and-contributing)
+  - [Creating a Release](#creating-a-release)
+  - [Versioning](#versioning)
   - [Code of Conduct](#code-of-conduct)
   - [Maintainers](#maintainers)
   - [Legal and Licensing](#legal-and-licensing)
+  - [Acknowledgements](#acknowledgements)
 
 ----------
 
@@ -103,6 +106,32 @@ If you do not see your problem captured, please file [feedback](CONTRIBUTING.md#
 
 ----------
 
+## Creating a Release
+
+================
+
+- Update changelog (`changelog.md`) with the new version number based on  Semantic Versioning (SemVer) version 2.0.0 <https://semver.org/spec/v2.0.0.html>.
+
+<!-- When updating the changelog please follow the same pattern as that of previous change sets
+(otherwise this may break the next step).
+
+- Import the ReleaseMaker module and execute `New-Release` cmdlet to perform the following actions.
+  - Update module manifest (engine/PSScriptAnalyzer.psd1) with the new version number and change set
+
+```powershell
+    PS> Import-Module .\Utils\ReleaseMaker.psm1
+    PS> New-Release
+``` -->
+
+- Sign the binaries and PowerShell files in the release build and publish the module to [PowerShell Gallery](www.powershellgallery.com).
+- Draft a new release on github and tag `master` with the new version number.
+
+## Versioning
+
+This module uses Semantic Versioning (SemVer) version 2.0.0 <https://semver.org/spec/v2.0.0.html>.
+
+----------
+
 ## Code of Conduct
 
 For more info, see [Code of Conduct](CODE_OF_CONDUCT.md)
@@ -118,3 +147,8 @@ For more info, see [Code of Conduct](CODE_OF_CONDUCT.md)
 ## Legal and Licensing
 
 PowerShellForLockpath is licensed under the [MIT license](LICENSE).
+
+## Acknowledgements
+
+[Oliver Lachlan](https://github.com/olivierlacan) - For creating the [Keep a Changelog](https://github.com/olivierlacan/keep-a-changelog) format.\
+[Tom Preston-Werner](https://github.com/mojombo) - For authoring the [Semantic Versioning Specification](https://github.com/semver/semver).

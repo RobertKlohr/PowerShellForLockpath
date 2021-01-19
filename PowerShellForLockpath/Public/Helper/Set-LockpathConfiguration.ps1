@@ -6,9 +6,6 @@
     .DESCRIPTION
         Change the value of a configuration property for the module, for the session only, or saved to disk.
 
-        To change any of the Boolean/switch properties to false, specify the switch, immediately followed by
-        ":$false" with no space.
-
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER AcceptHeader
@@ -135,7 +132,7 @@
         [ValidateSet('application/json', 'application/xml')]
         [String] $ContentTypetHeader,
 
-        [SecureString] $Credential,
+        [PSCredential] $Credential,
 
         [System.IO.Path] $CredentialFilePath,
 
@@ -161,9 +158,9 @@
 
         [String] $LogPath,
 
-        [Switch] $LogRequestBody,
+        [Boolean] $LogRequestBody,
 
-        [Switch] $LogTimeAsUtc,
+        [Boolean] $LogTimeAsUtc,
 
         [System.Collections.ArrayList] $MethodContainsBody,
 

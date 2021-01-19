@@ -41,7 +41,9 @@ function Send-LockpathLogout {
     }
 
     process {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         $restParameters = [ordered]@{
             'Description' = 'Sending Logout'
@@ -57,6 +59,8 @@ function Send-LockpathLogout {
             'FunctionName' = $functionName
             'Level'        = $level
             'Service'      = $service
+            # FIXME update all functions to pass the result to write-lockpathlog (1)
+            'Result'       = $result
         }
 
         $shouldProcessTarget = $restParameters.Description
@@ -69,6 +73,8 @@ function Send-LockpathLogout {
                 $result = $_.ErrorDetails.Message.Split('"')[3]
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
+                # FIXME update all functions to pass the result to write-lockpathlog (2)
+                $logParameters.result = $result
             } finally {
                 Write-LockpathLog @logParameters
             }

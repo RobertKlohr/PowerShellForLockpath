@@ -47,11 +47,13 @@
         [String] $Uri
     )
 
-    $level = 'Verbose'
+    $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
     $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
         'Domain' = $webSession.Cookies.GetCookies($uri).Domain

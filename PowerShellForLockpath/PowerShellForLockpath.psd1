@@ -11,8 +11,9 @@
     # Script module or binary module file associated with this manifest.
     RootModule           = 'PowerShellForLockpath.psm1'
 
-    # Version number of this module.
-    ModuleVersion        = '0.0.2'
+    # Version number of this module. This module adheres to Semantic Versioning Specification
+    # (SemVer) 2.0.0  https://semver.org/spec/v2.0.0.html
+    ModuleVersion        = '0.0.3'
 
     # Supported PSEditions CompatiblePSEditions = @()
 

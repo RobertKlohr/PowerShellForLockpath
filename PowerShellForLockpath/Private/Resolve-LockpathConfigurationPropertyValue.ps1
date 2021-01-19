@@ -63,17 +63,17 @@
         $DefaultValue
     )
 
-    $level = 'Verbose'
+    $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     if ($null -eq $InputObject) {
         return $DefaultValue
     }
     try {
-        switch (${Type}) {
+        switch ($Type) {
             'ArrayList' {
                 $typeType = [System.Collections.ArrayList]
                 break

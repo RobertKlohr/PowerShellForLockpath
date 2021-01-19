@@ -63,8 +63,9 @@
         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level $level
     }
 
-    # Normally Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
-    # configuration to be loaded first.
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    # Normally Write-LockpathInvocationLog runs first, but the configuration needs to be loaded
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
 }

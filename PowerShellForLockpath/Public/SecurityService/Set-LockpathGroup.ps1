@@ -110,16 +110,17 @@
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-        [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 0 -ValueOnly)
     }
 
     process {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         $Body = [ordered]@{}
         $Ids = @()
 
-        foreach ($parameter in $Invocation.BoundParameters.GetEnumerator()) {
+        foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
             if ($parameter.Value -is [Switch]) {
                 $Body.Add($parameter.Key, $parameter.Value.ToBool().ToString().ToLower())
             } elseif ($parameter.Value -is [Int64[]]) {

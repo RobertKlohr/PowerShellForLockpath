@@ -38,7 +38,9 @@
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'SecurityService'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
     if ($PSCmdlet.ShouldProcess("Getting users with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
         # check to see if the username is set in the login credential and exit early if it is null

@@ -52,7 +52,9 @@ function Reset-LockpathConfiguration {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PublicHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    }
 
     if (-not $SessionOnly) {
         if ($PSCmdlet.ShouldProcess("Reseting configuration file:  $GroupId", $GroupId, 'Deleting group with Id:')) {

@@ -98,7 +98,7 @@
     $message = 'API credential set in session'
     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
 
-    $Script:Lockpathonfig.credential = $credential
+    $Script:LockpathConfig.credential = $credential
 
     if (-not $SessionOnly) {
         Export-LockpathCredential -Credential $Credential

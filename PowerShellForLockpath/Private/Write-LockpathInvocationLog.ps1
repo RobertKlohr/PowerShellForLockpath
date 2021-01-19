@@ -53,8 +53,6 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service,
 
@@ -64,11 +62,13 @@
 
         [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
 
-        [String] $Level = 'Verbose',
+        [String] $level = 'Debug',
 
         [String[]] $RedactParameter
 
     )
+
+    # FIXME This section is not working
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
     $restParameters = @()

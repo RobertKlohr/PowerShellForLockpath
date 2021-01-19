@@ -64,12 +64,12 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $Active,
+        [Boolean] $Active,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $APIAccess,
+        [Boolean] $APIAccess,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -84,7 +84,7 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [String] $fax,
+        [String] $Fax,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -109,17 +109,18 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $IsLDAP,
+        [Boolean] $IsLDAP,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $IsSAML,
+        [Boolean] $IsSAML,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [String] $Language,
+        [ValidateSet(1033)]
+        [Int64] $Language,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -129,12 +130,12 @@
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [String[]] $LDAPDirectory,
+        [Int64] $LDAPDirectory,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [Switch] $Locked,
+        [Boolean] $Locked,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -178,26 +179,38 @@
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-        [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 0 -ValueOnly)
-
+        # FIXME remove this statement if not needed after testing
+        # [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 0 -ValueOnly)
     }
 
     process {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         $Body = [ordered]@{}
         $Ids = @()
 
-        foreach ($parameter in $Invocation.BoundParameters.GetEnumerator()) {
-            if ($parameter.Value -is [Switch]) {
-                $Body.Add($parameter.Key, $parameter.Value.ToBool().ToString().ToLower())
-            } elseif ($parameter.Value -is [Int64[]]) {
-                foreach ($value in $parameter.Value) {
-                    $Ids += @{'Id' = $value }
+        foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
+            if ($parameter.Value -isnot [Switch]) {
+                switch ($parameter.Key) {
+                    { $_ -in 'FunctionalRoles', 'Groups', 'SecurityRoles' } {
+                        foreach ($value in $parameter.Value) {
+                            $Ids += @{'Id' = $value }
+                        }
+                        $Body.Add($parameter.Key, $Ids)
+                        break
+                    }
+                    { $_ -in 'Department', 'LDAPDirectory', 'Manager', 'SecurityConfiguration' } {
+                        $Body.Add($parameter.Key, @{'Id' = $parameter.Value })
+                        break
+                    }
+                    # { $_ -in 'AccountType', 'Active', 'APIAccess', 'Id', 'UserName', 'FirstName',
+                    # 'LastName' }
+                    Default {
+                        $Body.Add($parameter.Key, $parameter.Value)
+                    }
                 }
-                $Body.Add($parameter.Key, $Ids)
-            } else {
-                $Body.Add($parameter.Key, $parameter.Value)
             }
         }
 

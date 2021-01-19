@@ -83,6 +83,7 @@
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        # FIXME need to add this into the CEF log or console log or both
         [Parameter(Mandatory = $true)]
         [String] $Description,
 
@@ -138,7 +139,7 @@
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    # If the REST call is the login then redact the username and password sent in the body from the logs
+    # If the request is the login then redact the username and password in the body from the logs
     if ($Login) {
         # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper' -RedactParameter Body
         Write-Verbose 'Executing Invoke-LockpathRestMethod'
@@ -192,20 +193,25 @@
         #FIXME stopwatch testing
         $stopWatch = [system.diagnostics.stopwatch]::StartNew()
 
-
         if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
             $params.Add('Body', $Body)
             if ($Script:LockpathConfig.logRequestBody) {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
+                try {
+                    $Body = (ConvertFrom-Json $Body) | ConvertTo-Json -Compress
+                } finally {
+                    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
+                }
             } else {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
             }
         }
 
-
         [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
 
         Write-Verbose $result
+
+        # FIXME this is here to suppress the PSScriptAnalyzer warning until added to the logging
+        Write-Verbose $Description
 
         $stopWatch.Stop()
         $ProgressPreference = 'Continue'
@@ -285,7 +291,6 @@
         } else {
             Write-LockpathLog -Confirm:$false -WhatIf:$false -Level $level -FunctionName $functionName -Service PrivateHelper -ErrorRecord $_
             Write-Error 'non-webresponse error' -ErrorAction stop
-
         }
     }
 }

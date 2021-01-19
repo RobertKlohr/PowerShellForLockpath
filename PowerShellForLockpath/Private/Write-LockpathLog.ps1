@@ -86,14 +86,16 @@
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service,
 
-        [String] $FunctionName,
-
         [System.Management.Automation.ErrorRecord] $ErrorRecord,
 
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
 
+        [String] $FunctionName,
+
         [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
-        [String] $Level = $Script:LockpathConfig.loggingLevel
+        [String] $Level = $Script:LockpathConfig.loggingLevel,
+
+        [String] $Result
 
         # #Possible CEF Extension Message Values
         # [Int32] $dpdt,
@@ -119,6 +121,26 @@
         $cefHeaderDeviceVendor = $Script:LockpathConfig.vendorName
         $cefHeaderDeviceVersion = $Script:LockpathConfig.productVersion
         $cefHeaderVersion = 'CEF:0'
+        switch ($Script:LockpathConfig.loggingLevel) {
+            'Error' {
+                $loggingLevel = 0
+            }
+            'Warning' {
+                $loggingLevel = 1
+            }
+            'Information' {
+                $loggingLevel = 2
+            }
+            'Verbose' {
+                $loggingLevel = 3
+            }
+            'Debug' {
+                $loggingLevel = 4
+            }
+            Default {
+                $loggingLevel = 0
+            }
+        }
     }
 
     process {
@@ -142,7 +164,12 @@
         # Build the CEF extension message
 
         # msg: An arbitrary message giving more details about the event.
-        $msg = 'msg=' + $Message
+        # FIXME update all functions to pass the result to write-lockpathlog (3)
+        If ($Result -eq '') {
+            $msg = 'msg=' + $Message
+        } else {
+            $msg = 'msg=' + $Result
+        }
 
         # rt: The time at which the event related to the activity was received.
         if ($Script:LockpathConfig.logTimeAsUtc) {
@@ -170,30 +197,34 @@
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
             # script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
+                $logMessageLevel = 0
                 $cefHeaderSeverity = 'High'
                 # FIXME validate the ErrorAction setting and the above script-level setting
                 # Write-Error $consoleMessage -ErrorAction SilentlyContinue
                 Write-Error $consoleMessage
             }
             'Warning' {
+                $logMessageLevel = 1
                 $cefHeaderSeverity = 'Medium'
                 Write-Warning $consoleMessage
             }
+            'Information' {
+                $logMessageLevel = 2
+                $cefHeaderSeverity = 'Low'
+                Write-Information $consoleMessage
+            }
             'Verbose' {
+                $logMessageLevel = 3
                 $cefHeaderSeverity = 'Low'
                 Write-Verbose $consoleMessage
             }
             'Debug' {
+                $logMessageLevel = 4
                 $cefHeaderSeverity = 'Low'
                 Write-Debug $consoleMessage
             }
-            'Information' {
-                $cefHeaderSeverity = 'Low'
-                Write-Information $consoleMessage
-            }
         }
-        # Only write verbose entries to the log file based on configuration setting
-        if ($Level -eq 'Verbose' -and $Script:LockpathConfig.loggingLevel -ne 'Verbose') {
+        if ($logMessageLevel -gt $loggingLevel) {
             return
         }
 
@@ -210,7 +241,7 @@
                 Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
             } else {
                 if (-not (Test-Path $FilePath)) {
-                    New-Item -Path $FilePath -ItemType File -Force
+                    $null = New-Item -Path $FilePath -ItemType File -Force
                 }
                 $cefLogEntry | Out-File -FilePath $FilePath -Append
             }

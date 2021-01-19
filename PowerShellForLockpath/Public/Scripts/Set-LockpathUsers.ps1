@@ -3,7 +3,6 @@
     # FIXME Need to configure parameters and filtering
     # FIXME Check and update all help sections
     # FIXME check and update all parameter sections
-
     <#
     .SYNOPSIS
         Bulk update user accounts.
@@ -53,6 +52,7 @@
         [Parameter(
             Mandatory = $true
         )]
+        #TODO set validate list
         [String] $UpdateField,
 
         [Parameter(
@@ -75,14 +75,24 @@
     if ($PSCmdlet.ShouldProcess("Updating users with:  $($restParameters.Body)", $($restParameters.Body), 'Updating users with:')) {
 
         $userCount = Get-LockpathUserCount
-        $users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+        $users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
         $usersProgress = $users.count
         $i = 1
 
         foreach ($user In $users) {
             try {
                 $ProgressPreference = 'SilentlyContinue'
-                Set-LockpathUser -Attributes @{'Id' = "$($user.Id)"; $UpdateField = $UpdateValue } -Confirm:$false -WhatIf:$false
+                # Set-LockpathUser -Attributes @{'Id' = "$($user.Id)"; $UpdateField = $UpdateValue }
+                # -Confirm:$false -WhatIf:$false
+                $parameters = @{
+                    Id           = $user.Id
+                    $UpdateField = $UpdateValue
+                    Confirm      = $false
+                    WhatIf       = $false
+                }
+                # Set-LockpathUser -Id $user.Id -$UpdateField $UpdateValue -Confirm:$false
+                # -WhatIf:$false
+                $null = Set-LockpathUser @parameters
                 $ProgressPreference = 'Continue'
             } catch {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
