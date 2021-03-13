@@ -1,4 +1,7 @@
-﻿function Get-LockpathFieldLookupReportColumns {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathFieldLookupReportColumns {
     <#
     .SYNOPSIS
         Gets the field information of each field in a field path that corresponds to a lookup report column.

@@ -1,4 +1,7 @@
-﻿BeforeAll {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+BeforeAll {
     Set-Location -Path $PSScriptRoot
     $script:ModuleName = 'PowerShellForLockpath'
 }

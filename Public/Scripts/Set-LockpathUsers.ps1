@@ -1,5 +1,7 @@
-﻿function Set-LockpathUsers {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
 
+function Set-LockpathUsers {
     # FIXME Need to configure parameters and filtering
     # FIXME Check and update all help sections
     # FIXME check and update all parameter sections

@@ -1,4 +1,7 @@
-﻿function Get-LockpathGroups {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathGroups {
     <#
     .SYNOPSIS
         Returns a list of groups and available fields.

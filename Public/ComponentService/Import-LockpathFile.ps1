@@ -1,4 +1,7 @@
-﻿function Import-LockpathFile {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Import-LockpathFile {
     <#
     .SYNOPSIS
         Queues a job to import a file for a defined import template.

@@ -1,3 +1,6 @@
+# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
 #-------------------------------------------------------------------------
 # FIXME figure out the location to set and how we do this for vscode unit testing
 # TODO figure out the location to set and how we do this for GitHub build testing

@@ -1,4 +1,7 @@
-﻿function Export-LockpathCredential {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Export-LockpathCredential {
     <#
     .SYNOPSIS
         Attempts to export the API credential to the local file system.

@@ -1,4 +1,7 @@
-﻿function New-LockpathUser {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function New-LockpathUser {
     <#
     .SYNOPSIS
         Creates a user account.

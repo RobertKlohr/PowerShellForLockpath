@@ -1,4 +1,7 @@
-﻿function Get-LockpathRecordAttachments {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathRecordAttachments {
     <#
     .SYNOPSIS
         Returns the file name, field Id and document Id for all attachments associated with a given record.

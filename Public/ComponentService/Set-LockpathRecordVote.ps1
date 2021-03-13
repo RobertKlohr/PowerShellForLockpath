@@ -1,4 +1,7 @@
-﻿function Set-LockpathRecordVote {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathRecordVote {
     <#
     .SYNOPSIS
         Casts a vote for a record in a workflow stage.

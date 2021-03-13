@@ -1,4 +1,7 @@
-﻿function Get-LockpathComponent {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathComponent {
     <#
     .SYNOPSIS
         Returns information about a component specified by its Id.

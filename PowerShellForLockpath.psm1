@@ -1,3 +1,6 @@
+# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
 # FIXME this psm1 is for local testing and development use only
 # FIXME check all functions with filters
 # TODO create credential file for each instance

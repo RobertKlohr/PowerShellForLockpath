@@ -1,4 +1,7 @@
-﻿function Remove-LockpathUser {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Remove-LockpathUser {
     <#
     .SYNOPSIS
         Deletes a user account.

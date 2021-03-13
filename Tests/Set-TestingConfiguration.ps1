@@ -1,4 +1,7 @@
-﻿Set-StrictMode -Version Latest
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+Set-StrictMode -Version Latest
 
 Set-Location -Path $PSScriptRoot
 $script:ModuleName = 'PowerShellForLockpath'

@@ -1,4 +1,7 @@
-﻿function Show-LockpathConfiguration {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Show-LockpathConfiguration {
     <#
     .SYNOPSIS
         Shows the current module configuration.

@@ -1,4 +1,7 @@
-﻿function Get-LockpathFields {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathFields {
     <#
     .SYNOPSIS
         Returns all field details for all fields or a subset of fields based on the provided componet Ids.

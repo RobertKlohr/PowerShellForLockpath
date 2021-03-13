@@ -1,4 +1,7 @@
-﻿function Set-LockpathRecord {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathRecord {
     <#
     .SYNOPSIS
         Update fields in a specified record.

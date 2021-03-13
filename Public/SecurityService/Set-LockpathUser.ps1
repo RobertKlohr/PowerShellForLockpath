@@ -1,6 +1,7 @@
-﻿function Set-LockpathUser {
-    # EXAMPLE: Set-LockpathUser -Id 6 -EmailAddress 'user@test.com' -Manager 6857 -Department 54
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
 
+function Set-LockpathUser {
     <#
     .SYNOPSIS
         Updates a user account.
@@ -33,8 +34,8 @@
         Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/UpdateUser
 
         The authentication account must have Read and Update Administrative Access permissions to administer users.
-        For vendor contacts, the authentication account must also have the Read and Update General Access to Vendor
-        Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
+
+        For vendor contacts, the authentication account must also have the Read and Update General Access to Vendor Profiles, View and Edit Vendor Profiles workflow stage and Vendor Profiles record permission.
 
     .LINK
         https://git.io/powershellforlockpathhelp

@@ -1,4 +1,7 @@
-﻿function Send-LockpathLogin {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Send-LockpathLogin {
     <#
     .SYNOPSIS
         Creates an active session.

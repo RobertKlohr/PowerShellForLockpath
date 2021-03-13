@@ -1,3 +1,6 @@
+# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
 function Send-LockpathPing {
     <#
     .SYNOPSIS
@@ -41,6 +44,8 @@ function Send-LockpathPing {
     }
 
     process {
+        # FIXME public function only log invocation when set to verbose and maybe then only to the
+        # verbose output stream
         if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
             Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
         }
@@ -52,34 +57,27 @@ function Send-LockpathPing {
             'UriFragment' = 'Ping'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'               = $false
-            'WhatIf'                = $false
-            'CefName'               = $message
-            'CefDeviceEventClassId' = $functionName
-            'CefDeviceProduct'      = $service
-            'Level'                 = $level
-
-
-            # #Possible CEF Extension Message Values
-            # [Int32] $dpdt,
-            # [String] $duser,
-            # [DateTime] $end,
-            # #[String] $filePath,
-            # [String] $fname,
-            # [Int32] $fsize,
-            # [Int32] $in,
-            # [Int32] $out,
-            # [String] $outcome,
-            # [String] $reason,
-            # [String] $request,
-            # [String] $requestClientApplication,
-            # [String] $requestContext,
-            # [String] $requestMethod,
-            # [DateTime] $start
-
-
-        }
+        # $logParameters = [ordered]@{
+        #     'CefHeaderDeviceVendor'         = $moduleName
+        #     'CefHeaderDeviceProduct'        = $moduleName
+        #     'CefHeaderDeviceVersion'        = $moduleVersion
+        #     'CefHeaderDeviceEventClassId'   = $functionName
+        #     'CefHeaderName'                 = $a
+        #     'CefHeaderSeverity'             = 'Unknown'
+        #     'CefExtensionEnd'               = $a
+        #     'CefExtensionFilePath'          = $a
+        #     'CefExtensionFileSize'          = $a
+        #     'CefExtensionMsg'               = $msg
+        #     'CefExtensionOutcome'           = $a
+        #     'CefExtensionReason'            = $a
+        #     'CefExtensionRequest'           = $a
+        #     'CefExtensionRequestMethod'     = $a
+        #     'CefExtensionSourceServiceName' = $a
+        #     'CefExtensionSourceProcessId'   = $a
+        #     'CefExtensionSourceUserName'    = $a
+        #     'CefExtensionSourceHostName'    = $a
+        #     'CefExtensionStart'             = $a
+        # }
 
         $shouldProcessTarget = $restParameters.Description
 

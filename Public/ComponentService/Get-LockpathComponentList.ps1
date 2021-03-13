@@ -1,4 +1,7 @@
-﻿function Get-LockpathComponentList {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathComponentList {
     <#
     .SYNOPSIS
         Returns a complete list of all components.

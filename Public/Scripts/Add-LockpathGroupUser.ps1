@@ -1,4 +1,7 @@
-﻿function Add-LockpathGroupUser {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Add-LockpathGroupUser {
     <#
     .SYNOPSIS
         Add a user to a group.

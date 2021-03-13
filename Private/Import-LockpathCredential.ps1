@@ -1,4 +1,7 @@
-﻿function Import-LockpathCredential {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Import-LockpathCredential {
     <#
     .SYNOPSIS
         Attempts to import the API credential from the local file system.

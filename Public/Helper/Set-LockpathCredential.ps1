@@ -1,4 +1,7 @@
-﻿function Set-LockpathCredential {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathCredential {
     <#
     .SYNOPSIS
         Allows the user to configure the API credential used for authentication.

@@ -1,4 +1,7 @@
-﻿function Invoke-LockpathRestMethod {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Invoke-LockpathRestMethod {
     <#
     .SYNOPSIS
         A wrapper around Invoke-WebRequest that understands the Lockpath API.

@@ -1,4 +1,7 @@
-﻿function Send-LockpathKeepAlive {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Send-LockpathKeepAlive {
     <#
     .SYNOPSIS
         Refreshes a valid session.

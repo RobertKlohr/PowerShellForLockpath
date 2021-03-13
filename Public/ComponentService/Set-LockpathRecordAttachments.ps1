@@ -1,4 +1,7 @@
-﻿function Set-LockpathRecordAttachments {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathRecordAttachments {
     <#
     .SYNOPSIS
         Adds new attachments and/or updates existing attachments to the provided Documents field(s) on a specific

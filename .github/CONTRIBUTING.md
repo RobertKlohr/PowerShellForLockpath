@@ -10,9 +10,11 @@ Please note there is a code of conduct, please follow it in all your interaction
 
 ## Reporting Bugs/Feature Requests
 
+## Finding contributions to work on
+
 ## Contributing via Pull Requests
 
-## Finding contributions to work on
+[Conventional Commits 1.0](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Code of Conduct
 
@@ -25,6 +27,7 @@ See the [LICENSE](LICENSE.txt) file for our project's licensing.
 ## Coding Style
 
 TODO Need to flush out this section
+
 ### Functions
 
 #### Help
@@ -38,7 +41,7 @@ TODO Need to flush out this section
 #### Advanced Functions
 
 - param block
-- pipleline enabled
+- pipeline enabled
 
 #### Seprate File
 

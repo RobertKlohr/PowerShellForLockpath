@@ -1,4 +1,7 @@
-﻿function Get-LockpathApiUserDetails {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathApiUserDetails {
     <#
     .SYNOPSIS
         Returns all user details for the user making the API request.

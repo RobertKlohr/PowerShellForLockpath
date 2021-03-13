@@ -1,4 +1,7 @@
-﻿function New-LockpathGroup {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function New-LockpathGroup {
     <#
     .SYNOPSIS
         Creates a group.

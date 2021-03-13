@@ -1,4 +1,7 @@
-﻿function Initialize-LockpathConfiguration {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Initialize-LockpathConfiguration {
     <#
     .SYNOPSIS
         Populates the configuration of the module for this session, loading in any values

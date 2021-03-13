@@ -1,4 +1,7 @@
-﻿function Get-LockpathGroupsDetails {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathGroupsDetails {
     <#
     .SYNOPSIS
         Returns all group details for selected groups based on the applied filter.

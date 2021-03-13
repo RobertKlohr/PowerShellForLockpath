@@ -1,11 +1,11 @@
-﻿function Import-LockpathUsers {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
 
+function Import-LockpathUsers {
     # TODO loads locally saved copy of user database
     # TODO create function to refresh user database, run GetUsers and compare output to the versions loaded from
     # disk then run GetUser for any delta an add it to the locally stored user database. A secondary function
     # would be to prune users from the local database that are not returned from GetUsers
-
-
     <#
     .SYNOPSIS
         Loads in the default configuration values and returns the deserialized object.

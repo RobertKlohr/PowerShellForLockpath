@@ -1,4 +1,7 @@
-﻿function Initialize-LockpathLogExports {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Initialize-LockpathLogExports {
     <#
     .SYNOPSIS
         Creates the folder structure used for extracting log files via the Ambassador service.

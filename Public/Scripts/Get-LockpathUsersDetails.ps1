@@ -1,4 +1,7 @@
-﻿function Get-LockpathUsersDetails {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathUsersDetails {
     <#
     .SYNOPSIS
         Returns all user details for selected users based on the applied filter.

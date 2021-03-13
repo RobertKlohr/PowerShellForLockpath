@@ -1,4 +1,7 @@
-﻿function New-LockpathRecord {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function New-LockpathRecord {
     <#
     .SYNOPSIS
         Create a new record within the specified component of the application.

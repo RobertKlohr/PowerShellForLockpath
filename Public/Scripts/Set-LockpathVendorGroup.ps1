@@ -1,4 +1,7 @@
-﻿function Set-LockpathVendorGroup {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathVendorGroup {
     <#
     .SYNOPSIS
         Adds all vendor contacts to a single group.

@@ -1,4 +1,7 @@
-﻿function Import-LockpathAuthenticationCookie {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Import-LockpathAuthenticationCookie {
     <#
     .SYNOPSIS
         Attempts to import the API authentication cookie from the local file system.

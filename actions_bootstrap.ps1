@@ -1,3 +1,6 @@
+# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
 # Bootstrap dependencies
 
 # https://docs.microsoft.com/powershell/module/packagemanagement/get-packageprovider
@@ -43,8 +46,7 @@ foreach ($module in $modulesToInstall) {
         Install-Module @installSplat
         Import-Module -Name $module.ModuleName -ErrorAction Stop
         '  - Successfully installed {0}' -f $module.ModuleName
-    }
-    catch {
+    } catch {
         $message = 'Failed to install {0}' -f $module.ModuleName
         "  - $message"
         throw $message

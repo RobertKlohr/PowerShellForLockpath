@@ -1,3 +1,6 @@
+# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
 #-------------------------------------------------------------------------
 Set-Location -Path $PSScriptRoot
 #-------------------------------------------------------------------------
@@ -10,13 +13,13 @@ if (Get-Module -Name $ModuleName -ErrorAction 'SilentlyContinue') {
 }
 Import-Module $PathToManifest -Force
 #-------------------------------------------------------------------------
-$WarningPreference = "SilentlyContinue"
+$WarningPreference = 'SilentlyContinue'
 #-------------------------------------------------------------------------
 #Import-Module $moduleNamePath -Force
 
 InModuleScope 'PowerShellForLockpath' {
     #-------------------------------------------------------------------------
-    $WarningPreference = "SilentlyContinue"
+    $WarningPreference = 'SilentlyContinue'
     #-------------------------------------------------------------------------
     Describe 'PowerShellForLockpath Private Function Tests' -Tag Unit {
         Context 'FunctionName' {

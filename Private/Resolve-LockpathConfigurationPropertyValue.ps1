@@ -1,4 +1,7 @@
-﻿function Resolve-LockpathConfigurationPropertyValue {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Resolve-LockpathConfigurationPropertyValue {
     <#
     .SYNOPSIS
         Returns the requested property from the provided object, if it exists and is a valid

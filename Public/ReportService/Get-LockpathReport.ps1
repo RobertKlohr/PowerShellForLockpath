@@ -1,4 +1,7 @@
-﻿function Get-LockpathReport {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathReport {
     <#
     .SYNOPSIS
         Returns a report for a given report Id.

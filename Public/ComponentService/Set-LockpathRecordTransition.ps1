@@ -1,4 +1,7 @@
-﻿function Set-LockpathRecordTransition {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathRecordTransition {
     <#
     .SYNOPSIS
         Transitions a record in a workflow.

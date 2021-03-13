@@ -1,4 +1,7 @@
-﻿function Get-LockpathComponentByAlias {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathComponentByAlias {
     <#
     .SYNOPSIS
         Returns available fields for a given component.

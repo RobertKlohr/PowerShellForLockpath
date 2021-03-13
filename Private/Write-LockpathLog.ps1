@@ -1,4 +1,7 @@
-﻿function Write-LockpathLog {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Write-LockpathLog {
     <#
     .SYNOPSIS
         Writes logging information to screen and log file simultaneously.
@@ -97,6 +100,26 @@
 
         [String] $Result
 
+        # 'CefHeaderDeviceVendor' = $moduleName
+        # 'CefHeaderDeviceProduct' = $moduleName
+        # 'CefHeaderDeviceVersion' = $moduleVersion
+        # 'CefHeaderDeviceEventClassId' = $functionName
+        # 'CefHeaderName' = $a
+        # 'CefHeaderSeverity' = 'Unknown'
+        # 'CefExtensionEnd' = $a
+        # 'CefExtensionFilePath' = $a
+        # 'CefExtensionFileSize' = $a
+        # 'CefExtensionMsg' = $msg
+        # 'CefExtensionOutcome' = $a
+        # 'CefExtensionReason' = $a
+        # 'CefExtensionRequest' = $a
+        # 'CefExtensionRequestMethod' = $a
+        # 'CefExtensionSourceServiceName' = $a
+        # 'CefExtensionSourceProcessId' = $a
+        # 'CefExtensionSourceUserName' = $a
+        # 'CefExtensionSourceHostName' = $a
+        # 'CefExtensionStart' = $a
+
         # #Possible CEF Extension Message Values
         # [Int32] $dpdt,
         # [String] $duser,
@@ -150,6 +173,18 @@
     }
 
     end {
+
+        # FIXME data to parse form the errorrecord object
+        $Error[0].ErrorDetails.Message
+        $Error[0].Exception.Message
+        $Error[0].Exception.Response # need to check, maybe redundant with other properties
+
+        $Error[0].InvocationInfo.MyCommand # see if we can get bound/unbound parameters
+
+
+        $Error[0].ScriptStackTrace # need to parse out methods
+        $Error[0].TargetObject.Method
+        $Error[0].TargetObject.RequestUri
 
         if ($null -ne $ErrorRecord) {
             # If we have an exception, add it after the accumulated messages.

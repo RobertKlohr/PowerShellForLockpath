@@ -1,4 +1,7 @@
-﻿function Export-LockpathAuthenticationCookie {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Export-LockpathAuthenticationCookie {
     <#
     .SYNOPSIS
         Attempts to export the API authentication cookie to the local file system.
@@ -51,6 +54,8 @@
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
+    # FIXME private function only log when the logging is set to debug level
+
     if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
     }
@@ -74,6 +79,8 @@
         $message = 'failed'
         $level = 'Warning'
     } finally {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+        }
     }
 }

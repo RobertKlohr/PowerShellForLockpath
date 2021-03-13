@@ -1,4 +1,7 @@
-﻿function Import-LockpathConfiguration {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Import-LockpathConfiguration {
     <#
     .SYNOPSIS
         Loads in the configuration file from the local file system and then updates the configuration in memory with

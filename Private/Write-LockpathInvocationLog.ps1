@@ -1,4 +1,7 @@
-﻿function Write-LockpathInvocationLog {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Write-LockpathInvocationLog {
     <#
     .SYNOPSIS
         Writes a log entry for the invoke command.

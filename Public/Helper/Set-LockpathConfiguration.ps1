@@ -1,4 +1,7 @@
-﻿function Set-LockpathConfiguration {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathConfiguration {
     <#
     .SYNOPSIS
         Change the value of a configuration property for the module, for the session only, or saved to disk.

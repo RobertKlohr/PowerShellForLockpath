@@ -1,4 +1,7 @@
-﻿function Get-LockpathRecordAttachment {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathRecordAttachment {
     <#
     .SYNOPSIS
         Returns a single file specified by the component Id, record Id, field Id and Document Id.

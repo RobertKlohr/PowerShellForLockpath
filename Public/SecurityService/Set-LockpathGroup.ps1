@@ -1,4 +1,7 @@
-﻿function Set-LockpathGroup {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Set-LockpathGroup {
     <#
     .SYNOPSIS
         Updates a group.
@@ -18,7 +21,6 @@
     .PARAMETER ChildGroups
         Array of child group Id values.
 
-
     .PARAMETER Description
         Group Description
 
@@ -27,7 +29,6 @@
 
     .PARAMETER ParentGroups
         Array of parent group Id values.
-
 
     .PARAMETER Users
         Array of user Id values.

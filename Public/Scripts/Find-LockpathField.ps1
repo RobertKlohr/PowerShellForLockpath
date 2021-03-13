@@ -1,4 +1,7 @@
-﻿function Find-LockpathField {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Find-LockpathField {
     <#
     .SYNOPSIS
         Returns all field details for selected fields based on the applied filter.

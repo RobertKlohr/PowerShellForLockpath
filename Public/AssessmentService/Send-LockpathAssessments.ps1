@@ -1,4 +1,7 @@
-﻿function Send-LockpathAssessments {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Send-LockpathAssessments {
     <#
     .SYNOPSIS
         Issue an assessment.

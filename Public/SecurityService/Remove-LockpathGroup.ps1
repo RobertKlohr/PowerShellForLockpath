@@ -1,4 +1,7 @@
-﻿function Remove-LockpathGroup {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Remove-LockpathGroup {
     <#
     .SYNOPSIS
         Deletes a group.

@@ -1,4 +1,7 @@
-﻿function Test-LockpathAuthentication {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Test-LockpathAuthentication {
     <#
     .SYNOPSIS
         Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and

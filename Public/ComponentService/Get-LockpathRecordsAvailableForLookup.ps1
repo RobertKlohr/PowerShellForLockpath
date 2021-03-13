@@ -1,4 +1,7 @@
-﻿function Get-LockpathRecordsAvailableForLookup {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Get-LockpathRecordsAvailableForLookup {
     <#
     .SYNOPSIS
         Returns specified fields for a set of records within a chosen component.

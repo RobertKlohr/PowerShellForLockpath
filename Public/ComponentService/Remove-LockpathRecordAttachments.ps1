@@ -1,4 +1,7 @@
-﻿function Remove-LockpathRecordAttachments {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Remove-LockpathRecordAttachments {
     <#
     .SYNOPSIS
         Deletes the specified attachment from the provided the component Id, record Id, field Id and Document Id.

@@ -1,4 +1,7 @@
-﻿function Remove-LockpathRecord {
+﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Licensed under the MIT License.
+
+function Remove-LockpathRecord {
     <#
     .SYNOPSIS
         Deletes a record.
