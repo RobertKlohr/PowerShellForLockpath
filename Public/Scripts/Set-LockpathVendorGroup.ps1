@@ -184,7 +184,7 @@ function Set-LockpathVendorGroup {
                 Set-LockpathGroup -GroupId $GroupId -Users $vendorIds
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

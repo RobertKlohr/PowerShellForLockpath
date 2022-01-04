@@ -52,7 +52,7 @@ function Test-LockpathAuthentication {
             Send-LockpathPing
             $logParameters.message = 'success'
         } catch {
-            Send-LockpathLogin
+            Connect-Lockpath
             $message = 'failed'
             $level = 'Warning'
         } finally {

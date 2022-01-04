@@ -15,8 +15,7 @@ function Set-LockpathGroup {
         Group Id.
 
     .PARAMETER BusinessUnit
-        Switches group to a business unit. Once this value is set it is not possible to revet the group to a normal
-        group without deleting and then recreating the group.
+        Switches group to a business unit. Once this value is set it is not possible to revet the group to a normal group without deleting and then recreating the group.
 
     .PARAMETER ChildGroups
         Array of child group Id values.
@@ -158,7 +157,7 @@ function Set-LockpathGroup {
                 $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

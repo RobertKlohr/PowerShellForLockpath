@@ -27,7 +27,7 @@ function Initialize-LockpathLogExports {
         Array, System.IO.FileInfo
 
     .OUTPUTS
-        None
+        Byte Stream
 
     .NOTES
         <FilePath>

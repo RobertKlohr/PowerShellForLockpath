@@ -57,27 +57,27 @@ function Send-LockpathPing {
             'UriFragment' = 'Ping'
         }
 
-        # $logParameters = [ordered]@{
-        #     'CefHeaderDeviceVendor'         = $moduleName
-        #     'CefHeaderDeviceProduct'        = $moduleName
-        #     'CefHeaderDeviceVersion'        = $moduleVersion
-        #     'CefHeaderDeviceEventClassId'   = $functionName
-        #     'CefHeaderName'                 = $a
-        #     'CefHeaderSeverity'             = 'Unknown'
-        #     'CefExtensionEnd'               = $a
-        #     'CefExtensionFilePath'          = $a
-        #     'CefExtensionFileSize'          = $a
-        #     'CefExtensionMsg'               = $msg
-        #     'CefExtensionOutcome'           = $a
-        #     'CefExtensionReason'            = $a
-        #     'CefExtensionRequest'           = $a
-        #     'CefExtensionRequestMethod'     = $a
-        #     'CefExtensionSourceServiceName' = $a
-        #     'CefExtensionSourceProcessId'   = $a
-        #     'CefExtensionSourceUserName'    = $a
-        #     'CefExtensionSourceHostName'    = $a
-        #     'CefExtensionStart'             = $a
-        # }
+        $logParameters = [ordered]@{
+            #     'CefHeaderDeviceVendor'         = $moduleName
+            #     'CefHeaderDeviceProduct'        = $moduleName
+            #     'CefHeaderDeviceVersion'        = $moduleVersion
+            #     'CefHeaderDeviceEventClassId'   = $functionName
+            #     'CefHeaderName'                 = $a
+            #     'CefHeaderSeverity'             = 'Unknown'
+            #     'CefExtensionEnd'               = $a
+            #     'CefExtensionFilePath'          = $a
+            #     'CefExtensionFileSize'          = $a
+            #     'CefExtensionMsg'               = $msg
+            #     'CefExtensionOutcome'           = $a
+            #     'CefExtensionReason'            = $a
+            #     'CefExtensionRequest'           = $a
+            #     'CefExtensionRequestMethod'     = $a
+            #     'CefExtensionSourceServiceName' = $a
+            #     'CefExtensionSourceProcessId'   = $a
+            #     'CefExtensionSourceUserName'    = $a
+            #     'CefExtensionSourceHostName'    = $a
+            #     'CefExtensionStart'             = $a
+        }
 
         $shouldProcessTarget = $restParameters.Description
 
@@ -86,7 +86,7 @@ function Send-LockpathPing {
                 $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

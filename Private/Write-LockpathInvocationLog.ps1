@@ -56,6 +56,7 @@ function Write-LockpathInvocationLog {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
+        # FIXME this is being updated to not take any parameters
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service,
 
@@ -71,23 +72,30 @@ function Write-LockpathInvocationLog {
 
     )
 
-    # FIXME This section is not working
+    if ($Script:LockpathConfig.loggingLevel -ne 'Debug') {
+        return
+    }
+
+    $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly)
+    $functionName = $Invocation.InvocationName
+    #FIXME temp until removed service from logging
+    $service = 'ReportService'
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
-    $restParameters = @()
+    $functionParameters = @()
     foreach ($parameter in $Invocation.BoundParameters.GetEnumerator()) {
         if ($parameter.Key -in ($ExcludeParameter)) {
             continue
         }
         if ($parameter.Key -in ($RedactParameter)) {
-            $restParameters += "-$($parameter.Key) <redacted>"
+            $functionParameters += "-$($parameter.Key) <redacted>"
         } else {
             if ($parameter.Value -is [Switch]) {
-                $restParameters += "-$($parameter.Key):`$$($parameter.Value.ToBool().ToString().ToLower())"
+                $functionParameters += "-$($parameter.Key):`$$($parameter.Value.ToBool().ToString().ToLower())"
             } else {
-                $restParameters += "-$($parameter.Key) $(ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $parameter.Value)"
+                $functionParameters += "-$($parameter.Key) $(ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $parameter.Value)"
             }
         }
     }
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($restParameters -join ' ')".Trim()
+    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($functionParameters -join ' ')".Trim()
 }

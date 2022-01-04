@@ -1,18 +1,18 @@
-﻿# Copyright (c) Robert Klohr. All rights reserved.
+# Copyright (c) Robert Klohr. All rights reserved.
 # Licensed under the MIT License.
 
-function Send-LockpathLogin {
+function Disconnect-Lockpath {
     <#
     .SYNOPSIS
-        Creates an active session.
+        Terminates the active session.
 
     .DESCRIPTION
-        Creates an active session.
+        Terminates the active session.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
-        Send-LockpathLogin
+        Send-LockpathLogout
 
     .INPUTS
         None.
@@ -21,7 +21,7 @@ function Send-LockpathLogin {
         String
 
     .NOTES
-        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/Login
+        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/Logout
 
         The authentication account must have access to the API.
 
@@ -48,18 +48,11 @@ function Send-LockpathLogin {
             Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
         }
 
-        $credential = $Script:LockpathConfig.credential
-        $hashBody = [ordered]@{
-            'username' = $credential.username
-            'password' = $credential.GetNetworkCredential().Password
-        }
-
         $restParameters = [ordered]@{
-            'Body'        = (ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $hashBody)
-            'Description' = 'Sending Login'
-            'Method'      = 'POST'
+            'Description' = 'Sending Logout'
+            'Method'      = 'GET'
             'Service'     = $service
-            'UriFragment' = 'Login'
+            'UriFragment' = 'Logout'
         }
 
         $logParameters = [ordered]@{
@@ -69,6 +62,8 @@ function Send-LockpathLogin {
             'FunctionName' = $functionName
             'Level'        = $level
             'Service'      = $service
+            # FIXME update all functions to pass the result to write-lockpathlog (1)
+            'Result'       = $result
         }
 
         $shouldProcessTarget = $restParameters.Description
@@ -78,9 +73,11 @@ function Send-LockpathLogin {
                 $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
+                # FIXME update all functions to pass the result to write-lockpathlog (2)
+                $logParameters.result = $result
             } finally {
                 Write-LockpathLog @logParameters
             }

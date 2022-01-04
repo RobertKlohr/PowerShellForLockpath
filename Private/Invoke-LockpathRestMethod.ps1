@@ -127,7 +127,7 @@ function Invoke-LockpathRestMethod {
 
     )
     # Check to see if the calling function was the login and set the Login flag
-    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Send-LockpathLogin') {
+    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Connect-Lockpath') {
         $Login = $true
     } else {
         $Login = $false
@@ -156,7 +156,13 @@ function Invoke-LockpathRestMethod {
             break
         } else {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
-            $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
+            # $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+            $cookie = [System.Net.Cookie] @{}
+            # $cookie = New-Object System.Net.Cookie
+            $cookie.Name = $Script:LockpathConfig.authenticationCookie.Name
+            $cookie.Domain = $Script:LockpathConfig.authenticationCookie.Domain
+            $cookie.Value = $Script:LockpathConfig.authenticationCookie.Value
+            # $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
             $webSession.Cookies.Add($cookie)
         }
     }
@@ -208,8 +214,14 @@ function Invoke-LockpathRestMethod {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
             }
         }
-
+        #! Here is the web call
         [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
+
+        # FIXME add code here (separate function) to look at $result variable and then throw the
+        # correct exception since
+        # current API does not return the correct status codes.
+
+
 
         Write-Verbose $result
 
@@ -218,8 +230,11 @@ function Invoke-LockpathRestMethod {
 
         $stopWatch.Stop()
         $ProgressPreference = 'Continue'
+
+        # FIXME need to add a null check for failed login
         if ($Login) {
-            Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri) -Uri $uri
+            # Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri) -Uri $uri
+            Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri)
         }
         # FIXME stopwatch testing
         # Write-Warning -Message $StopWatch.Elapsed.ToString()

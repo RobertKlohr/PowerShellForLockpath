@@ -100,6 +100,7 @@ function Initialize-LockpathConfiguration {
 
     # Normally Write-LockpathInvocationLog is run first in a function but we need to import the configuration
     # before using.
+
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
 

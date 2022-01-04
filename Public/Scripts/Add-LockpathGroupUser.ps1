@@ -94,7 +94,7 @@ function Add-LockpathGroupUser {
                 Set-LockpathGroup -GroupId $GroupId -Users $users
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

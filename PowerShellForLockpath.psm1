@@ -48,5 +48,8 @@ foreach ($file in @($public + $private)) {
 # export all public functions
 # Export-ModuleMember -Function $public.Basename
 
+# export all functions
+Export-ModuleMember -Function '*'
+
 Initialize-LockpathConfiguration
 Export-ModuleMember -Variable 'LockpathConfig'

@@ -57,6 +57,9 @@
     # use an empty array if there are no functions to export.
     FunctionsToExport    = @(
         'Add-LockpathGroupUser',
+        'Connect-Lockpath',
+        'Disconnect-Lockpath',
+        'Export-LockpathReport',
         'Find-LockpathField',
         'Get-LockpathComponent',
         'Get-LockpathComponentByAlias',
@@ -76,7 +79,6 @@
         'Get-LockpathRecords',
         'Get-LockpathRecordsAvailableForLookup',
         'Get-LockpathRecordsDetails',
-        'Get-LockpathReport',
         'Get-LockpathUser',
         'Get-LockpathUserCount',
         'Get-LockpathUsers',
@@ -97,8 +99,6 @@
         # See todo comment in function file as to why Send-LockpathAssessments is not working
         'Send-LockpathAssessments',
         'Send-LockpathKeepAlive',
-        'Send-LockpathLogin',
-        'Send-LockpathLogout',
         'Send-LockpathPing',
         'Set-LockpathConfiguration',
         'Set-LockpathCredential',

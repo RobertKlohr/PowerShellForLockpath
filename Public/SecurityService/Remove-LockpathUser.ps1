@@ -100,7 +100,7 @@ function Remove-LockpathUser {
                 $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

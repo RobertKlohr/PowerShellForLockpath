@@ -43,11 +43,11 @@ function Export-LockpathAuthenticationCookie {
     param(
         [Parameter(
             Mandatory = $true)]
-        [System.Net.CookieCollection] $CookieCollection,
+        [System.Net.CookieCollection] $CookieCollection
 
-        [Parameter(
-            Mandatory = $true)]
-        [String] $Uri
+        # [Parameter(
+        #     Mandatory = $true)]
+        # [String] $Uri
     )
 
     $level = 'Debug'
@@ -60,16 +60,11 @@ function Export-LockpathAuthenticationCookie {
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
     }
     # FIXME check to see if this section can be deleted
-    # $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
-    #     'Domain' = $webSession.Cookies.GetCookies($uri).Domain
-    #     'Name'   = $webSession.Cookies.GetCookies($uri).Name
-    #     'Value'  = $webSession.Cookies.GetCookies($uri).Value
-    # }
 
     $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
-        'Domain' = $CookieCollection.GetCookies($uri).Domain
-        'Name'   = $CookieCollection.GetCookies($uri).Name
-        'Value'  = $CookieCollection.GetCookies($uri).Value
+        'Domain' = $CookieCollection.Domain
+        'Name'   = $CookieCollection.Name
+        'Value'  = $CookieCollection.Value
     }
 
     try {

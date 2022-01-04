@@ -14,14 +14,16 @@ function Set-LockpathUser {
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER Attributes
+        # FIXME update with the complete list of parameters
         The list of fields and values to change as an array.
 
         The list of attributes must include the Id field and the user Id as the value for the user being updated.
 
     .EXAMPLE
-        Set-LockpathUser -Attributes @{'Id' = '6'; 'Manager' = @{'Id'= '10'}}
+        Set-LockpathUser -Id 6 -Manager 10
 
     .EXAMPLE
+        # FIXME update this example
         Set-LockpathUser -Attributes @{'Id' = '6'; 'Groups' = @(@{'Id'= '7'}@{'Id'= '8'})}
 
     .INPUTS
@@ -239,7 +241,7 @@ function Set-LockpathUser {
                 $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = $_.ErrorDetails.Message.Split('"')[3]
+                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {
