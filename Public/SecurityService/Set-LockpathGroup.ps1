@@ -70,7 +70,7 @@ function Set-LockpathGroup {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('GroupId')]
-        [Int64] $Id,
+        [Int32] $Id,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -81,7 +81,7 @@ function Set-LockpathGroup {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('ChildGroupId', 'ChildGroupIds')]
-        [Int64[]] $ChildGroups,
+        [Int32[]] $ChildGroups,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -97,25 +97,33 @@ function Set-LockpathGroup {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('ParentGroupsId', 'ParentGroupsIds')]
-        [Int64[]] $ParentGroups,
+        [Int32[]] $ParentGroups,
 
         [Parameter(
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [Alias('UserId', 'UserIds')]
-        [Int64[]] $Users
+        [Int32[]] $Users
     )
 
     begin {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{}
         $Ids = @()
@@ -123,7 +131,7 @@ function Set-LockpathGroup {
         foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
             if ($parameter.Value -is [Switch]) {
                 $Body.Add($parameter.Key, $parameter.Value.ToBool().ToString().ToLower())
-            } elseif ($parameter.Value -is [Int64[]]) {
+            } elseif ($parameter.Value -is [Int32[]]) {
                 foreach ($value in $parameter.Value) {
                     $Ids += @{'Id' = $value }
                 }
@@ -141,25 +149,25 @@ function Set-LockpathGroup {
             'UriFragment' = 'UpdateGroup'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
-        }
-
         $shouldProcessTarget = "Properties=$($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success'
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with Id ' + $Body.Id
+                if ($Script:LockpathConfig.logRequestBody) {
+                    try {
+                        $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                    } catch {
+                        $logParameters.result = 'Unable to convert API response.'
+                    }
+                } else {
+                    $logParameters.result = 'Response includes a body: <message body logging disabled>'
+                }
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed' + $restParameters.Description + ' with Id ' + $Body.Id
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

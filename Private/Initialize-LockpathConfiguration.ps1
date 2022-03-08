@@ -63,7 +63,7 @@ function Initialize-LockpathConfiguration {
             'jsonConversionDepth'          = [Int32] 100
             'keepAliveInterval'            = [Int32] 5
             'loggingLevel'                 = [String] 'Information'
-            'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('MyDocuments'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
+            'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
             'logRequestBody'               = [Boolean] $false
             'logTimeAsUtc'                 = [Boolean] $false
             'methodContainsBody'           = [System.Collections.ArrayList] ('Delete', 'Post')

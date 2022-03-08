@@ -45,6 +45,8 @@ function Send-LockpathAssessments {
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     param(
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
@@ -56,6 +58,16 @@ function Send-LockpathAssessments {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'AssessmentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = $null
+            'Service'      = $service
+            'Result'       = $null
+            'WhatIf'       = $false
+        }
     }
 
     process {
@@ -71,25 +83,17 @@ function Send-LockpathAssessments {
             'UriFragment' = 'IssueAssessment'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
-        }
-
         $shouldProcessTarget = "Id=$AssessmentRequest"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
+                [string] $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
+                $logParameters.result = $result | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed'
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

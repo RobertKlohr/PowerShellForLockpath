@@ -60,20 +60,25 @@ function Export-LockpathReport {
     )
 
     begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ReportService'
 
         $logParameters = [ordered]@{
-            'FunctionName' = ($PSCmdlet.CommandRuntime.ToString())
-            'Level'        = 'Information'
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = $null
             'Service'      = $service
+            'Result'       = $null
+            'WhatIf'       = $false
         }
     }
 
     process {
-        # if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-        #     Write-LockpathInvocationLog @logParameters
-        # }
-        Write-LockpathInvocationLog
+        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
+            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        }
 
         $restParameters = [ordered]@{
             'Description' = "Exporting Report with Report Id $ReportId and File Type $FileType"
@@ -87,19 +92,24 @@ function Export-LockpathReport {
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with Id ' + $ReportId
+                try {
+                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                } catch {
+                    $logParameters.result = 'Unable to convert API response.'
+                }
             } catch {
-                if ($null -eq $_.ErrorDetails) {
-                    $result = $_.Exception.Message
-                } else {
-                    $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                }
-                $logParameters.Message = $result
-                $logParameters.Level = 'Warning'
+                # TODO is the following extra error checking needed for this call?
+                # if ($null -eq $_.ErrorDetails) {
+                #     $result = $_.Exception.Message
+                # } else {
+                #     $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
+                # }$logParameters.Level = 'Error'
+                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with Id ' + $ReportId
+                $logParameters.result = $_.Exception.Message
             } finally {
-                if ($Script:LockpathConfig.loggingLevel -in 'Debug', 'Verbose') {
-                    Write-LockpathLog @logParameters
-                }
+                Write-LockpathLog @logParameters
             }
             return $result
         }

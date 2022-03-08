@@ -11,22 +11,37 @@ function Write-LockpathInvocationLog {
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
+    .PARAMETER ExcludeParameter
+        An optional array of parameter names that should simply not be logged.
+
+    .PARAMETER FunctionName
+        The name of the calling function creating the log entry.
+
     .PARAMETER InvocationInfo
         The '$MyInvocation' object from the calling function.
 
-        No need to explicitly provide this if you're trying to log the immediate function this is being called from.
+        No need to explicitly provide this if you're trying to log the immediate function this is being   called from.
+
+    .PARAMETER Level
+        The type of message to be logged.
+
+    .PARAMETER Message
+        The message(s) to be logged. Each element of the array will be written to a separate line.
 
     .PARAMETER RedactParameter
         An optional array of parameter names that should be logged, but their values redacted.
 
-    .PARAMETER ExcludeParameter
-        An optional array of parameter names that should simply not be logged.
+    .PARAMETER Result
+        The response message from the API call.
+
+    .PARAMETER Service
+        Either the API service being called a helper service.
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Message $message -Results $result -Service $service
 
     .EXAMPLE
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service
+        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Service $service -ExcludeParameter ('Body')
 
     .INPUTS
         Management.Automation.InvocationInfo, String
@@ -46,8 +61,6 @@ function Write-LockpathInvocationLog {
     https://git.io/powershellforlockpathhelp
     #>
 
-    # FIXME migrate this function to just use write-lockpathlog
-
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
@@ -56,10 +69,6 @@ function Write-LockpathInvocationLog {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        # FIXME this is being updated to not take any parameters
-        [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
-        [String] $Service,
-
         [String[]] $ExcludeParameter,
 
         [String] $FunctionName = ($PSCmdlet.CommandRuntime.ToString()),
@@ -68,18 +77,19 @@ function Write-LockpathInvocationLog {
 
         [String] $level = 'Debug',
 
-        [String[]] $RedactParameter
+        [String] $Message,
 
+        [String[]] $RedactParameter,
+
+        [String] $Result,
+
+        [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
+        [String] $Service
     )
 
     if ($Script:LockpathConfig.loggingLevel -ne 'Debug') {
         return
     }
-
-    $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly)
-    $functionName = $Invocation.InvocationName
-    #FIXME temp until removed service from logging
-    $service = 'ReportService'
 
     # Build up the invoked line, being sure to exclude and/or redact any values necessary
     $functionParameters = @()
@@ -97,5 +107,16 @@ function Write-LockpathInvocationLog {
             }
         }
     }
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $Level -Service $service -Message "Executing: $functionName $($functionParameters -join ' ')".Trim()
+
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $Message
+        'Service'      = $Service
+        'Result'       = "$Result $($functionParameters -join ' ')".Trim()
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathLog @logParameters
 }

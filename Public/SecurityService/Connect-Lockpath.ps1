@@ -15,13 +15,13 @@ function Connect-Lockpath {
         Specifies the PSCredential object that contains a valid username and password.
 
     .EXAMPLE
-        Send-LockpathLogin
+        Connect-LockpathLogin
 
     .EXAMPLE
-        Send-LockpathLogin -Credential $credentials
+        Connect-LockpathLogin -Credential $credentials
 
     .EXAMPLE
-        Get-Credential | Send-LockpathLogin
+        Get-Credential | Connect-LockpathLogin
 
     .INPUTS
         PSCredential object.
@@ -54,19 +54,23 @@ function Connect-Lockpath {
     )
 
     begin {
+        $level = 'Information'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
 
         $logParameters = [ordered]@{
-            'FunctionName' = ($PSCmdlet.CommandRuntime.ToString())
-            'Level'        = 'Information'
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
             'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
         }
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $hashBody = [ordered]@{
             'username' = $credential.username
@@ -75,7 +79,7 @@ function Connect-Lockpath {
 
         $restParameters = [ordered]@{
             'Body'        = (ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $hashBody)
-            'Description' = "Connecting to Lockpath with username $username and password <redacted>"
+            'Description' = 'Connecting to Lockpath with username ' + $username + 'and password <redacted>'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'Login'
@@ -85,19 +89,35 @@ function Connect-Lockpath {
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
-            } catch {
-                if ($null -eq $_.ErrorDetails) {
-                    $result = $_.Exception.Message
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+
+                # FIXME not sure why this TRIM is needed, the function or started handing back a
+                # value with whitespace at the beginning sometime on 2022-03-07
+                $result = $result.Trim()
+                # the following extra check is needed as the API returns HTTP 200 regardless of
+                # authentication success
+                if ($result -eq 'true') {
+                    $logParameters.message = 'success: ' + $restParameters.Description
+
                 } else {
-                    $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
+                    $logParameters.message = 'failed: ' + $restParameters.Description
+                    $logParameters.Level = 'Error'
                 }
-                $logParameters.Message = $result
-                $logParameters.Level = 'Warning'
+                if ($Script:LockpathConfig.logRequestBody) {
+                    try {
+                        $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                    } catch {
+                        $logParameters.result = 'Unable to convert API response.'
+                    }
+                } else {
+                    $logParameters.result = 'Response includes a body: <message body logging disabled>'
+                }
+            } catch {
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed'
+                $logParameters.result = $_.Exception.Message
             } finally {
-                if ($Script:LockpathConfig.loggingLevel -in 'Debug', 'Verbose') {
-                    Write-LockpathLog @logParameters
-                }
+                Write-LockpathLog @logParameters
             }
             return $result
         }

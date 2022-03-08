@@ -62,19 +62,27 @@ function Remove-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('Positive')]
-        [Int64] $UserId
+        [Int32] $UserId
     )
 
     begin {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
             'Body'        = $UserId | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
@@ -84,25 +92,21 @@ function Remove-LockpathUser {
             'UriFragment' = 'DeleteUser'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
-        }
-
         $shouldProcessTarget = "Id=$UserId"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success'
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with Id ' + $UserId
+                try {
+                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                } catch {
+                    $logParameters.result = 'Unable to convert API response.'
+                }
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with Id ' + $UserId
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

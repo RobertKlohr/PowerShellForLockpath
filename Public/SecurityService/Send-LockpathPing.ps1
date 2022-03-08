@@ -41,14 +41,20 @@ function Send-LockpathPing {
         $level = 'Verbose'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
-        # FIXME public function only log invocation when set to verbose and maybe then only to the
-        # verbose output stream
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
             'Description' = 'Sending Ping'
@@ -57,38 +63,22 @@ function Send-LockpathPing {
             'UriFragment' = 'Ping'
         }
 
-        $logParameters = [ordered]@{
-            #     'CefHeaderDeviceVendor'         = $moduleName
-            #     'CefHeaderDeviceProduct'        = $moduleName
-            #     'CefHeaderDeviceVersion'        = $moduleVersion
-            #     'CefHeaderDeviceEventClassId'   = $functionName
-            #     'CefHeaderName'                 = $a
-            #     'CefHeaderSeverity'             = 'Unknown'
-            #     'CefExtensionEnd'               = $a
-            #     'CefExtensionFilePath'          = $a
-            #     'CefExtensionFileSize'          = $a
-            #     'CefExtensionMsg'               = $msg
-            #     'CefExtensionOutcome'           = $a
-            #     'CefExtensionReason'            = $a
-            #     'CefExtensionRequest'           = $a
-            #     'CefExtensionRequestMethod'     = $a
-            #     'CefExtensionSourceServiceName' = $a
-            #     'CefExtensionSourceProcessId'   = $a
-            #     'CefExtensionSourceUserName'    = $a
-            #     'CefExtensionSourceHostName'    = $a
-            #     'CefExtensionStart'             = $a
-        }
-
         $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
+                [string] $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
+                try {
+                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                } catch {
+                    $logParameters.result = 'Unable to convert API response.'
+                }
+
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed'
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

@@ -145,7 +145,7 @@ function Set-LockpathVendorGroup {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-        $pagesize = Get-LockpathUserCount
+        [int32] $pagesize = Get-LockpathUserCount
     }
 
     process {
@@ -184,7 +184,7 @@ function Set-LockpathVendorGroup {
                 Set-LockpathGroup -GroupId $GroupId -Users $vendorIds
                 $logParameters.message = 'success'
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
+
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

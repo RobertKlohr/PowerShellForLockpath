@@ -52,6 +52,8 @@ function Get-LockpathWorkflows {
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     param(
         [Parameter(
             Mandatory = $true,
@@ -96,10 +98,10 @@ function Get-LockpathWorkflows {
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
+                [string] $result = Invoke-LockpathRestMethod @restParameters
                 $logParameters.message = 'success'
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
+
                 $logParameters.message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {

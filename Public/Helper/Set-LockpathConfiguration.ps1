@@ -197,6 +197,16 @@ function Set-LockpathConfiguration {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PublicHelper'
 
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'WhatIf'       = $false
+        'Message'      = $null
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Service'      = $service
+        'Result'       = $null
+    }
+
     Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
 
     $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
@@ -219,9 +229,14 @@ function Set-LockpathConfiguration {
             # make a copy of the configuration exceluding non-persistent properties
             $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
             Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth 10 -Force
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Successfully saved configuration to disk.' -Level $level
+            $logParameters.message = 'Successfully saved configuration to disk.'
+            $logParameters.result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
         } catch {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to save configuration to disk. It will remain for this PowerShell session only.' -Level $level
+            $logParameters.message = 'Failed to save configuration to disk. It will remain for this PowerShell session only.'
+            $logParameters.level = 'Error'
+            $logParameters.result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
     }
     Show-LockpathConfiguration

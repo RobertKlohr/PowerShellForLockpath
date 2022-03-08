@@ -12,7 +12,7 @@ function Disconnect-Lockpath {
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
-        Send-LockpathLogout
+        Disconnect-Lockpath
 
     .INPUTS
         None.
@@ -44,8 +44,17 @@ function Disconnect-Lockpath {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+        Write-LockpathInvocationLog @logParameters
+
+        # FIXME update all functions to pass the result to write-lockpathlog (1)
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
         }
 
         $restParameters = [ordered]@{
@@ -55,29 +64,22 @@ function Disconnect-Lockpath {
             'UriFragment' = 'Logout'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
-            # FIXME update all functions to pass the result to write-lockpathlog (1)
-            'Result'       = $result
-        }
-
         $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success'
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success: ' + $restParameters.Description
+                try {
+                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                } catch {
+                    $logParameters.result = 'Unable to convert API response.'
+                }
+
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
-                # FIXME update all functions to pass the result to write-lockpathlog (2)
-                $logParameters.result = $result
+                $logParameters.level = 'Error'
+                $logParameters.Message = 'failed: ' + $restParameters.Description
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

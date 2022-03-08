@@ -140,7 +140,7 @@ function Invoke-LockpathRestMethod {
     # $service = 'PrivateHelper'
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     # If the request is the login then redact the username and password in the body from the logs
     if ($Login) {
@@ -159,9 +159,9 @@ function Invoke-LockpathRestMethod {
             # $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
             $cookie = [System.Net.Cookie] @{}
             # $cookie = New-Object System.Net.Cookie
-            $cookie.Name = $Script:LockpathConfig.authenticationCookie.Name
-            $cookie.Domain = $Script:LockpathConfig.authenticationCookie.Domain
-            $cookie.Value = $Script:LockpathConfig.authenticationCookie.Value
+            $cookie.Name = $Script:LockpathConfig.authenticationCookie.Name[0]
+            $cookie.Domain = $Script:LockpathConfig.authenticationCookie.Domain[0]
+            $cookie.Value = $Script:LockpathConfig.authenticationCookie.Value[0]
             # $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
             $webSession.Cookies.Add($cookie)
         }
@@ -211,7 +211,7 @@ function Invoke-LockpathRestMethod {
                     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
                 }
             } else {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
             }
         }
         #! Here is the web call
@@ -248,7 +248,7 @@ function Invoke-LockpathRestMethod {
         #     if ($Script:LockpathConfig.logRequestBody) {
         #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
         #     } else {
-        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <request body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
         #     }
         # }
 
@@ -256,7 +256,7 @@ function Invoke-LockpathRestMethod {
 
         # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'API request successful.' -Level $level -FunctionName $functionName -Service PrivateHelper
 
-        return $result.Content
+        return $result.content.ToString()
     } catch {
         if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
             $statusCode = $_.Exception.Response.StatusCode.value__
@@ -305,7 +305,7 @@ function Invoke-LockpathRestMethod {
             #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
             # }
             # Write-Error -ErrorAction stop -Exception $_.Exception
-            Write-Error -ErrorAction stop -ErrorRecord $_
+            Write-Error -ErrorAction stop -Exception $_.Exception
         } else {
             Write-LockpathLog -Confirm:$false -WhatIf:$false -Level $level -FunctionName $functionName -Service PrivateHelper -ErrorRecord $_
             Write-Error 'non-webresponse error' -ErrorAction stop

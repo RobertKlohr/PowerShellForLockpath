@@ -76,8 +76,18 @@ function Set-LockpathUsers {
 
     if ($PSCmdlet.ShouldProcess("Updating users with:  $($restParameters.Body)", $($restParameters.Body), 'Updating users with:')) {
 
-        $userCount = Get-LockpathUserCount
-        $users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+        [string] $userCount = Get-LockpathUserCount
+        #FIXME The ConvertFrom-Json is throughing an error
+        # ConvertFrom-Json: C:\Users\r634204\Documents\GitHub\PowerShellForLockpath\src\Public\Scripts\Set-LockpathUsers.ps1:80:88
+        # Line |
+        # 80 | … userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConver …
+        # | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # | Cannot bind argument to parameter 'InputObject' because it is null.
+        #$users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+
+        [string] $returned = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount
+        $users = ConvertFrom-Json -InputObject $returned -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+
         $usersProgress = $users.count
         $i = 1
 
@@ -86,6 +96,12 @@ function Set-LockpathUsers {
                 $ProgressPreference = 'SilentlyContinue'
                 # Set-LockpathUser -Attributes @{'Id' = "$($user.Id)"; $UpdateField = $UpdateValue }
                 # -Confirm:$false -WhatIf:$false
+                # if ($UpdateValue -eq $true) {
+                #     [int] $UpdateValue = 0
+                # } else {
+                #     [int] $UpdateValue = 0
+                # }
+
                 $parameters = @{
                     Id           = $user.Id
                     $UpdateField = $UpdateValue
@@ -94,7 +110,9 @@ function Set-LockpathUsers {
                 }
                 # Set-LockpathUser -Id $user.Id -$UpdateField $UpdateValue -Confirm:$false
                 # -WhatIf:$false
-                $null = Set-LockpathUser @parameters
+                if ($user.Id -gt 14) {
+                    $null = Set-LockpathUser @parameters
+                }
                 $ProgressPreference = 'Continue'
             } catch {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem updating $($user.Fullname) with user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service

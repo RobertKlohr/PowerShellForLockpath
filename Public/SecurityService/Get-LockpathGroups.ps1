@@ -59,6 +59,7 @@ function Get-LockpathGroups {
         SupportsShouldProcess = $true)]
     [OutputType('System.String')]
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     [Parameter(
         Mandatory = $true,
@@ -85,13 +86,20 @@ function Get-LockpathGroups {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
-
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{
             'pageIndex' = $PageIndex
@@ -110,25 +118,25 @@ function Get-LockpathGroups {
             'UriFragment' = 'GetGroups'
         }
 
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
-        }
-
         $shouldProcessTarget = "Filter=$($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success'
+                [string] $result = Invoke-LockpathRestMethod @restParameters
+                $logParameters.message = 'success' + $restParameters.Description + ' with filter ' + $Filter
+                if ($Script:LockpathConfig.logRequestBody) {
+                    try {
+                        $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                    } catch {
+                        $logParameters.result = 'Unable to convert API response.'
+                    }
+                } else {
+                    $logParameters.result = 'Response includes a body: <message body logging disabled>'
+                }
             } catch {
-                $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                $logParameters.message = 'failed'
-                $logParameters.level = 'Warning'
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed' + $restParameters.Description + ' with filter ' + $Filter
+                $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }

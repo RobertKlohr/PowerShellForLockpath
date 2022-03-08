@@ -11,21 +11,30 @@ function Write-LockpathLog {
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
-    .PARAMETER Message
-        The message(s) to be logged. Each element of the array will be written to a separate line.
+    .PARAMETER ErrorRecord
+        If present, the exception information will be logged after the messages provided.
 
-    .PARAMETER Level
-        The type of message to be logged.
+        The actual string that is logged is obtained by passing this object to Out-String.
 
     .PARAMETER FilePath
         The log file path.
 
         Defaults to log path set in the configuration.
 
-    .PARAMETER Exception
-        If present, the exception information will be logged after the messages provided.
+    .PARAMETER FunctionName
+        The name of the calling function creating the log entry.
 
-        The actual string that is logged is obtained by passing this object to Out-String.
+    .PARAMETER Level
+        The type of message to be logged.
+
+    .PARAMETER Message
+        The message(s) to be logged. Each element of the array will be written to a separate line.
+
+    .PARAMETER Result
+        The response message from the API call.
+
+    .PARAMETER Service
+        Either the API service being called a helper service.
 
     .EXAMPLE
         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Everything worked." -Path "c:\Temp\PowerShellForLockpath.log"
@@ -74,31 +83,49 @@ function Write-LockpathLog {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
-        [Parameter(ValueFromPipeline = $true,
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [System.Management.Automation.ErrorRecord] $ErrorRecord,
+
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [String] $FunctionName,
+
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
+        [String] $Level = $Script:LockpathConfig.loggingLevel,
+
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [AllowEmptyCollection()]
         [AllowEmptyString()]
         [AllowNull()]
-        # FIXME does this need to be an array or will it always be just a string?
-        # [String[]] $Message = @(),
-        # Switching to string to test
         [String] $Message,
 
-        [Parameter(ValueFromPipeline = $true,
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [String] $Result,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
-        [String] $Service,
-
-        [System.Management.Automation.ErrorRecord] $ErrorRecord,
-
-        [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
-
-        [String] $FunctionName,
-
-        [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
-        [String] $Level = $Script:LockpathConfig.loggingLevel,
-
-        [String] $Result
+        [String] $Service
 
         # 'CefHeaderDeviceVendor' = $moduleName
         # 'CefHeaderDeviceProduct' = $moduleName
@@ -175,16 +202,16 @@ function Write-LockpathLog {
     end {
 
         # FIXME data to parse form the errorrecord object
-        $Error[0].ErrorDetails.Message
-        $Error[0].Exception.Message
-        $Error[0].Exception.Response # need to check, maybe redundant with other properties
+        # $Error[0].ErrorDetails.Message
+        # $Error[0].Exception.Message
+        # $Error[0].Exception.Response # need to check, maybe redundant with other properties
 
-        $Error[0].InvocationInfo.MyCommand # see if we can get bound/unbound parameters
+        # $Error[0].InvocationInfo.MyCommand # see if we can get bound/unbound parameters
 
 
-        $Error[0].ScriptStackTrace # need to parse out methods
-        $Error[0].TargetObject.Method
-        $Error[0].TargetObject.RequestUri
+        # $Error[0].ScriptStackTrace # need to parse out methods
+        # $Error[0].TargetObject.Method
+        # $Error[0].TargetObject.RequestUri
 
         if ($null -ne $ErrorRecord) {
             # If we have an exception, add it after the accumulated messages.
@@ -197,40 +224,38 @@ function Write-LockpathLog {
         $consoleMessage = $messages -join ' '
 
         # Build the CEF extension message
-
-        # msg: An arbitrary message giving more details about the event.
-        # FIXME update all functions to pass the result to write-lockpathlog (3)
+        # CEF msg: An arbitrary message giving more details about the event.
         If ($Result -eq '') {
             $msg = 'msg=' + $Message
         } else {
             $msg = 'msg=' + $Result
         }
 
-        # rt: The time at which the event related to the activity was received.
+        # CEF rt: The time at which the event related to the activity was received.
         if ($Script:LockpathConfig.logTimeAsUtc) {
             $rt = 'rt=' + (Get-Date -AsUTC -Format 'MMM dd yyyy HH:mm:ss.fff zzz')
         } else {
             $rt = 'rt=' + (Get-Date -Format 'MMM dd yyyy HH:mm:ss.fff zzz')
         }
 
-        # shost: The format should be a fully qualified domain name (FQDN) associated with the source node.
+        # CEF shost: The format should be a fully qualified domain name (FQDN) associated with the source node.
         $shost = 'shost=' + ("$env:computername.$env:userdnsdomain").ToLower()
 
-        # sourceServiceName: The service that is responsible for generating this event.
+        # CEF sourceServiceName: The service that is responsible for generating this event.
         $sourceServiceName = 'sourceServiceName=PowerShell'
 
-        # spid: The ID of the source process associated with the event.
+        # CEF spid: The ID of the source process associated with the event.
         $spid = 'spid=' + ($Script:LockpathConfig.ProcessId)
 
-        # suser: Identifies the source user by name.
+        # CEF suser: Identifies the source user by name.
         $suser = 'suser=' + ($env:username)
 
         $cefExtension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
 
         # Write the message to screen and set severity for logging.
         switch ($Level) {
-            # Need to explicitly say SilentlyContinue here so that we continue on, given that we've assigned a
-            # script-level ErrorActionPreference of "Stop" for the module.
+            # Need to explicitly say SilentlyContinue here so that we continue on, given that we've
+            # assigned a script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
                 $logMessageLevel = 0
                 $cefHeaderSeverity = 'High'
@@ -292,9 +317,8 @@ function Write-LockpathLog {
                 $output += $consoleMessage
                 Write-Warning ($output -join [Environment]::NewLine)
             } else {
-                # If the file doesn't exist and couldn't be created, it likely will never  be valid. In that
-                # instance, let's stop everything so that the user can fix the problem, since they have indicated
-                # that they want this logging to occur.
+                # If the file doesn't exist and couldn't be created, it likely will never  be valid.
+                # In that instance, let's stop everything so that the user can fix the problem, since they have indicated that they want this logging to occur.
                 throw ($output -join [Environment]::NewLine)
             }
         }
