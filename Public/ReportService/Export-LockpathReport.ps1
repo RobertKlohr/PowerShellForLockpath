@@ -80,9 +80,7 @@ function Export-LockpathReport {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
             'Description' = "Exporting Report with Report Id $ReportId and File Type $FileType"

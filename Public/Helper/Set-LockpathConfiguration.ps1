@@ -198,15 +198,15 @@ function Set-LockpathConfiguration {
 
     $logParameters = [ordered]@{
         'Confirm'      = $false
-        'WhatIf'       = $false
-        'Message'      = $null
         'FunctionName' = $functionName
         'Level'        = $level
+        'Message'      = $null
         'Service'      = $service
         'Result'       = $null
+        'WhatIf'       = $false
     }
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    Write-LockpathInvocationLog @logParameters
 
     $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
     foreach ($name in $properties) {

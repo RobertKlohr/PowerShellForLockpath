@@ -4,8 +4,7 @@
 function Initialize-LockpathConfiguration {
     <#
     .SYNOPSIS
-        Populates the configuration of the module for this session, loading in any values
-        that may have been saved to disk.
+        Populates the configuration of the module for this session, loading in any values that may have been saved to disk.
 
     .DESCRIPTION
         Populates the configuration of the module for this session, loading in any values that may have been saved to disk.
@@ -43,6 +42,16 @@ function Initialize-LockpathConfiguration {
     $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
+
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
 
     # Create a configuration object with all the default configuration and session values.
     if ($null -eq $Script:LockpathConfig) {
@@ -101,8 +110,5 @@ function Initialize-LockpathConfiguration {
 
     # Normally Write-LockpathInvocationLog is run first in a function but we need to import the configuration
     # before using.
-
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-
-
+    Write-LockpathInvocationLog @logParameters
 }

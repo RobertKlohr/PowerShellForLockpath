@@ -50,7 +50,17 @@ function Export-LockpathCredential {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
 
     try {
         Export-Clixml -InputObject $Credential -Path $Script:LockpathConfig.credentialFilePath -Depth 10 -Force

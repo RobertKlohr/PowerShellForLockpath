@@ -54,6 +54,18 @@ function Export-LockpathAuthenticationCookie {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
+
     # FIXME private function only log when the logging is set to debug level
 
     if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {

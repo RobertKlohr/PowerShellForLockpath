@@ -86,7 +86,17 @@ function Set-LockpathCredential {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PublicHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
 
     if (-not $PSBoundParameters.ContainsKey('Credential')) {
         do {

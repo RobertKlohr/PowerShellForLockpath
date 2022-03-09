@@ -48,26 +48,41 @@ function Import-LockpathConfiguration {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PublicHelper'
 
-    try {
-        $savedLockpathConfig = Import-Clixml -Path $FilePath
-        Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty |
-        ForEach-Object {
-            $name = $_.Name
-            $type = $Script:LockpathConfig.$name.GetType().Name
-            if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedLockpathConfig -Name $name -Type $type -DefaultValue $Script:LockpathConfig.$name) {
-                $Script:LockpathConfig.$name = $savedLockpathConfig.$name
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    $shouldProcessTarget = 'Loading Configuration File'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            $savedLockpathConfig = Import-Clixml -Path $FilePath
+            Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty |
+            ForEach-Object {
+                $name = $_.Name
+                $type = $Script:LockpathConfig.$name.GetType().Name
+                if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedLockpathConfig -Name $name -Type $type -DefaultValue $Script:LockpathConfig.$name) {
+                    $Script:LockpathConfig.$name = $savedLockpathConfig.$name
+                }
             }
+            $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
+            # $Script:LockpathConfig.credential = Import-LockpathCredential
+            Import-LockpathCredential
+        } catch {
+            # Normally Write-LockpathInvocationLog runs first, but the configuration needs to be loaded
+            Write-LockpathInvocationLog @logParameters
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'failed: ' + $shouldProcessTarget + 'Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".'
+            $logParameters.result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
-        $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
-        # $Script:LockpathConfig.credential = Import-LockpathCredential
-        Import-LockpathCredential
-    } catch {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Failed to load configuration file. Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".' -Level $level
+        return $result
     }
-
-    # Normally Write-LockpathInvocationLog runs first, but the configuration needs to be loaded
-    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-    }
-
 }

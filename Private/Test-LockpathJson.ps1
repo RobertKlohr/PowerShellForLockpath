@@ -68,11 +68,21 @@ function Test-LockpathJson {
     )
 
     begin {
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = $null
+            'Service'      = $service
+            'Result'       = $null
+            'WhatIf'       = $false
+        }
     }
 
     process {
+        Write-LockpathInvocationLog @logParameters
         $Input
-        $Compress
+        # $Compress
     }
 
     end {}

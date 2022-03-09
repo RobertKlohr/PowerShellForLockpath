@@ -146,6 +146,18 @@ function Invoke-LockpathRestMethod {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
+
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
     # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 

@@ -9,8 +9,9 @@ function Import-LockpathCredential {
     .DESCRIPTION
         Attempts to import the API credential from the local file system.
 
-        First the will try to use the credential already cached in memory. If not found, will look to see if there
-        is a file with the API credential stored as a SecureString.
+        First the will try to use the credential already cached in memory.
+        If not found, will look to see if there is a file with the API credential
+        stored as a SecureString.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
@@ -44,7 +45,17 @@ function Import-LockpathCredential {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
-    Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = $null
+        'Service'      = $service
+        'Result'       = $null
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
 
     if ($null -ne $Script:LockpathConfig.credential.UserName) {
         return
