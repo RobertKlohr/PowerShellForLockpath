@@ -82,7 +82,7 @@ function Connect-Lockpath {
 
         $restParameters = [ordered]@{
             'Body'        = (ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -InputObject $hashBody)
-            'Description' = "Connecting to API with username $username and password <redacted>"
+            'Description' = "Connecting to API with username $username and password <redacted>."
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'Login'
@@ -96,28 +96,28 @@ function Connect-Lockpath {
                 # the following extra check is needed as the API returns HTTP 200 regardless of
                 # authentication success
                 if ($result -eq 'true') {
-                    $logParameters.message = 'success: ' + $shouldProcessTarget
+                    $logParameters.Message = 'Success: ' + $shouldProcessTarget
                 } else {
-                    $logParameters.message = 'failed: ' + $shouldProcessTarget
+                    $logParameters.Message = 'Failed: ' + $shouldProcessTarget
                     $logParameters.Level = 'Error'
                 }
                 if ($Script:LockpathConfig.logRequestBody) {
                     try {
-                        $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                        $logParameters.Result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                     } catch {
-                        $logParameters.result = 'Unable to convert API response.'
+                        $logParameters.Result = 'Unable to convert API response.'
                     }
                 } else {
-                    $logParameters.result = 'Response includes a body: <message body logging disabled>'
+                    $logParameters.Result = 'Response includes a body: <message body logging disabled>.'
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $shouldProcessTarget
-                $logParameters.result = $_.Exception.Message
+                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+                $logParameters.Result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $result
+            return $logParameters.Message
         }
     }
 

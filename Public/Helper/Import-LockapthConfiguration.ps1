@@ -80,8 +80,8 @@ function Import-LockpathConfiguration {
             # Normally Write-LockpathInvocationLog runs first, but the configuration needs to be loaded
             Write-LockpathInvocationLog @logParameters
             $logParameters.Level = 'Error'
-            $logParameters.Message = 'failed: ' + $shouldProcessTarget + 'Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".'
-            $logParameters.result = $_.Exception.Message
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget + 'Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".'
+            $logParameters.Result = $_.Exception.Message
         } finally {
             Write-LockpathLog @logParameters
         }

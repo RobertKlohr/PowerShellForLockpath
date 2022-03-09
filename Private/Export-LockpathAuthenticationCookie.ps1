@@ -76,11 +76,11 @@ function Export-LockpathAuthenticationCookie {
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
-            $logParameters.message = 'success: ' + $shouldProcessTarget
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
         } catch {
             $logParameters.Level = 'Error'
-            $logParameters.Message = 'failed: ' + $shouldProcessTarget
-            $logParameters.result = $_.Exception.Message
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
         } finally {
             Write-LockpathLog @logParameters
         }

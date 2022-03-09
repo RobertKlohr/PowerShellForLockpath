@@ -68,19 +68,24 @@ function Reset-LockpathConfiguration {
 
     Write-LockpathInvocationLog @logParameters
 
-    if (-not $SessionOnly) {
-        if ($PSCmdlet.ShouldProcess("Reseting configuration file:  $GroupId", $GroupId, 'Deleting group with Id:')) {
-            $null = Remove-Item -Path $Script:LockpathConfig.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-            $null = New-Item -Path $Script:LockpathConfig.configurationFilePath -Force
-            $Script:LockpathConfig | Set-LockpathConfiguration
-        }
-
-        if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Reset was unsuccessful.  Experienced a problem trying to remove the file [$Script:LockpathConfigFilePath]." -Level $level -ErrorRecord $ev[0]
-        }
-    } else {
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         Initialize-LockpathConfiguration
+        $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        if (-not $SessionOnly) {
+            $shouldProcessTarget = "Reseting configuration in memory and configuration file at $($Script:LockpathConfig.configurationFilePath). This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that."
+            try {
+                $null = Remove-Item -Path $Script:LockpathConfig.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
+                $null = New-Item -Path $Script:LockpathConfig.configurationFilePath -Force
+                $Script:LockpathConfig | Set-LockpathConfiguration
+                $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            } catch {
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+                $logParameters.Result = $_.Exception.Message
+            } finally {
+                Write-LockpathLog @logParameters
+            }
+        }
+        return $logParameters.Message
     }
-
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.' -Level $level
 }

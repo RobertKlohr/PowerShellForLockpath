@@ -60,7 +60,7 @@ function Test-LockpathAuthentication {
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             Send-LockpathPing
-            $logParameters.message = 'success'
+            $logParameters.Message = 'success'
         } catch {
             Connect-Lockpath
             $message = 'failed'
@@ -68,6 +68,6 @@ function Test-LockpathAuthentication {
         } finally {
             Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
         }
-        return $message
+        return $logParameters.Message
     }
 }

@@ -229,15 +229,15 @@ function Set-LockpathConfiguration {
             # make a copy of the configuration exceluding non-persistent properties
             $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
             Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
-            $logParameters.message = 'Successfully saved configuration to disk.'
-            $logParameters.result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
+            $logParameters.Message = 'Successfully saved configuration to disk.'
+            $logParameters.Result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
         } catch {
-            $logParameters.message = 'Failed to save configuration to disk. It will remain for this PowerShell session only.'
+            $logParameters.Message = 'Failed to save configuration to disk. It will remain for this PowerShell session only.'
             $logParameters.level = 'Error'
-            $logParameters.result = $_.Exception.Message
+            $logParameters.Result = $_.Exception.Message
         } finally {
             Write-LockpathLog @logParameters
         }
     }
-    Show-LockpathConfiguration
+    return $logParameters.Message
 }

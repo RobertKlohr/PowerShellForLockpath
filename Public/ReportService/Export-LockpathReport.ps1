@@ -43,7 +43,7 @@ function Export-LockpathReport {
         SupportsShouldProcess = $true
     )]
 
-    [OutputType('application/octet-stream')]
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -95,20 +95,20 @@ function Export-LockpathReport {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $shouldProcessTarget
+                $logParameters.Message = 'Success: ' + $shouldProcessTarget
                 try {
-                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                    $logParameters.Result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
-                    $logParameters.result = 'Unable to convert API response.'
+                    $logParameters.Result = 'Unable to convert API response.'
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $shouldProcessTarget
-                $logParameters.result = $_.Exception.Message
+                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+                $logParameters.Result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $result
+            return $logParameters.Message
         }
     }
 

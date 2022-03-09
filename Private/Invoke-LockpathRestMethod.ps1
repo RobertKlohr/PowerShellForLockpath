@@ -232,7 +232,7 @@ function Invoke-LockpathRestMethod {
                     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
                 }
             } else {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>.' -Level $level -FunctionName $functionName -Service PrivateHelper
             }
         }
         #! Here is the web call
@@ -269,7 +269,7 @@ function Invoke-LockpathRestMethod {
         #     if ($Script:LockpathConfig.logRequestBody) {
         #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
         #     } else {
-        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>' -Level $level -FunctionName $functionName -Service PrivateHelper
+        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>.' -Level $level -FunctionName $functionName -Service PrivateHelper
         #     }
         # }
 

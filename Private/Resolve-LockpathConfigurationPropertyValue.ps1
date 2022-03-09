@@ -52,7 +52,7 @@ function Resolve-LockpathConfigurationPropertyValue {
         SupportsShouldProcess = $true
     )]
 
-    [OutputType([System.Boolen])]
+    [OutputType([System.Boolean])]
 
     param(
         [Parameter(

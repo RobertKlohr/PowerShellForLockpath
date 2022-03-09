@@ -96,10 +96,10 @@ function Add-LockpathGroupUser {
                     $users += $Id
                 }
                 Set-LockpathGroup -GroupId $GroupId -Users $users
-                $logParameters.message = 'success'
+                $logParameters.Message = 'success'
             } catch {
 
-                $logParameters.message = 'failed'
+                $logParameters.Message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {
                 Write-LockpathLog @logParameters

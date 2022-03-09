@@ -196,10 +196,10 @@ function Set-LockpathVendorGroup {
                     $vendorIds += $vendor.Id
                 }
                 Set-LockpathGroup -GroupId $GroupId -Users $vendorIds
-                $logParameters.message = 'success'
+                $logParameters.Message = 'success'
             } catch {
 
-                $logParameters.message = 'failed'
+                $logParameters.Message = 'failed'
                 $logParameters.level = 'Warning'
             } finally {
                 Write-LockpathLog @logParameters

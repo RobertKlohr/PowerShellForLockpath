@@ -66,18 +66,25 @@ function Remove-LockpathCredential {
 
     Write-LockpathInvocationLog @logParameters
 
-    if ($PSCmdlet.ShouldProcess('Cleared API credential (websession) from memory')) {
-        if (-not $SessionOnly) {
-            if ($PSCmdlet.ShouldProcess('Deleting API credential from the session and local file')) {
-                Remove-Item -Path $Script:LockpathConfig.credentialFilePath, -Force -ErrorAction SilentlyContinue -ErrorVariable ev
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Removed the API credential file $($Script:LockpathConfig.credentialFilePath) from file system." -Level $level -ErrorRecord $ev[0]
+    $shouldProcessTarget = 'Cleared API credential (websession) from memory.'
 
-                if (($null -ne $ev) -and ($ev.Count -gt 0) -and ($ev[0].FullyQualifiedErrorId -notlike 'PathNotFound*')) {
-                    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Experienced a problem trying to remove the API credential file $($Script:LockpathConfig.credentialFilePath)." -Level $level -ErrorRecord $ev[0]
-                }
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        $Script:LockpathConfig.credential = $null
+        $Script:LockpathConfig.webSession = $null
+        $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        if (-not $SessionOnly) {
+            $shouldProcessTarget = "Cleared API credential from the session and $($Script:LockpathConfig.credentialFilePath) from the file system."
+            try {
+                Remove-Item -Path $Script:LockpathConfig.credentialFilePath -Force
+                $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            } catch {
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+                $logParameters.Result = $_.Exception.Message
+            } finally {
+                Write-LockpathLog @logParameters
             }
         }
-        $Script:LockpathConfig.webSession = $null
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Cleared API credential (websession) from memory.' -Level $level
+        return $logParameters.Message
     }
 }
