@@ -94,7 +94,7 @@ function Get-LockpathUser {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with Id ' + $UserId
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -102,7 +102,7 @@ function Get-LockpathUser {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with Id ' + $UserId
+                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
@@ -110,6 +110,7 @@ function Get-LockpathUser {
             return $result
         }
     }
+
     end {
     }
 }

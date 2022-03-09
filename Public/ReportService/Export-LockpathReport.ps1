@@ -93,20 +93,15 @@ function Export-LockpathReport {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with Id ' + $ReportId
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
                     $logParameters.result = 'Unable to convert API response.'
                 }
             } catch {
-                # TODO is the following extra error checking needed for this call?
-                # if ($null -eq $_.ErrorDetails) {
-                #     $result = $_.Exception.Message
-                # } else {
-                #     $result = ($_.ErrorDetails.Message | ConvertFrom-Json).Message
-                # }$logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with Id ' + $ReportId
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

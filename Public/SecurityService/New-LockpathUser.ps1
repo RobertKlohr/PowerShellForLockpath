@@ -94,19 +94,15 @@ function New-LockpathUser {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with attributes ' + $Body
-                if ($Script:LockpathConfig.logRequestBody) {
-                    try {
-                        $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
-                    } catch {
-                        $logParameters.result = 'Unable to convert API response.'
-                    }
-                } else {
-                    $logParameters.result = 'Response includes a body: <message body logging disabled>'
+                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                try {
+                    $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
+                } catch {
+                    $logParameters.result = 'Unable to convert API response.'
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with attributes ' + $Body
+                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters
