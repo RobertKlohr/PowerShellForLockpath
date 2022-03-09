@@ -52,7 +52,8 @@ function Remove-LockpathUser {
     [CmdletBinding(
         ConfirmImpact = 'High',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
@@ -60,7 +61,8 @@ function Remove-LockpathUser {
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
         [Int32] $UserId
     )
@@ -85,19 +87,19 @@ function Remove-LockpathUser {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Body'        = $UserId | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
-            'Description' = 'Deleting User By Id'
+            'Body'        = $UserId | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = "Deleting User with Id $UserId"
             'Method'      = 'DELETE'
             'Service'     = $service
             'UriFragment' = 'DeleteUser'
         }
 
-        $shouldProcessTarget = "Id=$UserId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -105,7 +107,7 @@ function Remove-LockpathUser {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

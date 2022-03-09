@@ -46,13 +46,14 @@ function Get-LockpathWorkflows {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     param(
         [Parameter(
@@ -83,24 +84,22 @@ function Get-LockpathWorkflows {
     # TODO add ability to lookup by component Id as well as alias
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Workflows By Component Alias'
+            'Description' = "Getting Workflows with Component Alias $ComponentAlias"
             'Method'      = 'GET'
             'Query'       = "?ComponentAlias=$ComponentAlias"
             'Service'     = $service
             'UriFragment' = 'GetWorkflows'
         }
 
-        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -108,7 +107,7 @@ function Get-LockpathWorkflows {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

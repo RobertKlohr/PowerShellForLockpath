@@ -44,22 +44,24 @@ function Get-LockpathFieldLookupReportColumns {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     param(
         [Parameter(
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $FieldId,
+        [Int32] $FieldId,
 
         [Parameter(
             Mandatory = $true,
@@ -67,7 +69,7 @@ function Get-LockpathFieldLookupReportColumns {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('Positive')]
-        [Int64] $FieldPathId
+        [Int32] $FieldPathId
     )
 
     begin {
@@ -87,24 +89,22 @@ function Get-LockpathFieldLookupReportColumns {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Lookup Report Column Fields By Field Id & Field Path'
+            'Description' = "Getting Lookup Report Column with Field Id $Field and Field Path Id $FieldPathId"
             'Method'      = 'GET'
             'Query'       = "?LookupFieldId=$FieldId&FieldPathId=$FieldPathId"
             'Service'     = $service
             'UriFragment' = 'GetLookupReportColumnFields'
         }
 
-        $shouldProcessTarget = "LookupFieldId=$FieldId & FieldPathId=$FieldPathId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -112,7 +112,7 @@ function Get-LockpathFieldLookupReportColumns {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

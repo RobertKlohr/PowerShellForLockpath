@@ -36,13 +36,13 @@ function Export-LockpathAuthenticationCookie {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
 
     param(
         [Parameter(
-            Mandatory = $true)]
+            Mandatory = $true
+        )]
         [System.Net.CookieCollection] $CookieCollection
 
         # [Parameter(

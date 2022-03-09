@@ -55,7 +55,8 @@ function Get-LockpathGroup {
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('NonNegative')]
         [Int32] $GroupId
     )
@@ -80,19 +81,19 @@ function Get-LockpathGroup {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Group By Id'
+            'Description' = "Getting Group with Id = $GroupId"
             'Method'      = 'GET'
             'Query'       = "?Id=$GroupId"
             'Service'     = $service
             'UriFragment' = 'GetGroup'
         }
 
-        $shouldProcessTarget = "Id=$GroupId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -100,7 +101,7 @@ function Get-LockpathGroup {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

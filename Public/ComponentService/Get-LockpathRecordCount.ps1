@@ -34,7 +34,7 @@ function Get-LockpathRecordCount {
         System.Array
 
     .OUTPUTS
-        System.Int64
+        System.Int32
 
     .NOTES
         Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/GetRecordCount
@@ -48,15 +48,17 @@ function Get-LockpathRecordCount {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.Int64')]
+        SupportsShouldProcess = $true
+    )]
+    [OutputType('System.Int32')]
 
     param(
         [Parameter(
             Mandatory = $true,
-            Position = 0)]
+            Position = 0
+        )]
         [ValidateRange('Positive')]
-        [Int64] $ComponentId,
+        [Int32] $ComponentId,
 
         [Array] $Filter = @()
     )
@@ -78,9 +80,7 @@ function Get-LockpathRecordCount {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{
             'componentId' = $ComponentId
@@ -88,19 +88,19 @@ function Get-LockpathRecordCount {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-            'Description' = 'Getting Record County By Filter'
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Record Count'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetRecordCount'
         }
 
-        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+        $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -108,7 +108,7 @@ function Get-LockpathRecordCount {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

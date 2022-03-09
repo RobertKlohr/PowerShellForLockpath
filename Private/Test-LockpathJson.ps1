@@ -50,7 +50,8 @@ function Test-LockpathJson {
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
-        PositionalBinding = $false)]
+        PositionalBinding = $false
+    )]
     [OutputType('System.String')]
 
 
@@ -59,7 +60,8 @@ function Test-LockpathJson {
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Input,
 
         [Switch] $Compress

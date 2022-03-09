@@ -82,19 +82,19 @@ function Get-LockpathUser {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting User By Id'
+            'Description' = "Getting User with Id = $UserId"
             'Method'      = 'GET'
             'Query'       = "?Id=$UserId"
             'Service'     = $service
             'UriFragment' = 'GetUser'
         }
 
-        $shouldProcessTarget = "Id=$UserId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -102,7 +102,7 @@ function Get-LockpathUser {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

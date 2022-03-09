@@ -40,21 +40,24 @@ function Get-LockpathRecord {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $ComponentId,
+        [Int32] $ComponentId,
 
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $RecordId
+        [Int32] $RecordId
     )
 
     begin {
@@ -74,24 +77,22 @@ function Get-LockpathRecord {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Record By Component Id'
+            'Description' = "Getting Record with Component Id $ComponentId and RecordId $RecordId"
             'Method'      = 'GET'
             'Query'       = "ComponentId=$ComponentId&RecordId=$RecordId"
             'Service'     = $service
             'UriFragment' = 'GetRecord'
         }
 
-        $shouldProcessTarget = "ComponentId=$ComponentId & RecordId=$RecordId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -99,7 +100,7 @@ function Get-LockpathRecord {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

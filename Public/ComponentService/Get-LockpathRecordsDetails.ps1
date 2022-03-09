@@ -71,20 +71,22 @@ function Get-LockpathRecordsDetails {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     param(
         [Parameter(
             Mandatory = $true,
-            Position = 0)]
+            Position = 0
+        )]
         [ValidateRange('Positive')]
-        [Int64] $ComponentId,
+        [Int32] $ComponentId,
 
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
@@ -116,9 +118,7 @@ function Get-LockpathRecordsDetails {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{
             'componentId' = $ComponentId
@@ -130,19 +130,19 @@ function Get-LockpathRecordsDetails {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-            'Description' = 'Getting Records By Filter'
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Records Details'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetDetailRecords'
         }
 
-        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+        $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -150,7 +150,7 @@ function Get-LockpathRecordsDetails {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

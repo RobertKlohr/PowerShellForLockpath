@@ -32,7 +32,8 @@ function Disconnect-Lockpath {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param()
@@ -41,12 +42,7 @@ function Disconnect-Lockpath {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-    }
 
-    process {
-        Write-LockpathInvocationLog @logParameters
-
-        # FIXME update all functions to pass the result to write-lockpathlog (1)
         $logParameters = [ordered]@{
             'Confirm'      = $false
             'FunctionName' = $functionName
@@ -56,9 +52,13 @@ function Disconnect-Lockpath {
             'Result'       = "Executing cmdlet: $functionName"
             'WhatIf'       = $false
         }
+    }
+
+    process {
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Sending Logout'
+            'Description' = 'Disconnecting from API'
             'Method'      = 'GET'
             'Service'     = $service
             'UriFragment' = 'Logout'
@@ -69,7 +69,7 @@ function Disconnect-Lockpath {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -77,7 +77,7 @@ function Disconnect-Lockpath {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

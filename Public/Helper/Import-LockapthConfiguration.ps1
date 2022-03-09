@@ -37,9 +37,8 @@ function Import-LockpathConfiguration {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
 
     param(
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath

@@ -50,35 +50,40 @@ function Set-LockpathRecordVote {
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
         [Parameter(
             Mandatory = $true,
-            Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
+        #TODO validate for no spaces
         [ValidateLength(1, 128)]
         [String] $ComponentAlias,
 
-        [Parameter(Mandatory = $true,
+        [Parameter(
+            Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $RecordId,
-
-        [Parameter(Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [ValidateRange('Positive')]
-        [Int64] $TransitionId,
+        [Int32] $RecordId,
 
         [Parameter(
-            # Mandatory = $true,
-            Position = 0,
+            Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
+        [ValidateRange('Positive')]
+        [Int32] $TransitionId,
+
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateLength(1, 2048)]
         [String] $VotingComments
     )
@@ -100,9 +105,7 @@ function Set-LockpathRecordVote {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{
             'tableAlias'     = $ComponentAlias # There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.
@@ -114,19 +117,19 @@ function Set-LockpathRecordVote {
         # TODO update so this can take the component ID as well as the alias see also Set-LockpathRecordTransition
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-            'Description' = 'Voting Record'
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = "Voting Record with Table Alias $ComponentAlias, Record Id $RecordId, Transition Id $TransitionId, and Voting Comments $VotingComments"
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'VoteRecord'
         }
 
-        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -134,7 +137,7 @@ function Set-LockpathRecordVote {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

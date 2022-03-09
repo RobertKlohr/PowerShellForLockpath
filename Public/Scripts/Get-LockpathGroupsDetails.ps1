@@ -89,8 +89,8 @@ function Get-LockpathGroupsDetails {
     $restParameters = [ordered]@{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress)"
-        'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
+        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth)"
+        'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {

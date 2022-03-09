@@ -54,18 +54,20 @@ function Get-LockpathRecordsAvailableForLookup {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
         [Parameter(
             Mandatory = $true,
-            Position = 0)]
+            Position = 0
+        )]
         [ValidateRange('Positive')]
-        [Int64] $FieldId,
+        [Int32] $FieldId,
 
         [ValidateRange('Positive')]
-        [Int64] $RecordId,
+        [Int32] $RecordId,
 
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
@@ -91,9 +93,7 @@ function Get-LockpathRecordsAvailableForLookup {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{
             'pageIndex' = $PageIndex
@@ -106,19 +106,19 @@ function Get-LockpathRecordsAvailableForLookup {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
-            'Description' = 'Getting Record Available For Lookup By Field Id & Filter'
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = "Getting Record Available For Lookup with Field Id $FieldId and Record Id $RecordId"
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetAvailableLookupRecords'
         }
 
-        $shouldProcessTarget = "FieldId=$FieldId & Filter=$RecordId"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -126,7 +126,7 @@ function Get-LockpathRecordsAvailableForLookup {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

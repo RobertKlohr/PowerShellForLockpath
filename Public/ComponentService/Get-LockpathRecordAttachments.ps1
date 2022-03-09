@@ -40,32 +40,36 @@ function Get-LockpathRecordAttachments {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     param(
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $ComponentId,
+        [Int32] $ComponentId,
 
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $RecordId,
+        [Int32] $RecordId,
 
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $FieldId
+        [Int32] $FieldId
     )
 
     begin {
@@ -85,26 +89,24 @@ function Get-LockpathRecordAttachments {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Attachments By Component, Record & Field Id'
+            'Description' = "Getting Attachment with Component Id $ComponentId, Record Id $RecordId, and Field Id $FieldId"
             'Method'      = 'GET'
             'Query'       = "?ComponentId=$ComponentId&RecordId=$RecordId&FieldId=$FieldId"
             'Service'     = $service
             'UriFragment' = 'GetRecordAttachments'
         }
 
-        $shouldProcessTarget = "ComponentId=$ComponentId, RecordId=$RecordId & FieldId=$FieldId"
+        $shouldProcessTarget = $restParameters.Description
 
         # TODO possibly update to save file similar to Get-LockpathReport
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -112,7 +114,7 @@ function Get-LockpathRecordAttachments {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

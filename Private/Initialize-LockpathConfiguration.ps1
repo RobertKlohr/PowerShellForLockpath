@@ -28,14 +28,15 @@ function Initialize-LockpathConfiguration {
         https://git.io/powershellforlockpathhelp
     #>
 
-    [CmdletBinding(
-        ConfirmImpact = 'Low',
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
+
+    [CmdletBinding(
+        ConfirmImpact = 'Low',
+        PositionalBinding = $false,
+        SupportsShouldProcess = $true
+    )]
 
     param()
 

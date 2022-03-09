@@ -78,30 +78,33 @@ function Write-LockpathLog {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
 
     param(
         [Parameter(
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [System.Management.Automation.ErrorRecord] $ErrorRecord,
 
         [Parameter(
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $FunctionName,
 
         [Parameter(
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
         [String] $Level = $Script:LockpathConfig.loggingLevel,
 
@@ -109,7 +112,8 @@ function Write-LockpathLog {
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [AllowEmptyCollection()]
         [AllowEmptyString()]
         [AllowNull()]
@@ -117,13 +121,15 @@ function Write-LockpathLog {
 
         [Parameter(
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Result,
 
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateSet('AssessmentService', 'ComponentService', 'ReportService', 'SecurityService', 'PrivateHelper', 'PublicHelper')]
         [String] $Service
 

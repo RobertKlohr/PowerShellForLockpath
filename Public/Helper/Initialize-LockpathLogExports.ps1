@@ -1,7 +1,7 @@
 ﻿# Copyright (c) Robert Klohr. All rights reserved.
 # Licensed under the MIT License.
 
-function Initialize-LockpathLogExports {
+function Initialize-LockpathLogExport {
     <#
     .SYNOPSIS
         Creates the folder structure used for extracting log files via the Ambassador service.
@@ -18,10 +18,10 @@ function Initialize-LockpathLogExports {
         Array of directories to create.
 
     .EXAMPLE
-        Initialize-LockpathLogExports -FilePath 'c:\temp\'
+        Initialize-LockpathLogExport -FilePath 'c:\temp\'
 
     .EXAMPLE
-        Initialize-LockpathLogExports -FilePath 'c:\temp\' -Directory @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
+        Initialize-LockpathLogExport -FilePath 'c:\temp\' -Directory @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
 
     .INPUTS
         Array, System.IO.FileInfo
@@ -45,14 +45,14 @@ function Initialize-LockpathLogExports {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
 
     param(
         [Parameter(
             Mandatory = $true,
-            Position = 0)]
+            Position = 0
+        )]
         [System.IO.FileInfo] $FilePath,
 
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
@@ -67,6 +67,6 @@ function Initialize-LockpathLogExports {
     }
 
     ForEach ($Directory in $Directories) {
-        New-Item -ItemType Directory -Path [FilePath]\$Directory
+        New-Item -ItemType Directory -Path [$FilePath]\$Directory
     }
 }

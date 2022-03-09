@@ -76,32 +76,37 @@ function Get-LockpathUsers {
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true,
-        DefaultParameterSetName = 'Default')]
+        DefaultParameterSetName = 'Default'
+    )]
     [OutputType('System.String')]
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
 
     param(
         [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'All')]
+            ParameterSetName = 'All',
+            Mandatory = $false
+        )]
         [Switch] $All,
 
         [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'Default')]
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
         [ValidateRange('NonNegative')]
         [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'Default')]
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
         [ValidateRange('Positive')]
         [Int32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'Default')]
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
         [Array] $Filter = @()
     )
 
@@ -126,7 +131,7 @@ function Get-LockpathUsers {
 
         if ($All) {
             $PageIndex = 0
-            [int32] $PageSize = Get-LockpathUserCount
+            [Int32] $PageSize = Get-LockpathUserCount
             $Filter = @()
         }
 
@@ -137,19 +142,19 @@ function Get-LockpathUsers {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress
-            'Description' = 'Getting Users By Filter'
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Description' = 'Getting Users'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetUsers'
         }
 
-        $shouldProcessTarget = "Filter=$($restParameters.Body)"
+        $shouldProcessTarget = "$($restParameters.Description) with Filter = ($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -157,7 +162,7 @@ function Get-LockpathUsers {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

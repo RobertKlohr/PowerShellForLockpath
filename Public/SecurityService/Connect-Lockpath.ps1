@@ -41,7 +41,8 @@ function Connect-Lockpath {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $true,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
@@ -49,7 +50,8 @@ function Connect-Lockpath {
             Mandatory = $false,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [PSCredential] $Credential = $Script:LockpathConfig.credential
     )
 
@@ -78,8 +80,8 @@ function Connect-Lockpath {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = (ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth -Compress -InputObject $hashBody)
-            'Description' = 'Connecting to Lockpath with username ' + $username + 'and password <redacted>'
+            'Body'        = (ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth -InputObject $hashBody)
+            'Description' = "Connecting to API with username $username and password <redacted>"
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'Login'
@@ -90,17 +92,12 @@ function Connect-Lockpath {
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-
-                # FIXME not sure why this TRIM is needed, the function or started handing back a
-                # value with whitespace at the beginning sometime on 2022-03-07
-                # $result = $result.Trim()
                 # the following extra check is needed as the API returns HTTP 200 regardless of
                 # authentication success
                 if ($result -eq 'true') {
-                    $logParameters.message = 'success: ' + $restParameters.Description
-
+                    $logParameters.message = 'success: ' + $shouldProcessTarget
                 } else {
-                    $logParameters.message = 'failed: ' + $restParameters.Description
+                    $logParameters.message = 'failed: ' + $shouldProcessTarget
                     $logParameters.Level = 'Error'
                 }
                 if ($Script:LockpathConfig.logRequestBody) {
@@ -114,7 +111,7 @@ function Connect-Lockpath {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed'
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

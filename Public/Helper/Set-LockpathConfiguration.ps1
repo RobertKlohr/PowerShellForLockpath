@@ -119,10 +119,9 @@ function Set-LockpathConfiguration {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     param(
         [ValidateSet('application/json', 'application/xml')]
@@ -145,7 +144,7 @@ function Set-LockpathConfiguration {
         [String] $InstanceName,
 
         [ValidateRange(0, 65535)]
-        [Int64] $InstancePort,
+        [Int32] $InstancePort,
 
         [ValidatePattern('^https?$')]
         [String] $InstanceProtocol,
@@ -188,7 +187,7 @@ function Set-LockpathConfiguration {
         [String] $VendorName,
 
         [ValidateRange('NonNegative')]
-        [Int64] $WebRequestTimeoutSec,
+        [Int32] $WebRequestTimeoutSec,
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )

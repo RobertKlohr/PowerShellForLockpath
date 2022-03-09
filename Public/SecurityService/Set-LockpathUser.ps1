@@ -58,156 +58,212 @@ function Set-LockpathUser {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification = 'This cmdlets is a wrapper for an API call that only excepts a plain text password for a password reset. The mitigating control is that the password is temporary and the platform forces the user to reset the password on first use.')]
+
     [CmdletBinding(
         ConfirmImpact = 'High',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification = 'This cmdlets mirrors is a wrapper for an API call that only excepts a plain text password for a password reset. The mitigating control is that the password is temporary and the platform forces the user to reset the password on first use.')]
-
+    # FIXME update parameters to match set-lockpathgroup
     param(
         # AttributeAll parameter set
-        [Parameter(ParameterSetName = 'AttributeAll',
+        [Parameter(
+            ParameterSetName = 'AttributeAll',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Attributes,
 
         # Attribute parameter set
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Alias('UserId')]
         [Int32] $Id,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateSet(1, 2, 4)]
         [Int32] $AccountType,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Boolean] $Active,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Boolean] $APIAccess,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32] $Department,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Mailaddress] $EmailAddress,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Fax,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $FirstName,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32[]] $FunctionalRoles,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32[]] $Groups,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $HomePhone,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Boolean] $IsLDAP,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Boolean] $IsSAML,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateSet(1033)]
         [Int32] $Language,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $LastName,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32] $LDAPDirectory,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Boolean] $Locked,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32] $Manager,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $MiddleName,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $MobilePhone,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Password,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32] $SecurityConfiguration,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Int32[]] $SecurityRoles,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $Title,
 
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $WorkPhone,
 
         # This parameter must be last in the message body
-        [Parameter(ParameterSetName = 'Attribute',
+        [Parameter(
+            ParameterSetName = 'Attribute',
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Switch] $CommitNullProperties
     )
 
@@ -226,8 +282,6 @@ function Set-LockpathUser {
             'WhatIf'       = $false
         }
     }
-
-    # FIXME update parameters to match set-lockpathgroup
 
     process {
         Write-LockpathInvocationLog @logParameters
@@ -259,19 +313,19 @@ function Set-LockpathUser {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
             'Description' = 'Updating User'
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'UpdateUser'
         }
 
-        $shouldProcessTarget = "Properties=$($restParameters.Body)"
+        $shouldProcessTarget = "$($restParameters.Description) with Attributes = $($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -279,7 +333,7 @@ function Set-LockpathUser {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

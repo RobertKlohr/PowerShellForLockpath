@@ -47,24 +47,31 @@ function Get-LockpathRecordDetail {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
     [OutputType('System.String')]
 
     param(
-        [Parameter(Mandatory = $true,
+        [Parameter(
+            Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $ComponentId,
+        [Int32] $ComponentId,
 
-        [Parameter(Mandatory = $true,
+        [Parameter(
+            Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('Positive')]
-        [Int64] $RecordId,
+        [Int32] $RecordId,
 
-        [Parameter(ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+        [Parameter(
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Switch] $ExtractRichTextImages
     )
 
@@ -85,24 +92,22 @@ function Get-LockpathRecordDetail {
     }
 
     process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
+        Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Description' = 'Getting Record Detail By Component Id'
+            'Description' = "Getting Record Detail with Component Id $ComponentId, Record Id $RecordId, and EmbedRichTextImages $ExtractRichTextImages"
             'Method'      = 'GET'
             'Query'       = "?ComponentId=$ComponentId&RecordId=$RecordId&EmbedRichTextImages=$ExtractRichTextImages"
             'Service'     = $service
             'UriFragment' = 'GetDetailRecord'
         }
 
-        $shouldProcessTarget = "ComponentId=$ComponentId, RecordId=$RecordId & EmbedRichTextImages=$ExtractRichTextImages"
+        $shouldProcessTarget = $restParameters.Description
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
                 [string] $result = Invoke-LockpathRestMethod @restParameters
-                $logParameters.message = 'success: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.message = 'success: ' + $shouldProcessTarget
                 try {
                     $logParameters.result = (ConvertFrom-Json -InputObject $result) | ConvertTo-Json -Compress
                 } catch {
@@ -110,7 +115,7 @@ function Get-LockpathRecordDetail {
                 }
             } catch {
                 $logParameters.Level = 'Error'
-                $logParameters.Message = 'failed: ' + $restParameters.Description + ' with ' + $shouldProcessTarget
+                $logParameters.Message = 'failed: ' + $shouldProcessTarget
                 $logParameters.result = $_.Exception.Message
             } finally {
                 Write-LockpathLog @logParameters

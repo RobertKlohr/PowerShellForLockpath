@@ -47,7 +47,7 @@ function Add-LockpathGroupUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('NonNegative')]
-        [Int64] $GroupId,
+        [Int32] $GroupId,
 
         # FIXME add ability to use group name
 
@@ -56,7 +56,7 @@ function Add-LockpathGroupUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('NonNegative')]
-        [Int64[]] $UserId
+        [Int32[]] $UserId
     )
 
     begin {

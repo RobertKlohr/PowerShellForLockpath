@@ -44,25 +44,35 @@ function Resolve-LockpathConfigurationPropertyValue {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
+    [OutputType('System.Boolen')]
 
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [PSCustomObject] $InputObject,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [String] $Name,
 
-        [Parameter(Mandatory = $true)]
-        [ValidateSet('ArrayList', 'Boolean', 'Hashtable', 'Int16', 'Int32', 'Int64', 'PSCredential', 'PSObject', 'String', 'String[]')]
+        [Parameter(
+            Mandatory = $true
+        )]
+        [ValidateSet('ArrayList', 'Boolean', 'Hashtable', 'Int16', 'Int32', 'Int32', 'PSCredential', 'PSObject', 'String', 'String[]')]
         [String] $Type,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         $DefaultValue
     )
 
@@ -70,7 +80,17 @@ function Resolve-LockpathConfigurationPropertyValue {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'PrivateHelper'
 
-    # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    $logParameters = [ordered]@{
+        'Confirm'      = $false
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = "Executing cmdlet: $functionName"
+        'Service'      = $service
+        'Result'       = "Executing cmdlet: $functionName"
+        'WhatIf'       = $false
+    }
+
+    Write-LockpathInvocationLog @logParameters
 
     if ($null -eq $InputObject) {
         return $DefaultValue
@@ -97,8 +117,8 @@ function Resolve-LockpathConfigurationPropertyValue {
                 $typeType = [Int32]
                 break
             }
-            'Int64' {
-                $typeType = [Int64]
+            'Int32' {
+                $typeType = [Int32]
                 break
             }
             'PSCredential' {

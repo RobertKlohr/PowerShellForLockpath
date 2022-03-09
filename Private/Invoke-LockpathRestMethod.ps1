@@ -78,27 +78,36 @@ function Invoke-LockpathRestMethod {
         https://aka.ms/PowerShellForGitHub
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+        SupportsShouldProcess = $true
+    )]
 
     param(
         # FIXME need to add this into the CEF log or console log or both
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [String] $Description,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [ValidateSet('Delete', 'Get', 'Post')]
         [String] $Method,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [ValidateSet('AssessmentService', 'ComponentService', 'PrivateHelper', 'Public', 'ReportService', 'SecurityService')]
         [String] $Service,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory = $true
+        )]
         [ValidatePattern('^[a-zA-Z0-9]+$')]
         [String] $UriFragment,
 
@@ -133,11 +142,9 @@ function Invoke-LockpathRestMethod {
         $Login = $false
     }
 
-
-    $level = 'Verbose'
+    $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
-    # FIXME need to reconcile this variable
-    # $service = 'PrivateHelper'
+    $service = 'PrivateHelper'
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
     # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
