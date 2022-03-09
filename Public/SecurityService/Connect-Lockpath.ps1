@@ -93,7 +93,7 @@ function Connect-Lockpath {
 
                 # FIXME not sure why this TRIM is needed, the function or started handing back a
                 # value with whitespace at the beginning sometime on 2022-03-07
-                $result = $result.Trim()
+                # $result = $result.Trim()
                 # the following extra check is needed as the API returns HTTP 200 regardless of
                 # authentication success
                 if ($result -eq 'true') {

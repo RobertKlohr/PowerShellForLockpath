@@ -87,6 +87,16 @@ function Set-LockpathRecordVote {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ComponentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
@@ -101,7 +111,7 @@ function Set-LockpathRecordVote {
             'votingComments' = $VotingComments
         }
 
-        # TODO update so this can take the component ID as well as the alias see also Set-LockpathRecordTransitio
+        # TODO update so this can take the component ID as well as the alias see also Set-LockpathRecordTransition
 
         $restParameters = [ordered]@{
             'Body'        = $Body | ConvertTo-Json -Depth $Script:LockpathConfig.jsonConversionDepth
@@ -109,15 +119,6 @@ function Set-LockpathRecordVote {
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'VoteRecord'
-        }
-
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
         }
 
         $shouldProcessTarget = "Filter=$($restParameters.Body)"

@@ -89,6 +89,16 @@ function Set-LockpathRecordAttachments {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ComponentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
@@ -117,15 +127,6 @@ function Set-LockpathRecordAttachments {
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'UpdateRecordAttachments'
-        }
-
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
         }
 
         $shouldProcessTarget = "Filter=$($restParameters.Body)"

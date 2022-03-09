@@ -68,6 +68,16 @@ function Get-LockpathWorkflows {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ComponentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     # TODO add ability to lookup by component Id as well as alias
@@ -83,15 +93,6 @@ function Get-LockpathWorkflows {
             'Query'       = "?ComponentAlias=$ComponentAlias"
             'Service'     = $service
             'UriFragment' = 'GetWorkflows'
-        }
-
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
         }
 
         $shouldProcessTarget = "Filter=$($restParameters.Body)"

@@ -103,6 +103,16 @@ function Get-LockpathRecordsDetails {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ComponentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
@@ -125,15 +135,6 @@ function Get-LockpathRecordsDetails {
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'GetDetailRecords'
-        }
-
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
         }
 
         $shouldProcessTarget = "Filter=$($restParameters.Body)"

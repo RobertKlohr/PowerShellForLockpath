@@ -65,6 +65,16 @@ function Get-LockpathField {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'ComponentService'
+
+        $logParameters = [ordered]@{
+            'Confirm'      = $false
+            'FunctionName' = $functionName
+            'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
+            'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
+            'WhatIf'       = $false
+        }
     }
 
     process {
@@ -78,15 +88,6 @@ function Get-LockpathField {
             'Query'       = "?Id=$FieldId"
             'Service'     = $service
             'UriFragment' = 'GetField'
-        }
-
-        $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
-            'FunctionName' = $functionName
-            'Level'        = $level
-            'Service'      = $service
         }
 
         $shouldProcessTarget = "Id=$FieldId"
