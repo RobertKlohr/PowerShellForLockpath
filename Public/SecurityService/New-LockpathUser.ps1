@@ -52,7 +52,8 @@ function New-LockpathUser {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -84,7 +85,7 @@ function New-LockpathUser {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Body'        = $Attributes | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Attributes | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Creating User'
             'Method'      = 'POST'
             'Service'     = $service

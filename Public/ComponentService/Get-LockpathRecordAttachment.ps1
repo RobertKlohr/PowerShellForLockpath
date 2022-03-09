@@ -60,7 +60,8 @@ function Get-LockpathRecordAttachment {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(Mandatory = $true,

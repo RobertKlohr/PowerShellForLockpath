@@ -121,7 +121,8 @@ function Set-LockpathConfiguration {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [ValidateSet('application/json', 'application/xml')]
@@ -133,6 +134,9 @@ function Set-LockpathConfiguration {
 
         [ValidateSet('application/json', 'application/xml')]
         [String] $ContentTypetHeader,
+
+        [ValidateRange('Positive')]
+        [Int32] $conversionDepth,
 
         [PSCredential] $Credential,
 
@@ -148,9 +152,6 @@ function Set-LockpathConfiguration {
 
         [ValidatePattern('^https?$')]
         [String] $InstanceProtocol,
-
-        [ValidateRange('Positive')]
-        [Int32] $jsonConversionDepth,
 
         [ValidateRange('Positive')]
         [Int32] $KeepAliveInterval,
@@ -227,9 +228,9 @@ function Set-LockpathConfiguration {
         try {
             # make a copy of the configuration exceluding non-persistent properties
             $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
-            Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth 10 -Force
+            Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
             $logParameters.message = 'Successfully saved configuration to disk.'
-            $logParameters.result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+            $logParameters.result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
         } catch {
             $logParameters.message = 'Failed to save configuration to disk. It will remain for this PowerShell session only.'
             $logParameters.level = 'Error'

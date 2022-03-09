@@ -59,7 +59,8 @@ function Set-LockpathRecordAttachments {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -129,7 +130,7 @@ function Set-LockpathRecordAttachments {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Updating Attachment with Component Id $ComponentId, Record Id $RecordId, and Field Id $FieldId and File Name $($FilePath.Name)"
             'Method'      = 'POST'
             'Service'     = $service

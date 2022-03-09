@@ -78,7 +78,8 @@ function Get-LockpathRecordsDetails {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -130,7 +131,7 @@ function Get-LockpathRecordsDetails {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Getting Records Details'
             'Method'      = 'POST'
             'Service'     = $service

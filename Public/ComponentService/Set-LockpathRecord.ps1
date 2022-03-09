@@ -44,7 +44,8 @@ function Set-LockpathRecord {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -98,7 +99,7 @@ function Set-LockpathRecord {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Updating Record with Component Id $ComponentId, Record Id $RecordId, and Attributes $Attributes"
             'Method'      = 'POST'
             'Service'     = $service

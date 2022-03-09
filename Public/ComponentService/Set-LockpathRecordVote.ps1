@@ -52,7 +52,8 @@ function Set-LockpathRecordVote {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -117,7 +118,7 @@ function Set-LockpathRecordVote {
         # TODO update so this can take the component ID as well as the alias see also Set-LockpathRecordTransition
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Voting Record with Table Alias $ComponentAlias, Record Id $RecordId, Transition Id $TransitionId, and Voting Comments $VotingComments"
             'Method'      = 'POST'
             'Service'     = $service

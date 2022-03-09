@@ -72,15 +72,16 @@ function Get-LockpathUsers {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
         SupportsShouldProcess = $true,
         DefaultParameterSetName = 'Default'
     )]
-    [OutputType('System.String')]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -142,7 +143,7 @@ function Get-LockpathUsers {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Getting Users'
             'Method'      = 'POST'
             'Service'     = $service

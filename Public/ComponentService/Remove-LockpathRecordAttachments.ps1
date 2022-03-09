@@ -55,14 +55,15 @@ function Remove-LockpathRecordAttachments {
         https://git.io/powershellforlockpathhelp
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+
     [CmdletBinding(
         ConfirmImpact = 'High',
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Justification = 'This cmdlets is a wrapper for an API call that uses a plural noun.')]
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -127,7 +128,7 @@ function Remove-LockpathRecordAttachments {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Deleting Record Attachment with Component Id $ComponentId, Record Id $RecordId, Field Id $FieldId, and Document Id $DocumentId"
             'Method'      = 'POST'
             'Service'     = $service

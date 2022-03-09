@@ -65,7 +65,8 @@ function Set-LockpathUser {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     # FIXME update parameters to match set-lockpathgroup
     param(
@@ -313,7 +314,7 @@ function Set-LockpathUser {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Updating User'
             'Method'      = 'POST'
             'Service'     = $service

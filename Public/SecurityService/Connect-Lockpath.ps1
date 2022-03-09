@@ -43,7 +43,8 @@ function Connect-Lockpath {
         PositionalBinding = $true,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -80,7 +81,7 @@ function Connect-Lockpath {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = (ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth -InputObject $hashBody)
+            'Body'        = (ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -InputObject $hashBody)
             'Description' = "Connecting to API with username $username and password <redacted>"
             'Method'      = 'POST'
             'Service'     = $service

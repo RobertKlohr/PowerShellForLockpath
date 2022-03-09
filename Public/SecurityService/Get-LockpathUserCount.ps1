@@ -50,7 +50,8 @@ function Get-LockpathUserCount {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.Int32')]
+
+    [OutputType([System.Int32])]
 
     param(
         [Array] $Filter = @()
@@ -81,7 +82,7 @@ function Get-LockpathUserCount {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth -AsArray
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -AsArray
             'Description' = 'Getting User Count'
             'Method'      = 'POST'
             'Service'     = $service
@@ -90,7 +91,7 @@ function Get-LockpathUserCount {
         # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
         # To compensate for this bug we need to edit the JSON in $restParameters.body so that
         # it does not use the filters key. When the bug is fixed we can delete the next line.
-        $restParameters.Body = $Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+        $restParameters.Body = $Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
 
         $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 

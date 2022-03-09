@@ -38,14 +38,17 @@ function Add-LockpathGroupUser {
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('NonNegative')]
         [Int32] $GroupId,
 
@@ -54,7 +57,8 @@ function Add-LockpathGroupUser {
         [Parameter(
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('NonNegative')]
         [Int32[]] $UserId
     )
@@ -84,7 +88,7 @@ function Add-LockpathGroupUser {
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
-                $existingUsers = (Get-LockpathGroup -GroupId $GroupId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth).Users
+                $existingUsers = (Get-LockpathGroup -GroupId $GroupId | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth).Users
                 foreach ($user in $existingUsers) {
                     $users += $user.Id
                 }

@@ -69,6 +69,8 @@ function Write-LockpathInvocationLog {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param(
         [String[]] $ExcludeParameter,
 
@@ -104,7 +106,7 @@ function Write-LockpathInvocationLog {
             if ($parameter.Value -is [Switch]) {
                 $functionParameters += "-$($parameter.Key):`$$($parameter.Value.ToBool().ToString().ToLower())"
             } else {
-                $functionParameters += "-$($parameter.Key) $(ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth -InputObject $parameter.Value)"
+                $functionParameters += "-$($parameter.Key) $(ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -InputObject $parameter.Value)"
             }
         }
     }

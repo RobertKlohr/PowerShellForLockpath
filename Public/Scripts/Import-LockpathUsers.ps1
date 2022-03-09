@@ -40,9 +40,10 @@ function Import-LockpathUsers {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
+        SupportsShouldProcess = $true
+    )]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
+    [OutputType([System.String])]
 
     param(
         [Parameter(Mandatory = $true)]
@@ -67,7 +68,7 @@ function Import-LockpathUsers {
 
     # try {
     #     $content = Get-Content -Path $FilePath -Encoding UTF8 -ErrorAction Stop
-    #     return ($content | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth)
+    #     return ($content | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth)
     # } catch {
     #     Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The configuration file for this module is in an invalid state.  Use Reset-LockpathConfiguration to reset the file followed by Set-LockpathConfiguration -InstanceName <instancename>.' -Level $level
     # }

@@ -54,7 +54,8 @@ function Remove-LockpathUser {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -87,7 +88,7 @@ function Remove-LockpathUser {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Body'        = $UserId | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $UserId | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Deleting User with Id $UserId"
             'Method'      = 'DELETE'
             'Service'     = $service

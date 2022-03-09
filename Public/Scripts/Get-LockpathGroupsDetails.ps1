@@ -56,8 +56,10 @@ function Get-LockpathGroupsDetails {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [ValidateRange('NonNegative')]
@@ -89,12 +91,12 @@ function Get-LockpathGroupsDetails {
     $restParameters = [ordered]@{
         'UriFragment' = 'SecurityService/GetGroups'
         'Method'      = 'POST'
-        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth)"
-        'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+        'Description' = "Getting groups with filter: $($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth)"
+        'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
     }
 
     if ($PSCmdlet.ShouldProcess("Getting groups with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
-        $groups = Invoke-LockpathRestMethod @restParameters -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+        $groups = Invoke-LockpathRestMethod @restParameters -Confirm:$false | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
         $groupsProgress = $groups.count
         # Array
         # $result = @()
@@ -102,7 +104,7 @@ function Get-LockpathGroupsDetails {
         $i = 1
         foreach ($group In $groups) {
             try {
-                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+                $groupDetails = Get-LockpathGroup -GroupId $group.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
                 $result.Add($i, $groupDetails)
                 # Array
                 # $result += $userDetails

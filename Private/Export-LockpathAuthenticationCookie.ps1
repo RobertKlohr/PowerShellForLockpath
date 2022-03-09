@@ -39,15 +39,13 @@ function Export-LockpathAuthenticationCookie {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param(
         [Parameter(
             Mandatory = $true
         )]
         [System.Net.CookieCollection] $CookieCollection
-
-        # [Parameter(
-        #     Mandatory = $true)]
-        # [String] $Uri
     )
 
     $level = 'Debug'
@@ -66,28 +64,25 @@ function Export-LockpathAuthenticationCookie {
 
     Write-LockpathInvocationLog @logParameters
 
-    # FIXME private function only log when the logging is set to debug level
-
-    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-    }
-    # FIXME check to see if this section can be deleted
-
+    # TODO check to see if this section can be deleted
     $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
         'Domain' = $CookieCollection.Domain
         'Name'   = $CookieCollection.Name
         'Value'  = $CookieCollection.Value
     }
 
-    try {
-        Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth 10 -Force
-        $message = 'success'
-    } catch {
-        $message = 'failed'
-        $level = 'Warning'
-    } finally {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+    $shouldProcessTarget = 'Exporting Authentication Cookie'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            Export-Clixml -InputObject $Script:LockpathConfig.authenticationCookie -Path $Script:LockpathConfig.authenticationCookieFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
+            $logParameters.message = 'success: ' + $shouldProcessTarget
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'failed: ' + $shouldProcessTarget
+            $logParameters.result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
     }
 }

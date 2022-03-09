@@ -49,8 +49,10 @@ function Get-LockpathUser {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(

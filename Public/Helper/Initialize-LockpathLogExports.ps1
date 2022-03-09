@@ -48,6 +48,8 @@ function Initialize-LockpathLogExport {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param(
         [Parameter(
             Mandatory = $true,

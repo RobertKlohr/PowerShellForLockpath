@@ -51,7 +51,8 @@ function Remove-LockpathGroup {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -84,7 +85,7 @@ function Remove-LockpathGroup {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Body'        = $GroupId | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $GroupId | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Deleting Group with Id $GroupId"
             'Method'      = 'DELETE'
             'Service'     = $service

@@ -11,11 +11,8 @@ function Export-LockpathCredential {
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
-    .PARAMETER Cookie
-        A .Net cookie object.
-
-    .PARAMETER Uri
-        Uri of the cookie.
+    .PARAMETER Credential
+        A PSCredential object.
 
     .EXAMPLE
         Export-LockpathCredential
@@ -38,6 +35,8 @@ function Export-LockpathCredential {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
+
+    [OutputType([System.Void])]
 
     param(
         [Parameter(
@@ -62,13 +61,18 @@ function Export-LockpathCredential {
 
     Write-LockpathInvocationLog @logParameters
 
-    try {
-        Export-Clixml -InputObject $Credential -Path $Script:LockpathConfig.credentialFilePath -Depth 10 -Force
-        $message = 'success'
-    } catch {
-        $message = 'failed'
-        $level = 'Warning'
-    } finally {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+    $shouldProcessTarget = 'Exporting Credential'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            Export-Clixml -InputObject $Credential -Path $Script:LockpathConfig.credentialFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
+            $logParameters.message = 'success: ' + $shouldProcessTarget
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'failed: ' + $shouldProcessTarget
+            $logParameters.result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
+        }
     }
 }

@@ -37,6 +37,8 @@ function Initialize-LockpathConfiguration {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param()
 
     $level = 'Debug'
@@ -70,7 +72,7 @@ function Initialize-LockpathConfiguration {
             'instanceName'                 = [String] '<invalid>.keylightgrc.com'
             'instancePort'                 = [Int16] 4443
             'instanceProtocol'             = [String] 'https'
-            'jsonConversionDepth'          = [Int32] 100
+            'conversionDepth'              = [Int32] 100
             'keepAliveInterval'            = [Int32] 5
             'loggingLevel'                 = [String] 'Information'
             'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')

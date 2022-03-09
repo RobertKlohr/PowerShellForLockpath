@@ -39,6 +39,8 @@ function Import-LockpathCredential {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param()
 
     $level = 'Debug'

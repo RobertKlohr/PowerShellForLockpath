@@ -81,6 +81,8 @@ function Write-LockpathLog {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param(
         [Parameter(
             ValueFromPipeline = $true,

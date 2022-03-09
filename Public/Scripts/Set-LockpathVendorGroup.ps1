@@ -64,80 +64,94 @@ function Set-LockpathVendorGroup {
     [CmdletBinding(
         ConfirmImpact = 'Medium',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
+            ParameterSetName = 'Id-Active',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-Active')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Id-All',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-All')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Id-Inactive',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-Inactive')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [ValidateRange('NonNegative')]
         [Int32] $GroupId,
 
         [Parameter(
+            ParameterSetName = 'Group-Active',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-Active')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Group-All',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-All')]
+            ValueFromPipelineByPropertyName = $true
+        )]
 
         [Parameter(
+            ParameterSetName = 'Group-Inactive',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-Inactive')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [String] $GroupName,
 
         [Parameter(
+            ParameterSetName = 'Id-Active',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-Active')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Group-Active',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-Active')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Switch] $Active,
 
         [Parameter(
+            ParameterSetName = 'Id-All',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-All')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Group-All',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-All')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Switch] $All,
 
         [Parameter(
+            ParameterSetName = 'Id-Inactive',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Id-Inactive')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Parameter(
+            ParameterSetName = 'Group-Inactive',
             Mandatory = $true,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            ParameterSetName = 'Group-Inactive')]
+            ValueFromPipelineByPropertyName = $true
+        )]
         [Switch] $Inactive
     )
 
@@ -174,7 +188,7 @@ function Set-LockpathVendorGroup {
                 if ($Active) {
                     $vendors = Get-LockpathUsers -PageSize $pagesize -Filter @(@{'Field' = @{'ShortName' = 'AccountType' }; 'FilterType' = '5'; 'Value' = '2' }, @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'true' })
                 } elseif ($All) {
-                    $vendors = Get-LockpathUsers -PageSize $pagesize -Filter @{'Field' = @{'ShortName' = 'AccountType' }; 'FilterType' = '5'; 'Value' = '2' } | ConvertFrom-Json -Depth 10 -AsHashtable
+                    $vendors = Get-LockpathUsers -PageSize $pagesize -Filter @{'Field' = @{'ShortName' = 'AccountType' }; 'FilterType' = '5'; 'Value' = '2' } | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
                 } else {
                     $vendors = Get-LockpathUsers -PageSize $pagesize -Filter @(@{'Field' = @{'ShortName' = 'AccountType' }; 'FilterType' = '5'; 'Value' = '2' }, @{'Field' = @{'ShortName' = 'Active' }; 'FilterType' = '5'; 'Value' = 'false' })
                 }

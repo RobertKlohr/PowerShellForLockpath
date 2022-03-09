@@ -50,8 +50,10 @@ function Find-LockpathField {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [Array] $ComponentIds
@@ -67,23 +69,23 @@ function Find-LockpathField {
 
     # If a list of component Ids was not provided we will get the entire list from the platform.
     if (!$ComponentIds) {
-        $ComponentIds = Get-LockpathComponentList | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable | Select-Object -ExpandProperty Id
+        $ComponentIds = Get-LockpathComponentList | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable | Select-Object -ExpandProperty Id
     }
 
     $result = @()
     $componentCounter = 1
     foreach ($componentId in $ComponentIds) {
         # get the component details
-        $componentDetails = Get-LockpathComponent -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+        $componentDetails = Get-LockpathComponent -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
         # get the list of field Ids in the component
-        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+        $fieldIds = Get-LockpathFieldList -ComponentId $componentId | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth #-AsHashtable
         | Select-Object -ExpandProperty Id
         Write-Progress -Id 0 -Activity "Getting fields for component $componentCounter of $($ComponentIds.Count)" -Status "Get fields for component: $($componentDetails.Name)" -PercentComplete ($componentCounter / $ComponentIds.Count * 100)
         $componentCounter += 1
         $fieldCounter = 1
         foreach ($fieldId in $fieldIds) {
             # get the field details
-            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+            $fieldDetails = Get-LockpathField -FieldId $fieldId | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth #-AsHashtable
             # combine field details and component details into a an ordered dictionary
             $fieldFullDetails = [ordered]@{
                 'FieldId'             = $fieldDetails.Id

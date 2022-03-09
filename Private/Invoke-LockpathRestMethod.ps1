@@ -86,6 +86,8 @@ function Invoke-LockpathRestMethod {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.String])]
+
     param(
         # FIXME need to add this into the CEF log or console log or both
         [Parameter(

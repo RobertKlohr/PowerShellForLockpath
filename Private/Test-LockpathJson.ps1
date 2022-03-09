@@ -52,8 +52,8 @@ function Test-LockpathJson {
         ConfirmImpact = 'Low',
         PositionalBinding = $false
     )]
-    [OutputType('System.String')]
 
+    [OutputType([System.Boolen])]
 
     param(
         [Parameter(

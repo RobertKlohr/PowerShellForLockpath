@@ -60,7 +60,8 @@ function Get-LockpathGroups {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [ValidateRange('NonNegative')]
@@ -105,7 +106,7 @@ function Get-LockpathGroups {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Getting Groups'
             'Method'      = 'POST'
             'Service'     = $service

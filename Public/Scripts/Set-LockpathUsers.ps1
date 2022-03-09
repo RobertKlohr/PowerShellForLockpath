@@ -47,8 +47,10 @@ function Set-LockpathUsers {
     [CmdletBinding(
         ConfirmImpact = 'High',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -63,8 +65,9 @@ function Set-LockpathUsers {
         [String] $UpdateValue,
 
         [Parameter(
-            Mandatory = $false,
-            ParameterSetName = 'Default')]
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
         [Array] $Filter = @()
     )
 
@@ -79,14 +82,9 @@ function Set-LockpathUsers {
         [string] $userCount = Get-LockpathUserCount
         #FIXME The ConvertFrom-Json is throughing an error
         # ConvertFrom-Json: C:\Users\r634204\Documents\GitHub\PowerShellForLockpath\src\Public\Scripts\Set-LockpathUsers.ps1:80:88
-        # Line |
-        # 80 | … userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConver …
-        # | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # | Cannot bind argument to parameter 'InputObject' because it is null.
-        #$users = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
 
         [string] $returned = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount
-        $users = ConvertFrom-Json -InputObject $returned -Depth $Script:LockpathConfig.jsonConversionDepth #-AsHashtable
+        $users = ConvertFrom-Json -InputObject $returned -Depth $Script:LockpathConfig.conversionDepth #-AsHashtable
 
         $usersProgress = $users.count
         $i = 1

@@ -46,7 +46,8 @@ function Remove-LockpathRecord {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(Mandatory = $true,
@@ -89,7 +90,7 @@ function Remove-LockpathRecord {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Deleting Record with Component Id $ComponentId and Record Id $RecordId"
             'Method'      = 'DELETE'
             'Service'     = $service

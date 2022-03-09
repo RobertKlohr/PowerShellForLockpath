@@ -37,7 +37,8 @@ function New-LockpathGroup {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -69,7 +70,7 @@ function New-LockpathGroup {
         Write-LockpathInvocationLog @logParameters
 
         $restParameters = [ordered]@{
-            'Body'        = $Attributes | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Attributes | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Creating Group'
             'Method'      = 'POST'
             'Service'     = $service

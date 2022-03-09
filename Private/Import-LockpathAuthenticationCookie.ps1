@@ -35,6 +35,8 @@ function Import-LockpathAuthenticationCookie {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param()
 
     $level = 'Debug'

@@ -50,7 +50,8 @@ function Set-LockpathRecordTransition {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.String')]
+
+    [OutputType([System.String])]
 
     param(
         [Parameter(
@@ -107,7 +108,7 @@ function Set-LockpathRecordTransition {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = "Transitioning Record with Table Alias $ComponentAlias, Record Id $RecordId, and Transition Id $TransitionId"
             'Method'      = 'POST'
             'Service'     = $service

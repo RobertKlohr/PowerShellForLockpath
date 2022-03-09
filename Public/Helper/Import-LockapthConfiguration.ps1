@@ -40,6 +40,8 @@ function Import-LockpathConfiguration {
         SupportsShouldProcess = $true
     )]
 
+    [OutputType([System.Void])]
+
     param(
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
@@ -83,6 +85,5 @@ function Import-LockpathConfiguration {
         } finally {
             Write-LockpathLog @logParameters
         }
-        return $result
     }
 }

@@ -50,7 +50,8 @@ function Get-LockpathRecordCount {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.Int32')]
+
+    [OutputType([System.Int32])]
 
     param(
         [Parameter(
@@ -88,7 +89,7 @@ function Get-LockpathRecordCount {
         }
 
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.jsonConversionDepth
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Getting Record Count'
             'Method'      = 'POST'
             'Service'     = $service

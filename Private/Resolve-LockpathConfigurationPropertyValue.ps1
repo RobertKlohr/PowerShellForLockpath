@@ -51,7 +51,8 @@ function Resolve-LockpathConfigurationPropertyValue {
         PositionalBinding = $false,
         SupportsShouldProcess = $true
     )]
-    [OutputType('System.Boolen')]
+
+    [OutputType([System.Boolen])]
 
     param(
         [Parameter(

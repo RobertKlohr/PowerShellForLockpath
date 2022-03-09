@@ -41,8 +41,10 @@ function Get-LockpathUsersDetails {
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
-        SupportsShouldProcess = $true)]
-    [OutputType('System.String')]
+        SupportsShouldProcess = $true
+    )]
+
+    [OutputType([System.String])]
 
     param(
         # FIXME decide if there will be parameters on this call and how they will work
@@ -79,7 +81,7 @@ function Get-LockpathUsersDetails {
         # Test-LockpathAuthentication
 
         # Get-LockpathUsers -All will return vendor contacts without login account that we filter out
-        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
+        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
 
         # TODO add paramters and logic to filter users after we get all users above
 
@@ -88,7 +90,7 @@ function Get-LockpathUsersDetails {
         $i = 1
         foreach ($user In $users) {
             try {
-                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.jsonConversionDepth -AsHashtable
+                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
                 $result += $userDetails
             } catch {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
