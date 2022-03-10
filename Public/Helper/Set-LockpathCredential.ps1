@@ -75,8 +75,6 @@ function Set-LockpathCredential {
 
     [OutputType([System.String])]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
-
     param(
         [PSCredential] $Credential,
 
@@ -99,23 +97,30 @@ function Set-LockpathCredential {
 
     Write-LockpathInvocationLog @logParameters
 
-    if (-not $PSBoundParameters.ContainsKey('Credential')) {
-        do {
-            $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
+    $shouldProcessTarget = 'Updating credential in current session.'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            if (-not $PSBoundParameters.ContainsKey('Credential')) {
+                do {
+                    $Credential = Get-Credential -Message 'Please provide your API Username and Password.'
+                }
+                while ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password))
+            }
+            $Script:LockpathConfig.credential = $credential
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            if (-not $SessionOnly) {
+                $shouldProcessTarget = 'Updating credential in current session and saving to file system.'
+                Export-LockpathCredential -Credential $Credential
+                $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            }
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
-        while ([String]::IsNullOrWhiteSpace($Credential.GetNetworkCredential().Password))
-    }
-
-    $level = 'Information'
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-    $level = 'Verbose'
-
-    $message = 'API credential set in session'
-    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
-
-    $Script:LockpathConfig.credential = $credential
-
-    if (-not $SessionOnly) {
-        Export-LockpathCredential -Credential $Credential
+        return $result
     }
 }

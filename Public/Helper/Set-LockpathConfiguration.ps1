@@ -209,39 +209,38 @@ function Set-LockpathConfiguration {
 
     Write-LockpathInvocationLog @logParameters
 
-    $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
-    foreach ($name in $properties) {
-        if ($PSBoundParameters.ContainsKey($name)) {
-            $value = $PSBoundParameters.$name
-            if ($value -is [Switch]) {
-                $value = $value.ToBool()
-            }
-            # If just the hostname is passed in $InstanceName then add '.keylightgrc.com' to the end of $InstanceName
-            if ($name -eq 'instanceName' -and $InstanceName.IndexOf('.') -eq -1) {
-                $value = $value + '.keylightgrc.com'
-            }
-            $Script:LockpathConfig.$name = $value
-        }
-    }
-
     $shouldProcessTarget = 'Updating configuration.'
 
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
-        # make a copy of the configuration exceluding non-persistent properties
-        $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
-        $logParameters.Message = 'Success: ' + $shouldProcessTarget
-        if (-not $SessionOnly) {
-            $shouldProcessTarget = "Updating configuration and saving persistent properties to file system at $($Script:LockpathConfig.configurationFilePath)."
-            try {
+        try {
+            $properties = Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty | Select-Object -ExpandProperty Name
+            foreach ($name in $properties) {
+                if ($PSBoundParameters.ContainsKey($name)) {
+                    $value = $PSBoundParameters.$name
+                    if ($value -is [Switch]) {
+                        $value = $value.ToBool()
+                    }
+                    # If just the hostname is passed in $InstanceName then add '.keylightgrc.com' to the end of $InstanceName
+                    if ($name -eq 'instanceName' -and $InstanceName.IndexOf('.') -eq -1) {
+                        $value = $value + '.keylightgrc.com'
+                    }
+                    $Script:LockpathConfig.$name = $value
+                }
+            }
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            if (-not $SessionOnly) {
+                $shouldProcessTarget = "Updating configuration and saving persistent properties to file system at $($Script:LockpathConfig.configurationFilePath)."
+                # make a copy of the configuration exceluding non-persistent properties
+                $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
                 Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
                 $logParameters.Message = 'Success: ' + $shouldProcessTarget
-            } catch {
-                $logParameters.Level = 'Error'
-                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
-                $logParameters.Result = $_.Exception.Message
-            } finally {
-                Write-LockpathLog @logParameters
             }
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
         return $result
     }
