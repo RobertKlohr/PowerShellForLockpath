@@ -159,15 +159,6 @@ function Set-LockpathVendorGroup {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-        [UInt32] $pagesize = Get-LockpathUserCount
-    }
-
-    process {
-        if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-            Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
-        }
-
-        $vendorIds = @()
 
         $logParameters = [ordered]@{
             'FunctionName' = $functionName
@@ -176,6 +167,14 @@ function Set-LockpathVendorGroup {
             'Service'      = $service
             'Result'       = "Executing cmdlet: $functionName"
         }
+
+        [UInt32] $pagesize = Get-LockpathUserCount
+    }
+
+    process {
+        Write-LockpathInvocationLog @logParameters
+
+        $vendorIds = @()
 
         $shouldProcessTarget = "Properties=$($restParameters.Body)"
 

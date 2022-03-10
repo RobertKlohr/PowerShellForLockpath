@@ -15,6 +15,13 @@ function Get-LockpathWorkflows {
     .PARAMETER ComponentAlias
         Specifies the system alias of the component.
 
+    .PARAMETER ComponentId
+        Specifies the system Id of the component.
+
+        If the component Id is used it is converted to the component alias required by the API call by using Get-LockpathComponent.
+
+        The component Id may be found by using Get-LockpathComponentList.
+
     .EXAMPLE
         Get-LockpathWorkflows -ComponentAlias 'Controls'
 
@@ -58,14 +65,23 @@ function Get-LockpathWorkflows {
 
     param(
         [Parameter(
+            ParameterSetName = 'ComponentAlias',
             Mandatory = $true,
-            Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateLength(2, 64)]
         [ValidatePattern('^_?[A-Za-z]{1}[_A-Za-z0-9]+$')]
-        [String] $ComponentAlias
+        [String] $ComponentAlias,
+
+        [Parameter(
+            ParameterSetName = 'ComponentId',
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )]
+        [ValidateRange('Positive')]
+        [UInt32] $ComponentId
     )
 
     begin {
@@ -82,10 +98,13 @@ function Get-LockpathWorkflows {
         }
     }
 
-    # TODO add ability to lookup by component Id as well as alias
-
     process {
         Write-LockpathInvocationLog @logParameters
+
+        # Get the component alias if the component Id was used
+        if ($ComponentId) {
+            $ComponentAlias = (Get-LockpathComponent -ComponentId $ComponentId | ConvertFrom-Json).ShortName
+        }
 
         $restParameters = [ordered]@{
             'Description' = "Getting Workflows with Component Alias $ComponentAlias"

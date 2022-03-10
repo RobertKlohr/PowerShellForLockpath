@@ -53,9 +53,9 @@ function Import-LockpathConfiguration {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     $shouldProcessTarget = 'Loading Configuration File'
@@ -76,12 +76,13 @@ function Import-LockpathConfiguration {
                     }
                 }
             }
-            $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie
-            # $Script:LockpathConfig.credential = Import-LockpathCredential
-            Import-LockpathCredential
-        } catch {
-            # Normally Write-LockpathInvocationLog runs first, but the configuration needs to be loaded
+            # Normally Write-LockpathInvocationLog is run first in a cmdlet but we need to
+            # import the configuration before using.
             Write-LockpathInvocationLog @logParameters
+            Import-LockpathAuthenticationCookie
+            Import-LockpathCredential
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        } catch {
             $logParameters.Level = 'Error'
             $logParameters.Message = 'Failed: ' + $shouldProcessTarget + 'Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".'
             $logParameters.Result = $_.Exception.Message

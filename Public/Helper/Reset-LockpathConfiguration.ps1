@@ -59,12 +59,14 @@ function Reset-LockpathConfiguration {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     Write-LockpathInvocationLog @logParameters
+
+    $shouldProcessTarget = 'Reseting configuration in memory. This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.'
 
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         Initialize-LockpathConfiguration

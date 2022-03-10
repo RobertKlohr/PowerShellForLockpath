@@ -200,9 +200,9 @@ function Set-LockpathConfiguration {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     Write-LockpathInvocationLog @logParameters

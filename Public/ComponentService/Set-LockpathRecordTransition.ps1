@@ -43,8 +43,7 @@ function Set-LockpathRecordTransition {
     .NOTES
         Native API Request: https://[InstanceName]:[InstancePort]/ComponentService/TransitionRecord
 
-        The authentication account must have Read and Update General Access permissions for the specific component,
-        and record as well as View and Transition workflow stage permissions.
+        The authentication account must have Read and Update General Access permissions for the specific component, and record as well as View and Transition workflow stage permissions.
 
         There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.
 

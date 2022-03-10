@@ -77,8 +77,7 @@ function Write-LockpathLog {
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true
+        PositionalBinding = $false
     )]
 
     [OutputType([System.Void])]

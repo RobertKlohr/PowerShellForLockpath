@@ -51,11 +51,7 @@ function Initialize-LockpathLogExport {
     [OutputType([System.Void])]
 
     param(
-        [Parameter(
-            Mandatory = $true,
-            Position = 0
-        )]
-        [System.IO.FileInfo] $FilePath,
+        [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.logPath,
 
         [Array] $Directories = @('API', 'Audit', 'Email', 'Event', 'Job', 'Session')
     )
@@ -67,15 +63,28 @@ function Initialize-LockpathLogExport {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     Write-LockpathInvocationLog @logParameters
 
-    #TODO add try catch around creating the folder and what happens if they already exist
-    ForEach ($Directory in $Directories) {
-        New-Item -ItemType Directory -Path [$FilePath]\$Directory -Force
+    $shouldProcessTarget = 'Initializing Log Export Directories.'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        try {
+            ForEach ($Directory in $Directories) {
+                New-Item -ItemType Directory -Path [$FilePath]\$Directory -Force
+            }
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
+        }
+        return $result
     }
 }

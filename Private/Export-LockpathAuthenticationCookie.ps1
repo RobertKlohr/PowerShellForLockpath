@@ -55,12 +55,12 @@ function Export-LockpathAuthenticationCookie {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
-    Write-LockpathInvocationLog @logParameters
+    Write-LockpathInvocationLog @logParameters -RedactParameter 'CookieCollection'
 
     # TODO check to see if this section can be deleted
     $Script:LockpathConfig.authenticationCookie = [Hashtable] @{

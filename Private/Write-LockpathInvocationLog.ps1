@@ -63,8 +63,7 @@ function Write-LockpathInvocationLog {
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true
+        PositionalBinding = $false
     )]
 
     [OutputType([System.Void])]
@@ -112,9 +111,9 @@ function Write-LockpathInvocationLog {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = "Executing cmdlet: $functionName"
+        'Message'      = $message
         'Service'      = $service
-        'Result'       = "Executing cmdlet: $functionName"
+        'Result'       = "$Result $($functionParameters -join ' ')".Trim()
     }
 
     Write-LockpathLog @logParameters

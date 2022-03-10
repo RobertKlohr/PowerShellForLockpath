@@ -138,28 +138,29 @@ function Invoke-LockpathRestMethod {
         [String] $UserAgent = $Script:LockpathConfig.userAgent
 
     )
-    # Check to see if the calling function was the login and set the Login flag
-    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Connect-Lockpath') {
-        $Login = $true
-    } else {
-        $Login = $false
-    }
-
     $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     # In most cmdlets the $service is set here but in this module it is used for building the API
     # $uri and so needs to be set below.
+    $logParameters.service = 'PrivateHelper'
 
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
-    $logParameters.service = 'PrivateHelper'
-    Write-LockpathInvocationLog @logParameters
+    # Check to see if the calling function was the login and set the Login flag and redact the
+    # message body so the password is not logged.
+    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Connect-Lockpath') {
+        $Login = $true
+        Write-LockpathInvocationLog @logParameters -RedactParameter 'Body'
+    } else {
+        $Login = $false
+        Write-LockpathInvocationLog @logParameters
+    }
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
     # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12

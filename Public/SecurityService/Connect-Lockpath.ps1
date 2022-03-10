@@ -80,7 +80,7 @@ function Connect-Lockpath {
 
         $restParameters = [ordered]@{
             'Body'        = (ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -InputObject $hashBody)
-            'Description' = "Connecting to API with username $username and password <redacted>."
+            'Description' = "Connecting to API with username $($credential.username) and password <redacted>."
             'Method'      = 'POST'
             'Service'     = $service
             'UriFragment' = 'Login'

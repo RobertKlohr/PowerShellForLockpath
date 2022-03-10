@@ -45,9 +45,9 @@ function Initialize-LockpathConfiguration {
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $null
+        'Message'      = "Executing cmdlet: $functionName"
         'Service'      = $service
-        'Result'       = $null
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     try {
@@ -105,6 +105,9 @@ function Initialize-LockpathConfiguration {
         # Load the persistant configuration file if it exists and overwrite any default values set
         # in this function.
         Import-LockpathConfiguration
+        # Normally Write-LockpathInvocationLog is run first in a cmdlet but we need to import the
+        # configuration before using.
+        Write-LockpathInvocationLog @logParameters
         $logParameters.Message = 'Success: Initializing Configuration'
         $logParameters.Result = 'Success: Initializing Configuration'
     } catch {
@@ -112,8 +115,6 @@ function Initialize-LockpathConfiguration {
         $logParameters.Message = 'Failed: Initializing Configuration'
         $logParameters.Result = $_.Exception.Message
     } finally {
-        # Normally Write-LockpathInvocationLog is run first in a function but we need to import the
-        # configuration before using.
-        Write-LockpathInvocationLog @logParameters
+        Write-LockpathLog @logParameters
     }
 }
