@@ -62,7 +62,7 @@ function Remove-LockpathGroup {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $GroupId
+        [UInt32] $GroupId
     )
 
     begin {
@@ -110,7 +110,7 @@ function Remove-LockpathGroup {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

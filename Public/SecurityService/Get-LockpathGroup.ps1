@@ -58,7 +58,7 @@ function Get-LockpathGroup {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('NonNegative')]
-        [Int32] $GroupId
+        [UInt32] $GroupId
     )
 
     begin {
@@ -106,7 +106,7 @@ function Get-LockpathGroup {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

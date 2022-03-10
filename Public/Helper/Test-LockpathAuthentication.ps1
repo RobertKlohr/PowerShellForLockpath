@@ -68,6 +68,6 @@ function Test-LockpathAuthentication {
         } finally {
             Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
         }
-        return $logParameters.Message
+        return $result
     }
 }

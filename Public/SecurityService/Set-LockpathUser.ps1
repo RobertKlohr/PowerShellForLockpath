@@ -87,7 +87,7 @@ function Set-LockpathUser {
             ValueFromPipelineByPropertyName = $true
         )]
         [Alias('UserId')]
-        [Int32] $Id,
+        [UInt32] $Id,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -95,7 +95,7 @@ function Set-LockpathUser {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateSet(1, 2, 4)]
-        [Int32] $AccountType,
+        [UInt32] $AccountType,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -116,7 +116,7 @@ function Set-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [Int32] $Department,
+        [UInt32] $Department,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -180,7 +180,7 @@ function Set-LockpathUser {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateSet(1033)]
-        [Int32] $Language,
+        [UInt32] $Language,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -194,7 +194,7 @@ function Set-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [Int32] $LDAPDirectory,
+        [UInt32] $LDAPDirectory,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -208,7 +208,7 @@ function Set-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [Int32] $Manager,
+        [UInt32] $Manager,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -236,7 +236,7 @@ function Set-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [Int32] $SecurityConfiguration,
+        [UInt32] $SecurityConfiguration,
 
         [Parameter(
             ParameterSetName = 'Attribute',
@@ -339,7 +339,7 @@ function Set-LockpathUser {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

@@ -89,7 +89,7 @@ function Set-LockpathVendorGroup {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('NonNegative')]
-        [Int32] $GroupId,
+        [UInt32] $GroupId,
 
         [Parameter(
             ParameterSetName = 'Group-Active',
@@ -159,7 +159,7 @@ function Set-LockpathVendorGroup {
         $level = 'Information'
         $functionName = ($PSCmdlet.CommandRuntime.ToString())
         $service = 'SecurityService'
-        [Int32] $pagesize = Get-LockpathUserCount
+        [UInt32] $pagesize = Get-LockpathUserCount
     }
 
     process {

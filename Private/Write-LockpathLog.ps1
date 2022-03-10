@@ -156,14 +156,14 @@ function Write-LockpathLog {
         # 'CefExtensionStart' = $a
 
         # #Possible CEF Extension Message Values
-        # [Int32] $dpdt,
+        # [UInt32] $dpdt,
         # [String] $duser,
         # [DateTime] $end,
         # #[String] $filePath,
         # [String] $fname,
-        # [Int32] $fsize,
-        # [Int32] $in,
-        # [Int32] $out,
+        # [UInt32] $fsize,
+        # [UInt32] $in,
+        # [UInt32] $out,
         # [String] $outcome,
         # [String] $reason,
         # [String] $request,
@@ -185,15 +185,31 @@ function Write-LockpathLog {
             }
             'Warning' {
                 $loggingLevel = 1
+                $WarningPreference = 'continue'
+                $InformationPreference = 'SilentlyContinue'
+                $VerbosePreference = 'SilentlyContinue'
+                $DebugPreference = 'SilentlyContinue'
             }
             'Information' {
                 $loggingLevel = 2
+                $WarningPreference = 'continue'
+                $InformationPreference = 'continue'
+                $VerbosePreference = 'SilentlyContinue'
+                $DebugPreference = 'SilentlyContinue'
             }
             'Verbose' {
                 $loggingLevel = 3
+                $WarningPreference = 'continue'
+                $InformationPreference = 'continue'
+                $VerbosePreference = 'continue'
+                $DebugPreference = 'SilentlyContinue'
             }
             'Debug' {
                 $loggingLevel = 4
+                $WarningPreference = 'continue'
+                $InformationPreference = 'continue'
+                $VerbosePreference = 'continue'
+                $DebugPreference = 'continue'
             }
             Default {
                 $loggingLevel = 0
@@ -261,6 +277,8 @@ function Write-LockpathLog {
         $cefExtension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
 
         # Write the message to screen and set severity for logging.
+        # TODO look into settings a module level for writing to console
+        $InformationPreference = 'Continue'
         switch ($Level) {
             # Need to explicitly say SilentlyContinue here so that we continue on, given that we've
             # assigned a script-level ErrorActionPreference of "Stop" for the module.
@@ -292,6 +310,7 @@ function Write-LockpathLog {
                 Write-Debug $consoleMessage
             }
         }
+        $InformationPreference = 'SilentlyContinue'
         if ($logMessageLevel -gt $loggingLevel) {
             return
         }

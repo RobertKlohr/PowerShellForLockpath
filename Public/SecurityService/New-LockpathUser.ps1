@@ -110,7 +110,7 @@ function New-LockpathUser {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

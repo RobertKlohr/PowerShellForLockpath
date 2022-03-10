@@ -85,6 +85,6 @@ function Remove-LockpathCredential {
                 Write-LockpathLog @logParameters
             }
         }
-        return $logParameters.Message
+        return $result
     }
 }

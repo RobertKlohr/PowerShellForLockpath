@@ -65,16 +65,16 @@ function Get-LockpathRecordsAvailableForLookup {
             Position = 0
         )]
         [ValidateRange('Positive')]
-        [Int32] $FieldId,
+        [UInt32] $FieldId,
 
         [ValidateRange('Positive')]
-        [Int32] $RecordId,
+        [UInt32] $RecordId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:LockpathConfig.pageSize
+        [UInt32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
     begin {
@@ -132,7 +132,7 @@ function Get-LockpathRecordsAvailableForLookup {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

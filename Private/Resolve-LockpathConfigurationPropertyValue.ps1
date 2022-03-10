@@ -68,7 +68,7 @@ function Resolve-LockpathConfigurationPropertyValue {
         [Parameter(
             Mandatory = $true
         )]
-        [ValidateSet('ArrayList', 'Boolean', 'Hashtable', 'Int16', 'Int32', 'Int32', 'PSCredential', 'PSObject', 'String', 'String[]')]
+        [ValidateSet('ArrayList', 'Boolean', 'Hashtable', 'Int16', 'Int32', 'PSCredential', 'PSObject', 'String', 'String[]', 'UInt16', 'UInt32')]
         [String] $Type,
 
         [Parameter(
@@ -118,10 +118,6 @@ function Resolve-LockpathConfigurationPropertyValue {
                 $typeType = [Int32]
                 break
             }
-            'Int32' {
-                $typeType = [Int32]
-                break
-            }
             'PSCredential' {
                 $typeType = [PSCredential]
                 break
@@ -136,6 +132,14 @@ function Resolve-LockpathConfigurationPropertyValue {
             }
             'String[]' {
                 $typeType = [String[]]
+                break
+            }
+            'UInt16' {
+                $typeType = [UInt16]
+                break
+            }
+            'UInt32' {
+                $typeType = [UInt32]
                 break
             }
             Default {}

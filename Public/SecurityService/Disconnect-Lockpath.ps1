@@ -83,7 +83,7 @@ function Disconnect-Lockpath {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            $logParameters.Message
+            return $result
         }
     }
 

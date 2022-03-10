@@ -59,14 +59,19 @@ function Import-LockpathCredential {
 
     Write-LockpathInvocationLog @logParameters
 
-    if ($null -ne $Script:LockpathConfig.credential.UserName) {
-        return
-    } else {
+
+    $shouldProcessTarget = "Importing API credential from $($Script:LockpathConfig.credentialFilePath)."
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             $Script:LockpathConfig.credential = Import-Clixml -Path $Script:LockpathConfig.credentialFilePath
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service -Message 'Importing API credential from file.'
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
         } catch {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message 'The credential configuration file for this module is in an invalid state.'
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
+        } finally {
+            Write-LockpathLog @logParameters
         }
     }
 }

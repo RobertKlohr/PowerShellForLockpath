@@ -104,7 +104,7 @@ function Set-LockpathConfiguration {
         Sets the pageSize value to 1000 for this session only.
 
     .INPUTS
-        Array, Microsoft.PowerShell.Commands.WebRequestSession, String, UInt32
+        Array, Microsoft.PowerShell.Commands.WebRequestSession, String, UInt16, UInt32
 
     .OUTPUTS
         None.
@@ -136,7 +136,7 @@ function Set-LockpathConfiguration {
         [String] $ContentTypetHeader,
 
         [ValidateRange('Positive')]
-        [Int32] $conversionDepth,
+        [UInt32] $conversionDepth,
 
         [PSCredential] $Credential,
 
@@ -148,13 +148,13 @@ function Set-LockpathConfiguration {
         [String] $InstanceName,
 
         [ValidateRange(0, 65535)]
-        [Int32] $InstancePort,
+        [UInt16] $InstancePort,
 
         [ValidatePattern('^https?$')]
         [String] $InstanceProtocol,
 
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval,
+        [UInt32] $KeepAliveInterval,
 
         [ValidateSet('Error', 'Warning', 'Information', 'Verbose', 'Debug')]
         [String] $LoggingLevel,
@@ -168,10 +168,10 @@ function Set-LockpathConfiguration {
         [System.Collections.ArrayList] $MethodContainsBody,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex,
+        [UInt32] $PageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize,
+        [UInt32] $PageSize,
 
         [String] $ProcessId,
 
@@ -188,7 +188,7 @@ function Set-LockpathConfiguration {
         [String] $VendorName,
 
         [ValidateRange('NonNegative')]
-        [Int32] $WebRequestTimeoutSec,
+        [UInt32] $WebRequestTimeoutSec,
 
         [Microsoft.PowerShell.Commands.WebRequestSession] $WebSession
     )
@@ -224,20 +224,25 @@ function Set-LockpathConfiguration {
         }
     }
 
-    if (-not $SessionOnly) {
-        try {
-            # make a copy of the configuration exceluding non-persistent properties
-            $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
-            Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
-            $logParameters.Message = 'Successfully saved configuration to disk.'
-            $logParameters.Result = $_.Exception.Message | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
-        } catch {
-            $logParameters.Message = 'Failed to save configuration to disk. It will remain for this PowerShell session only.'
-            $logParameters.level = 'Error'
-            $logParameters.Result = $_.Exception.Message
-        } finally {
-            Write-LockpathLog @logParameters
+    $shouldProcessTarget = 'Updating configuration.'
+
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        # make a copy of the configuration exceluding non-persistent properties
+        $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
+        $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        if (-not $SessionOnly) {
+            $shouldProcessTarget = "Updating configuration and saving persistent properties to file system at $($Script:LockpathConfig.configurationFilePath)."
+            try {
+                Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
+                $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            } catch {
+                $logParameters.Level = 'Error'
+                $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+                $logParameters.Result = $_.Exception.Message
+            } finally {
+                Write-LockpathLog @logParameters
+            }
         }
+        return $result
     }
-    return $logParameters.Message
 }

@@ -60,11 +60,11 @@ function Get-LockpathUsersDetails {
 
         # [Parameter(
         #     Mandatory = $false)]
-        # [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        # [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         # [Parameter(
         #     Mandatory = $false)]
-        # [Int32] $PageSize = $Script:LockpathConfig.pageSize
+        # [UInt32] $PageSize = $Script:LockpathConfig.pageSize
     )
 
     $level = 'Information'

@@ -73,7 +73,7 @@ function Set-LockpathGroup {
             ValueFromPipelineByPropertyName = $true
         )]
         [Alias('GroupId')]
-        [Int32] $Id,
+        [UInt32] $Id,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -176,7 +176,7 @@ function Set-LockpathGroup {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

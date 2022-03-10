@@ -65,7 +65,7 @@ function Remove-LockpathUser {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $UserId
+        [UInt32] $UserId
     )
 
     begin {
@@ -113,7 +113,7 @@ function Remove-LockpathUser {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

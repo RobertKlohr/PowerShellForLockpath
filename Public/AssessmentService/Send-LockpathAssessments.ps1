@@ -102,7 +102,7 @@ function Send-LockpathAssessments {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

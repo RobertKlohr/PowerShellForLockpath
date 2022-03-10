@@ -61,7 +61,7 @@ function Get-LockpathUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('NonNegative')]
-        [Int32] $UserId
+        [UInt32] $UserId
     )
 
     begin {

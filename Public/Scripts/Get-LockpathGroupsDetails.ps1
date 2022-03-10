@@ -63,10 +63,10 @@ function Get-LockpathGroupsDetails {
 
     param(
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
+        [UInt32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Array] $Filter = @()
     )

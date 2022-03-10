@@ -83,7 +83,7 @@ function Send-LockpathPing {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

@@ -57,7 +57,7 @@ function Get-LockpathWorkflow {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $WorkflowId
+        [UInt32] $WorkflowId
     )
 
     begin {
@@ -105,7 +105,7 @@ function Get-LockpathWorkflow {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

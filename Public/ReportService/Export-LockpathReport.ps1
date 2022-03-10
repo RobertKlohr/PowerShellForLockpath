@@ -52,7 +52,7 @@ function Export-LockpathReport {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $ReportId,
+        [UInt32] $ReportId,
 
         [Parameter(
             Mandatory = $true,
@@ -108,7 +108,7 @@ function Export-LockpathReport {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

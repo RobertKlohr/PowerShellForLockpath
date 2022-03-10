@@ -70,17 +70,17 @@ function Initialize-LockpathConfiguration {
             'credential'                   = [PSCredential]::Empty
             'credentialFilePath'           = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpathCredential.xml')
             'instanceName'                 = [String] '<invalid>.keylightgrc.com'
-            'instancePort'                 = [Int16] 4443
+            'instancePort'                 = [UInt16] 4443
             'instanceProtocol'             = [String] 'https'
-            'conversionDepth'              = [Int32] 100
-            'keepAliveInterval'            = [Int32] 5
+            'conversionDepth'              = [UInt32] 100
+            'keepAliveInterval'            = [UInt32] 5
             'loggingLevel'                 = [String] 'Information'
             'logPath'                      = [System.IO.Path]::Combine([Environment]::GetFolderPath('LocalApplicationData'), 'PowerShellForLockpath', 'PowerShellForLockpath.log')
             'logRequestBody'               = [Boolean] $false
             'logTimeAsUtc'                 = [Boolean] $false
             'methodContainsBody'           = [System.Collections.ArrayList] ('Delete', 'Post')
-            'pageIndex'                    = [Int32] 0
-            'pageSize'                     = [Int32] 100
+            'pageIndex'                    = [UInt32] 0
+            'pageSize'                     = [UInt32] 100
             'ProcessId'                    = [String] $global:PID.ToString()
             # The module version is not present until after the module is loaded therefore we need to manually parse the
             # manifest and extract the module version number to use it in logging before the module
@@ -103,7 +103,7 @@ function Initialize-LockpathConfiguration {
             }
             'UserAgent'                    = "PowerShell/$($PSVersionTable.PSVersion.ToString()) PowerShellForLockpath"
             'vendorName'                   = [String] 'PowerShellForLockpath'
-            'webRequestTimeoutSec'         = [Int32] 0
+            'webRequestTimeoutSec'         = [UInt32] 0
         }
     }
 

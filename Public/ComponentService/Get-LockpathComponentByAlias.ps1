@@ -61,7 +61,8 @@ function Get-LockpathComponentByAlias {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [ValidateLength(1, 128)]
+        [ValidateLength(2, 64)]
+        [ValidatePattern('^_?[A-Za-z]{1}[_A-Za-z0-9]+$')]
         [String] $ComponentAlias
     )
 
@@ -110,7 +111,7 @@ function Get-LockpathComponentByAlias {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

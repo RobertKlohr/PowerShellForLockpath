@@ -14,6 +14,13 @@ function Set-LockpathRecordVote {
     .PARAMETER ComponentAlias
         Specifies the system alias of the component.
 
+    .PARAMETER ComponentId
+        Specifies the system Id of the component.
+
+        If the component Id is used it is converted to the component alias required by the API call by using Get-LockpathComponent.
+
+        The component Id may be found by using Get-LockpathComponentList.
+
     .PARAMETER RecordId
         Specifies the Id number of the record.
 
@@ -57,21 +64,24 @@ function Set-LockpathRecordVote {
 
     param(
         [Parameter(
+            ParameterSetName = 'ComponentAlias',
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
         #TODO validate for no spaces
-        [ValidateLength(1, 128)]
+        [ValidateLength(2, 64)]
+        [ValidatePattern('^_?[A-Za-z]{1}[_A-Za-z0-9]+$')]
         [String] $ComponentAlias,
 
         [Parameter(
+            ParameterSetName = 'ComponentId',
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $RecordId,
+        [UInt32] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -79,7 +89,15 @@ function Set-LockpathRecordVote {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $TransitionId,
+        [UInt32] $RecordId,
+
+        [Parameter(
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )]
+        [ValidateRange('Positive')]
+        [UInt32] $TransitionId,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -107,6 +125,11 @@ function Set-LockpathRecordVote {
 
     process {
         Write-LockpathInvocationLog @logParameters
+
+        # Get the component alias if the component Id was used
+        if ($ComponentId) {
+            $ComponentAlias = (Get-LockpathComponent -ComponentId $ComponentId | ConvertFrom-Json).ShortName
+        }
 
         $Body = [ordered]@{
             'tableAlias'     = $ComponentAlias # There is an inconsistency in the API that requires the the tableAlias (componentAlias) instead of the componentId.
@@ -143,7 +166,7 @@ function Set-LockpathRecordVote {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

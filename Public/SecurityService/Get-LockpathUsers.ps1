@@ -95,14 +95,14 @@ function Get-LockpathUsers {
             Mandatory = $false
         )]
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [Parameter(
             ParameterSetName = 'Default',
             Mandatory = $false
         )]
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
+        [UInt32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Parameter(
             ParameterSetName = 'Default',
@@ -132,7 +132,7 @@ function Get-LockpathUsers {
 
         if ($All) {
             $PageIndex = 0
-            [Int32] $PageSize = Get-LockpathUserCount
+            [UInt32] $PageSize = Get-LockpathUserCount
             $Filter = @()
         }
 
@@ -168,7 +168,7 @@ function Get-LockpathUsers {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

@@ -117,7 +117,7 @@ function Connect-Lockpath {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

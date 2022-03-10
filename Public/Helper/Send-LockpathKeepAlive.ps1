@@ -18,7 +18,7 @@ function Send-LockpathKeepAlive {
         Send-LockpathKeepAlive
 
     .INPUTS
-        [Int32]
+        [UInt32]
 
     .OUTPUTS
         System.Management.Automation.PSRemotingJob
@@ -43,7 +43,7 @@ function Send-LockpathKeepAlive {
             Position = 0
         )]
         [ValidateRange('Positive')]
-        [Int32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval
+        [UInt32] $KeepAliveInterval = $Script:LockpathConfig.keepAliveInterval
     )
 
     $level = 'Verbose'

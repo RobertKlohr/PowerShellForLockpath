@@ -87,13 +87,13 @@ function Get-LockpathRecordsDetails {
             Position = 0
         )]
         [ValidateRange('Positive')]
-        [Int32] $ComponentId,
+        [UInt32] $ComponentId,
 
         [ValidateRange('NonNegative')]
-        [Int32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
         [ValidateRange('Positive')]
-        [Int32] $PageSize = $Script:LockpathConfig.pageSize,
+        [UInt32] $PageSize = $Script:LockpathConfig.pageSize,
 
         [Array] $Filter = @(),
 
@@ -156,7 +156,7 @@ function Get-LockpathRecordsDetails {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

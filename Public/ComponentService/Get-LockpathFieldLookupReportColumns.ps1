@@ -62,7 +62,7 @@ function Get-LockpathFieldLookupReportColumns {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $FieldId,
+        [UInt32] $FieldId,
 
         [Parameter(
             Mandatory = $true,
@@ -70,7 +70,7 @@ function Get-LockpathFieldLookupReportColumns {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateRange('Positive')]
-        [Int32] $FieldPathId
+        [UInt32] $FieldPathId
     )
 
     begin {
@@ -118,7 +118,7 @@ function Get-LockpathFieldLookupReportColumns {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

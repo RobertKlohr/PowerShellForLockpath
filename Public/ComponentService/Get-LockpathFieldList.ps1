@@ -63,7 +63,7 @@ function Get-LockpathFieldList {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $ComponentId
+        [UInt32] $ComponentId
     )
 
     begin {
@@ -111,7 +111,7 @@ function Get-LockpathFieldList {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

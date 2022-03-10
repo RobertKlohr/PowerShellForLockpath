@@ -59,7 +59,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $ComponentId,
+        [UInt32] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -67,7 +67,7 @@ function Get-LockpathRecordDetail {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $RecordId,
+        [UInt32] $RecordId,
 
         [Parameter(
             ValueFromPipeline = $true,
@@ -121,7 +121,7 @@ function Get-LockpathRecordDetail {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

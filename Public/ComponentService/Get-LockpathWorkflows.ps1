@@ -61,8 +61,10 @@ function Get-LockpathWorkflows {
             Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true)]
-        [ValidateLength(1, 128)]
+            ValueFromPipelineByPropertyName = $true
+        )]
+        [ValidateLength(2, 64)]
+        [ValidatePattern('^_?[A-Za-z]{1}[_A-Za-z0-9]+$')]
         [String] $ComponentAlias
     )
 
@@ -113,7 +115,7 @@ function Get-LockpathWorkflows {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

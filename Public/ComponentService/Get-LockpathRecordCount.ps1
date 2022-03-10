@@ -59,7 +59,7 @@ function Get-LockpathRecordCount {
             Position = 0
         )]
         [ValidateRange('Positive')]
-        [Int32] $ComponentId,
+        [UInt32] $ComponentId,
 
         [Array] $Filter = @()
     )
@@ -114,7 +114,7 @@ function Get-LockpathRecordCount {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

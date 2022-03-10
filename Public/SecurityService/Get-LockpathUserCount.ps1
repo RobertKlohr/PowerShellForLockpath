@@ -111,7 +111,7 @@ function Get-LockpathUserCount {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

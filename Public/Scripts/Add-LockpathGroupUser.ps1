@@ -50,7 +50,7 @@ function Add-LockpathGroupUser {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('NonNegative')]
-        [Int32] $GroupId,
+        [UInt32] $GroupId,
 
         # FIXME add ability to use group name
 

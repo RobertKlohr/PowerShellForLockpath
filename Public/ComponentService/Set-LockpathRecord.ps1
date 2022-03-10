@@ -54,7 +54,7 @@ function Set-LockpathRecord {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $ComponentId,
+        [UInt32] $ComponentId,
 
         [Parameter(
             Mandatory = $true,
@@ -62,7 +62,7 @@ function Set-LockpathRecord {
             ValueFromPipelineByPropertyName = $true
         )]
         [ValidateRange('Positive')]
-        [Int32] $RecordId,
+        [UInt32] $RecordId,
 
         [Parameter(
             Mandatory = $true,
@@ -124,7 +124,7 @@ function Set-LockpathRecord {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            return $logParameters.Message
+            return $result
         }
     }
 

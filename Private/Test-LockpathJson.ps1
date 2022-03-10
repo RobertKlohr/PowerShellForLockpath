@@ -68,6 +68,10 @@ function Test-LockpathJson {
     )
 
     begin {
+        $level = 'Debug'
+        $functionName = ($PSCmdlet.CommandRuntime.ToString())
+        $service = 'PrivateHelper'
+
         $logParameters = [ordered]@{
             'Confirm'      = $false
             'FunctionName' = $functionName

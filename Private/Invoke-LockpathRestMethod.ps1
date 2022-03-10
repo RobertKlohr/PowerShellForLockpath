@@ -146,7 +146,8 @@ function Invoke-LockpathRestMethod {
 
     $level = 'Debug'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
-    $service = 'PrivateHelper'
+    # In most cmdlets the $service is set here but in this module it is used for building the API
+    # $uri and so needs to be set below.
 
     $logParameters = [ordered]@{
         'Confirm'      = $false
@@ -158,6 +159,7 @@ function Invoke-LockpathRestMethod {
         'WhatIf'       = $false
     }
 
+    $logParameters.service = 'PrivateHelper'
     Write-LockpathInvocationLog @logParameters
 
     # TODO do I need this line? can it be more generic to remove hardcoded protocol?
