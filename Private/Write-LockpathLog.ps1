@@ -159,7 +159,7 @@ function Write-LockpathLog {
         # [UInt32] $dpdt,
         # [String] $duser,
         # [DateTime] $end,
-        # #[String] $filePath,
+        # [String] $filePath,
         # [String] $fname,
         # [UInt32] $fsize,
         # [UInt32] $in,
@@ -224,19 +224,6 @@ function Write-LockpathLog {
     }
 
     end {
-
-        # FIXME data to parse form the errorrecord object
-        # $Error[0].ErrorDetails.Message
-        # $Error[0].Exception.Message
-        # $Error[0].Exception.Response # need to check, maybe redundant with other properties
-
-        # $Error[0].InvocationInfo.MyCommand # see if we can get bound/unbound parameters
-
-
-        # $Error[0].ScriptStackTrace # need to parse out methods
-        # $Error[0].TargetObject.Method
-        # $Error[0].TargetObject.RequestUri
-
         if ($null -ne $ErrorRecord) {
             # If we have an exception, add it after the accumulated messages.
             $messages += $ErrorRecord.Exception.Message
@@ -276,17 +263,11 @@ function Write-LockpathLog {
 
         $cefExtension = $rt, $sourceServiceName, $shost, $spid, $suser, $msg -join ' '
 
-        # Write the message to screen and set severity for logging.
-        # TODO look into settings a module level for writing to console
-        $InformationPreference = 'Continue'
+        # Write the message to screen and set CEF severity for logging.
         switch ($Level) {
-            # Need to explicitly say SilentlyContinue here so that we continue on, given that we've
-            # assigned a script-level ErrorActionPreference of "Stop" for the module.
             'Error' {
                 $logMessageLevel = 0
                 $cefHeaderSeverity = 'High'
-                # FIXME validate the ErrorAction setting and the above script-level setting
-                # Write-Error $consoleMessage -ErrorAction SilentlyContinue
                 Write-Error $consoleMessage
             }
             'Warning' {
@@ -310,7 +291,6 @@ function Write-LockpathLog {
                 Write-Debug $consoleMessage
             }
         }
-        $InformationPreference = 'SilentlyContinue'
         if ($logMessageLevel -gt $loggingLevel) {
             return
         }
@@ -338,14 +318,14 @@ function Write-LockpathLog {
             $output += Out-String -InputObject $_
 
             if (Test-Path -Path $FilePath -PathType Leaf) {
-                # The file exists, but likely is being held open by another process.
-                # Let's do best effort here and if we can't log something, just report it and move on.
+                # The file exists, but mostly likely locked by another process.
+                # If we are not able to write the log entry, report it and continue.
                 $output += 'This is non-fatal, and your command will continue.  Your log file will be missing this entry:'
                 $output += $consoleMessage
                 Write-Warning ($output -join [Environment]::NewLine)
             } else {
-                # If the file doesn't exist and couldn't be created, it likely will never  be valid.
-                # In that instance, let's stop everything so that the user can fix the problem, since they have indicated that they want this logging to occur.
+                # If the file doesn't exist and couldn't be created, it likely will never work.
+                # If that happens throw an stop the module so that the user can fix the problem.
                 throw ($output -join [Environment]::NewLine)
             }
         }

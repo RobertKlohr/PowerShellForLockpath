@@ -65,18 +65,17 @@ function Initialize-LockpathLogExport {
     $service = 'PublicHelper'
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     Write-LockpathInvocationLog @logParameters
 
+    #TODO add try catch around creating the folder and what happens if they already exist
     ForEach ($Directory in $Directories) {
-        New-Item -ItemType Directory -Path [$FilePath]\$Directory
+        New-Item -ItemType Directory -Path [$FilePath]\$Directory -Force
     }
 }

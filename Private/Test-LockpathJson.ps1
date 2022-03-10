@@ -73,15 +73,14 @@ function Test-LockpathJson {
         $service = 'PrivateHelper'
 
         $logParameters = [ordered]@{
-            'Confirm'      = $false
             'FunctionName' = $functionName
             'Level'        = $level
-            'Message'      = $null
+            'Message'      = "Executing cmdlet: $functionName"
             'Service'      = $service
-            'Result'       = $null
-            'WhatIf'       = $false
+            'Result'       = "Executing cmdlet: $functionName"
         }
     }
+    #TODO add try catch
 
     process {
         Write-LockpathInvocationLog @logParameters

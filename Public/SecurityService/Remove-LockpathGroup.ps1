@@ -71,13 +71,11 @@ function Remove-LockpathGroup {
         $service = 'SecurityService'
 
         $logParameters = [ordered]@{
-            'Confirm'      = $false
             'FunctionName' = $functionName
             'Level'        = $level
             'Message'      = "Executing cmdlet: $functionName"
             'Service'      = $service
             'Result'       = "Executing cmdlet: $functionName"
-            'WhatIf'       = $false
         }
     }
 

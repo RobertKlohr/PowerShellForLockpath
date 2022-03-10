@@ -48,8 +48,6 @@ function Show-LockpathConfiguration {
 
     [OutputType([System.String])]
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
-
     param(
         [Switch] $Saved,
 
@@ -61,21 +59,22 @@ function Show-LockpathConfiguration {
     $service = 'PublicHelper'
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     Write-LockpathInvocationLog @logParameters
 
-    if ($Saved) {
-        Import-LockpathConfiguration -FilePath $FilePath
+    #TODO add try catch
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        if ($Saved) {
+            Import-LockpathConfiguration -FilePath $FilePath
 
-    } else {
-        return $Script:LockpathConfig
+        } else {
+            return $Script:LockpathConfig
+        }
     }
 }

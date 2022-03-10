@@ -51,16 +51,16 @@ function Send-LockpathKeepAlive {
     $service = 'PublicHelper'
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     Write-LockpathInvocationLog @logParameters
+
+#TODO need to update
 
     # clean up any existing jobs
     $jobs = Get-Job

@@ -78,6 +78,7 @@ function Invoke-LockpathRestMethod {
         https://aka.ms/PowerShellForGitHub
     #>
 
+    #TODO add should process
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
 
     [CmdletBinding(
@@ -150,13 +151,11 @@ function Invoke-LockpathRestMethod {
     # $uri and so needs to be set below.
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     $logParameters.service = 'PrivateHelper'

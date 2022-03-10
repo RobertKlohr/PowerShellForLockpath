@@ -51,13 +51,11 @@ function Import-LockpathConfiguration {
     $service = 'PublicHelper'
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     $shouldProcessTarget = 'Loading Configuration File'

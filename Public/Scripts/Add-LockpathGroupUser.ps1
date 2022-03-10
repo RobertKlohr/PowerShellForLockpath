@@ -76,12 +76,11 @@ function Add-LockpathGroupUser {
         }
 
         $logParameters = [ordered]@{
-            'Confirm'      = $false
-            'WhatIf'       = $false
-            'Message'      = $message
             'FunctionName' = $functionName
             'Level'        = $level
+            'Message'      = "Executing cmdlet: $functionName"
             'Service'      = $service
+            'Result'       = "Executing cmdlet: $functionName"
         }
 
         $shouldProcessTarget = "Properties=$($restParameters.Body)"

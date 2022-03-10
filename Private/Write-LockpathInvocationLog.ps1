@@ -61,8 +61,6 @@ function Write-LockpathInvocationLog {
     https://git.io/powershellforlockpathhelp
     #>
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
-
     [CmdletBinding(
         ConfirmImpact = 'Low',
         PositionalBinding = $false,
@@ -112,13 +110,11 @@ function Write-LockpathInvocationLog {
     }
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
-        'Message'      = $Message
-        'Service'      = $Service
-        'Result'       = "$Result $($functionParameters -join ' ')".Trim()
-        'WhatIf'       = $false
+        'Message'      = "Executing cmdlet: $functionName"
+        'Service'      = $service
+        'Result'       = "Executing cmdlet: $functionName"
     }
 
     Write-LockpathLog @logParameters

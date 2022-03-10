@@ -57,13 +57,11 @@ function Reset-LockpathConfiguration {
     $service = 'PublicHelper'
 
     $logParameters = [ordered]@{
-        'Confirm'      = $false
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = $null
         'Service'      = $service
         'Result'       = $null
-        'WhatIf'       = $false
     }
 
     Write-LockpathInvocationLog @logParameters
