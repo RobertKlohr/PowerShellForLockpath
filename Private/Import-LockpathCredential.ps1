@@ -57,7 +57,6 @@ function Import-LockpathCredential {
 
     Write-LockpathInvocationLog @logParameters
 
-
     $shouldProcessTarget = "Importing API credential from $($Script:LockpathConfig.credentialFilePath)."
 
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
