@@ -44,12 +44,9 @@ function Resolve-LockpathConfigurationPropertyValue {
         https://git.io/powershellforlockpathhelp
     #>
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
-
     [CmdletBinding(
         ConfirmImpact = 'Low',
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true
+        PositionalBinding = $false
     )]
 
     [OutputType([System.Boolean])]
@@ -149,16 +146,30 @@ function Resolve-LockpathConfigurationPropertyValue {
             ($null -ne (Get-Member -InputObject $InputObject -Name $Name -MemberType Properties))
         ) {
             if ($InputObject.$Name -is $typeType) {
+                $logParameters.Message = "Success: The stored $Name configuration setting of '$($InputObject.$Name)' was of type $Type."
+                $logParameters.Result = 'Validated the configuration setting object type.'
+                Write-LockpathLog @logParameters
                 return $true
             } else {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue."
+                $logParameters.Level = 'Error'
+                $logParameters.Message = "Failed: The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type. Reverting to default value of $DefaultValue."
+                $logParameters.Result = 'Failed to validate configuration setting object type.'
+                Write-LockpathLog @logParameters
                 return $false
             }
         } else {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = "Failed: The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type. Reverting to default value of $DefaultValue."
+            $logParameters.Result = 'Failed to validate configuration setting object type.'
+            Write-LockpathLog @logParameters
             return $false
         }
     } catch {
-        Write-LockpathLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level 'Warning' -Service $service -Message "The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type.  Reverting to default value of $DefaultValue."
-        return $false
+        $logParameters.Level = 'Error'
+        $logParameters.Message = "Failed: The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type. Reverting to default value of $DefaultValue."
+        $logParameters.Result = $_.Exception.Message
+    } finally {
+        Write-LockpathLog @logParameters
     }
+    return $false
 }

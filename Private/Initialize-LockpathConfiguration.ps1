@@ -27,14 +27,11 @@ function Initialize-LockpathConfiguration {
         https://git.io/powershellforlockpathhelp
     #>
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Methods called within here make use of PSShouldProcess, and the switch is passed on to them inherently.')]
-
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
-        PositionalBinding = $false,
-        SupportsShouldProcess = $true
+        PositionalBinding = $false
     )]
 
     [OutputType([System.Void])]
@@ -82,11 +79,10 @@ function Initialize-LockpathConfiguration {
             'pageIndex'                    = [UInt32] 0
             'pageSize'                     = [UInt32] 100
             'ProcessId'                    = [String] $global:PID.ToString()
-            # The module version is not present until after the module is loaded therefore we need to manually parse the
-            # manifest and extract the module version number to use it in logging before the module
-            # is fully loaded.
+            # The module version is not present until after the module is loaded therefore we need
+            # to manually parse the manifest and extract the module version number to use it in
+            # logging before the module is fully loaded.
             'productVersion'               = [String] (Select-String -Path "$PSScriptRoot\..\PowerShellForLockpath.psd1" -Pattern moduleversion -List -Raw -SimpleMatch).Split("'")[1]
-
             'runAsSystem'                  = [Boolean] $true
             'systemFields'                 = [Hashtable] @{
                 'Begin Date'         = 'BeginDate'
@@ -107,10 +103,11 @@ function Initialize-LockpathConfiguration {
         }
     }
 
-    # Load the persistant configuration file if it exists and overwrite any default values set in this function.
+    # Load the persistant configuration file if it exists and overwrite any default values set in
+    # this function.
     Import-LockpathConfiguration
 
-    # Normally Write-LockpathInvocationLog is run first in a function but we need to import the configuration
-    # before using.
+    # Normally Write-LockpathInvocationLog is run first in a function but we need to import the
+    # configuration before using.
     Write-LockpathInvocationLog @logParameters
 }
