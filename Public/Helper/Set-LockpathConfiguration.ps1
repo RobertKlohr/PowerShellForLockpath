@@ -231,7 +231,7 @@ function Set-LockpathConfiguration {
             if (-not $SessionOnly) {
                 $shouldProcessTarget = "Updating configuration and saving persistent properties to file system at $($Script:LockpathConfig.configurationFilePath)."
                 # make a copy of the configuration exceluding non-persistent properties
-                $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productName, productVersion, vendorName
+                $output = Select-Object -InputObject $Script:LockpathConfig -ExcludeProperty authenticationCookie, credential, productVersion, vendorName
                 Export-Clixml -InputObject $output -Path $Script:LockpathConfig.configurationFilePath -Depth $Script:LockpathConfig.conversionDepth -Force
                 $logParameters.Message = 'Success: ' + $shouldProcessTarget
             }

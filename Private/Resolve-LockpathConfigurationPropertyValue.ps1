@@ -148,20 +148,20 @@ function Resolve-LockpathConfigurationPropertyValue {
             if ($InputObject.$Name -is $typeType) {
                 $logParameters.Message = "Success: The stored $Name configuration setting of '$($InputObject.$Name)' was of type $Type."
                 $logParameters.Result = 'Validated the configuration setting object type.'
-                Write-LockpathLog @logParameters
+                # Write-LockpathLog @logParameters
                 return $true
             } else {
                 $logParameters.Level = 'Error'
                 $logParameters.Message = "Failed: The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type. Reverting to default value of $DefaultValue."
                 $logParameters.Result = 'Failed to validate configuration setting object type.'
-                Write-LockpathLog @logParameters
+                # Write-LockpathLog @logParameters
                 return $false
             }
         } else {
             $logParameters.Level = 'Error'
             $logParameters.Message = "Failed: The stored $Name configuration setting of '$($InputObject.$Name)' was not of type $Type. Reverting to default value of $DefaultValue."
             $logParameters.Result = 'Failed to validate configuration setting object type.'
-            Write-LockpathLog @logParameters
+            # Write-LockpathLog @logParameters
             return $false
         }
     } catch {

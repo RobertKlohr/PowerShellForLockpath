@@ -65,12 +65,17 @@ function Import-LockpathConfiguration {
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             $savedLockpathConfig = Import-Clixml -Path $FilePath
+            # The following configuration settings are never saved to the file system
+            $nonPersistantSettings = @('authenticationCookie', 'credential', 'productVersion', 'vendorName')
             Get-Member -InputObject $Script:LockpathConfig -MemberType NoteProperty |
             ForEach-Object {
                 $name = $_.Name
                 $type = $Script:LockpathConfig.$name.GetType().Name
-                if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedLockpathConfig -Name $name -Type $type -DefaultValue $Script:LockpathConfig.$name) {
-                    $Script:LockpathConfig.$name = $savedLockpathConfig.$name
+                # Skip nonpersistant configuration settings
+                if (-not $nonPersistantSettings.Contains($name)) {
+                    if (Resolve-LockpathConfigurationPropertyValue -InputObject $savedLockpathConfig -Name $name -Type $type -DefaultValue $Script:LockpathConfig.$name) {
+                        $Script:LockpathConfig.$name = $savedLockpathConfig.$name
+                    }
                 }
             }
             $Script:LockpathConfig.authenticationCookie = Import-LockpathAuthenticationCookie

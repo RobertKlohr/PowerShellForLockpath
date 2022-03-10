@@ -27,7 +27,7 @@ function Initialize-LockpathConfiguration {
         https://git.io/powershellforlockpathhelp
     #>
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'We need to be able to access the PID for logging purposes, and it is accessed via a global variable.')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '', Justification = 'The PID is needed for logging and it is only accessible via a global variable.')]
 
     [CmdletBinding(
         ConfirmImpact = 'Low',
