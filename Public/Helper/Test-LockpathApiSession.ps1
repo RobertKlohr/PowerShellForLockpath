@@ -1,20 +1,18 @@
 ﻿# Copyright (c) Robert Klohr. All rights reserved.
 # Licensed under the MIT License.
 
-function Test-LockpathAuthentication {
+function Test-LockpathApiSession {
     <#
     .SYNOPSIS
-        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and
-        set a new cookie.
+        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and set a new cookie.
 
     .DESCRIPTION
-        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and
-        set a new cookie.
+        Tests if the authentication cookie stored in the configuration is valid. If not tries to authenticate and set a new cookie.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .EXAMPLE
-        Test-LockpathAuthentication
+        Test-LockpathApiSession
 
     .INPUTS
         None.
@@ -60,13 +58,13 @@ function Test-LockpathAuthentication {
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         try {
             Send-LockpathPing
-            $logParameters.Message = 'success'
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
         } catch {
-            Connect-Lockpath
-            $message = 'failed'
-            $level = 'Warning'
+            $logParameters.Level = 'Error'
+            $logParameters.Message = 'Failed: ' + $shouldProcessTarget
+            $logParameters.Result = $_.Exception.Message
         } finally {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $message -FunctionName $functionName -Level $level -Service $service
+            Write-LockpathLog @logParameters
         }
         return $result
     }
