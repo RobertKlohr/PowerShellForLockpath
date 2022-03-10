@@ -129,7 +129,7 @@ function Get-LockpathGroups {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            $logParameters.Message
+            return $result
         }
     }
 

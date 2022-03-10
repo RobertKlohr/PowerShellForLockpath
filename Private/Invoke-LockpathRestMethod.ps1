@@ -90,7 +90,6 @@ function Invoke-LockpathRestMethod {
     [OutputType([System.String])]
 
     param(
-        # FIXME need to add this into the CEF log or console log or both
         [Parameter(
             Mandatory = $true
         )]
@@ -152,32 +151,20 @@ function Invoke-LockpathRestMethod {
         'Result'       = "Executing cmdlet: $functionName"
     }
 
-    # Check to see if the calling function was the login and set the Login flag and redact the
-    # message body so the password is not logged.
-    If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Connect-Lockpath') {
-        $Login = $true
-        Write-LockpathInvocationLog @logParameters -RedactParameter 'Body'
-    } else {
-        $Login = $false
-        Write-LockpathInvocationLog @logParameters
-    }
-
-    # TODO do I need this line? can it be more generic to remove hardcoded protocol?
-    # [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-    # If the request is the login then redact the username and password in the body from the logs
-    if ($Login) {
-        # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper' -RedactParameter Body
-        Write-Verbose 'Executing Invoke-LockpathRestMethod'
-    } else {
-        Write-Verbose 'Executing Invoke-LockpathRestMethod'
-        # Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -Service 'PrivateHelper'
-
-        # Check to see if there is a valid authentication cookie and if not exit early.
-        if ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.' -Level $level -FunctionName $functionName -Service PrivateHelper
-            break
+    $shouldProcessTarget = $Description
+    if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
+        # Check to see if the calling function was the login and set the Login flag and redact the
+        # message body so the password is not logged.
+        If (((Get-Variable -Name MyInvocation -Scope 1 -ValueOnly).MyCommand.Name) -eq 'Connect-Lockpath') {
+            $Login = $true
+            Write-LockpathInvocationLog @logParameters -RedactParameter 'Body'
         } else {
+            $Login = $false
+            Write-LockpathInvocationLog @logParameters
+        }
+
+        # Check to see if there is a valid cookie and create the websession, if not exit early
+        if (-not $login && -not $Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
             # $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
             $cookie = [System.Net.Cookie] @{}
@@ -187,151 +174,93 @@ function Invoke-LockpathRestMethod {
             $cookie.Value = $Script:LockpathConfig.authenticationCookie.Value[0]
             # $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
             $webSession.Cookies.Add($cookie)
-        }
-    }
-
-    $headers = @{
-        'Accept'     = $AcceptHeader
-        'User-Agent' = $UserAgent
-    }
-    if ($Method -in $MethodContainsBody) {
-        $headers.Add('Content-Type', $ContentTypeHeader)
-    }
-
-    # FIXME remove once all functions are updated and tested
-    # $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$UriFragment"
-
-    $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$Service/$UriFragment$Query"
-
-    $params = [Hashtable]@{ }
-    $params.Add('Uri', $uri)
-    $params.Add('Method', $Method)
-    $params.Add('Headers', $headers)
-    $params.Add('TimeoutSec', $Script:LockpathConfig.webRequestTimeoutSec)
-
-    #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
-    if ($Login) {
-        $params.Add('Body', $Body)
-        $params.Add('SessionVariable', 'webSession')
-    } else {
-        $params.Add('WebSession', $webSession)
-    }
-
-
-    # FIXME add write-versbose or write-debug lines to replace the intermediate logging that is now written to file
-
-    try {
-        $ProgressPreference = 'SilentlyContinue'
-        #FIXME stopwatch testing
-        $stopWatch = [system.diagnostics.stopwatch]::StartNew()
-
-        if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
-            $params.Add('Body', $Body)
-            if ($Script:LockpathConfig.logRequestBody) {
-                try {
-                    $Body = (ConvertFrom-Json $Body) | ConvertTo-Json -Compress
-                } finally {
-                    Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
-                }
-            } else {
-                Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>.' -Level $level -FunctionName $functionName -Service PrivateHelper
-            }
-        }
-        #! Here is the web call
-        [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
-
-        # FIXME add code here (separate function) to look at $result variable and then throw the
-        # correct exception since
-        # current API does not return the correct status codes.
-
-
-
-        Write-Verbose $result
-
-        # FIXME this is here to suppress the PSScriptAnalyzer warning until added to the logging
-        Write-Verbose $Description
-
-        $stopWatch.Stop()
-        $ProgressPreference = 'Continue'
-
-        # FIXME need to add a null check for failed login
-        if ($Login) {
-            # Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri) -Uri $uri
-            Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri)
-        }
-        # FIXME stopwatch testing
-        # Write-Warning -Message $StopWatch.Elapsed.ToString()
-
-        # FIXME combine the 4 log entries below into a single log CEF entry
-
-        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $Description -Level $level -FunctionName $functionName -Service PrivateHelper
-
-        # if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
-        #     $params.Add('Body', $Body)
-        #     if ($Script:LockpathConfig.logRequestBody) {
-        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Request includes a body: $Body" -Level $level -FunctionName $functionName -Service PrivateHelper
-        #     } else {
-        #         Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'Request includes a body: <message body logging disabled>.' -Level $level -FunctionName $functionName -Service PrivateHelper
-        #     }
-        # }
-
-        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "Accessing [$Method] $uri [Timeout = $($Script:LockpathConfig.webRequestTimeoutSec)]" -Level $level -FunctionName $functionName -Service PrivateHelper
-
-        # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message 'API request successful.' -Level $level -FunctionName $functionName -Service PrivateHelper
-
-        return $result.content.ToString()
-    } catch {
-        if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
-            $statusCode = $_.Exception.Response.StatusCode.value__
-            # FIXME update the switch with use information
-            # FIXME comment out the status codes not currently implemented by the API as place holders (need to
-            # test and validate)
-            switch ($statusCode) {
-                '400' {
-                    $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error.'
-                }
-                '401' {
-                    $httpResponseDetails = 'The 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource. The user agent MAY repeat the request with a new or replaced Authorization header field.'
-                }
-                '403' {
-                    $httpResponseDetails = 'The 403 (Forbidden) status code indicates that the server understood the request but refuses to authorize it. If authentication credentials were provided in the request, the server considers them insufficient to grant access.'
-                }
-                '404' {
-                    $httpResponseDetails = 'The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.'
-                }
-                '405' {
-                    $httpResponseDetails = 'The 405 (Method Not Allowed) status code indicates that the method received in the request-line is known by the origin server but not supported by the target resource.'
-                }
-                '500' {
-                    $httpResponseDetails = 'The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.'
-                }
-                '504' {
-                    $httpResponseDetails = 'The 504 (Gateway Timeout) status code indicates that the server, while acting as a gateway or proxy, did not receive a timely response from an upstream server it needed to access in order to complete the request.'
-                }
-                Default {
-                    $httpResponseDetails = "Other Status Code $($_.Exception.Response.StatusCode.value__)."
-                }
-            }
-
-            # FIXME pass this information back to the calling function where the write-lockpathlog call will be made
-            # Write-Error -ErrorAction Stop -ErrorRecord $_
-            # Write-LockpathLog -Confirm:$false -WhatIf:$false -Message $($_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message) -ErrorRecord $_ -Level $level -FunctionName $functionName -Service 'PrivateHelper'
-
-            # TODO the following will be more useful once the conversion to CEF format
-            # $exceptionOutput = [ordered]@{
-            #     'statusCode'         = $statusCode
-            #     'exceptionMessage'   = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -ExpandProperty Message
-            #     'exceptionDetails'   = $httpResponseDetails
-            #     'scriptName'         = $_.InvocationInfo.ScriptName
-            #     'scriptLine'         = $_.InvocationInfo.ScriptLineNumber
-            #     'scriptOffestInLine' = $_.InvocationInfo.OffsetInLine
-            #     'scriptStackTace'    = @($_.ScriptStackTrace.Split([System.Environment]::NewLine))
-            # }
-            # Write-Error -ErrorAction stop -Exception $_.Exception
-            Write-Error -ErrorAction stop -Exception $_.Exception
         } else {
-            Write-LockpathLog -Confirm:$false -WhatIf:$false -Level $level -FunctionName $functionName -Service PrivateHelper -ErrorRecord $_
-            Write-Error 'non-webresponse error' -ErrorAction stop
+            $logParameters.message = 'Failed: The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.'
+            Write-LockpathLog @logParameters
+            break
         }
+
+        # Set the headers
+        $headers = @{
+            'Accept'     = $AcceptHeader
+            'User-Agent' = $UserAgent
+        }
+        if ($Method -in $MethodContainsBody) {
+            $headers.Add('Content-Type', $ContentTypeHeader)
+        }
+
+        # Build the URI
+        $uri = "${InstancePortocol}://${InstanceName}:$InstancePort/$Service/$UriFragment$Query"
+
+        $params = [Hashtable]@{ }
+        $params.Add('Uri', $uri)
+        $params.Add('Method', $Method)
+        $params.Add('Headers', $headers)
+        $params.Add('TimeoutSec', $Script:LockpathConfig.webRequestTimeoutSec)
+
+        #If the call is a login then capture the WebRequestSession object else send the WebRequestSession object.
+        if ($Login) {
+            $params.Add('Body', $Body)
+            $params.Add('SessionVariable', 'webSession')
+        } else {
+            $params.Add('WebSession', $webSession)
+        }
+
+        try {
+            if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
+                $params.Add('Body', $Body)
+                if ($Script:LockpathConfig.logRequestBody) {
+                    $logParameters.Message = 'Request includes a body.'
+                    try {
+                        $Body = (ConvertFrom-Json $Body) | ConvertTo-Json -Compress
+                        $logParameters.result = $Body
+                    } catch {
+                        $logParameters.Level = 'Error'
+                        $logParameters.Message = 'Failed: to convert request body.'
+                        $logParameters.Result = $_.Exception.Message
+                    } finally {
+                        Write-LockpathLog @logParameters
+                    }
+                } else {
+                    $logParameters.Message = 'Request includes a body: <message body logging disabled>.'
+                    Write-LockpathLog $logParameters
+                }
+            }
+
+            #! Here is the web call
+            [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
+
+            if ($Login && $result.Content -eq 'true') {
+                Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri)
+            }
+
+            $logParameters.Message = 'Success: ' + $shouldProcessTarget
+        } catch {
+            $logParameters.Level = 'Error'
+            $logParameters.Message = "Failed: $Description"
+            $logParameters.Result = $_.Exception.Message
+            if ($_.Exception -is [Microsoft.PowerShell.Commands.HttpResponseException]) {
+                $statusCode = $_.Exception.Response.StatusCode.value__
+                switch ($statusCode) {
+                    '400' {
+                        $httpResponseDetails += 'The 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error.'
+                    }
+                    '404' {
+                        $httpResponseDetails = 'The 404 (Not Found) status code indicates that the origin server did not find a current representation for the target resource or is not willing to disclose that one exists.'
+                    }
+                    '500' {
+                        $httpResponseDetails = 'The 500 (Internal Server Error) status code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.'
+                    }
+                    Default {
+                        $httpResponseDetails = "Other Status Code $($_.Exception.Response.StatusCode.value__)."
+                    }
+                }
+                $logParameters.Message = "Failed: Status code $statusCode."
+                $logParameters.Result = $_.Exception.Message + $httpResponseDetails
+            }
+        } finally {
+            Write-LockpathLog @logParameters
+        }
+        return $result.content.ToString()
     }
 }

@@ -107,7 +107,7 @@ function Get-LockpathUser {
             } finally {
                 Write-LockpathLog @logParameters
             }
-            $logParameters.Message
+            return $result
         }
     }
 
