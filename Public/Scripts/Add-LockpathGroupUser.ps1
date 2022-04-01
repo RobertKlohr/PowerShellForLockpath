@@ -27,8 +27,6 @@ function Add-LockpathGroupUser {
         String
 
     .NOTES
-        Native API Request: https://[InstanceName]:[InstancePort]/SecurityService/UpdateGroup
-
         The authentication account must have Read and Update Administrative Access permissions to administer groups.
 
     .LINK
@@ -52,7 +50,8 @@ function Add-LockpathGroupUser {
         [ValidateRange('NonNegative')]
         [UInt32] $GroupId,
 
-        # FIXME add ability to use group name
+        # TODO add ability to use group name
+        # TODO combine with Edit-LockpathGroup
 
         [Parameter(
             Mandatory = $true,

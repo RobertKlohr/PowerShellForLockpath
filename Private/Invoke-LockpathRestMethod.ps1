@@ -164,7 +164,11 @@ function Invoke-LockpathRestMethod {
         }
 
         # Check to see if there is a valid cookie and create the websession, if not exit early
-        if (-not $login && -not $Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID') {
+        if ((-not $login) -and ($Script:LockpathConfig.authenticationCookie.Name -eq 'INVALID')) {
+            $logParameters.message = 'Failed: The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.'
+            Write-LockpathLog @logParameters
+            break
+        } elseif (-not $login) {
             $webSession = [Microsoft.PowerShell.Commands.WebRequestSession] @{}
             # $webSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
             $cookie = [System.Net.Cookie] @{}
@@ -174,10 +178,6 @@ function Invoke-LockpathRestMethod {
             $cookie.Value = $Script:LockpathConfig.authenticationCookie.Value[0]
             # $cookie = [System.Net.Cookie] $Script:LockpathConfig.authenticationCookie
             $webSession.Cookies.Add($cookie)
-        } else {
-            $logParameters.message = 'Failed: The authentication cookie is not valid. You must first use Send-LockpathLogin to capture a valid authentication coookie.'
-            Write-LockpathLog @logParameters
-            break
         }
 
         # Set the headers
@@ -205,7 +205,7 @@ function Invoke-LockpathRestMethod {
         } else {
             $params.Add('WebSession', $webSession)
         }
-
+        #TODO reduce the output logging to one line per request, currently 2 are written on a failure
         try {
             if ($Method -in $methodContainsBody -and $Login -eq $false -and (-not [String]::IsNullOrEmpty($Body))) {
                 $params.Add('Body', $Body)
@@ -223,14 +223,14 @@ function Invoke-LockpathRestMethod {
                     }
                 } else {
                     $logParameters.Message = 'Request includes a body: <message body logging disabled>.'
-                    Write-LockpathLog $logParameters
+                    Write-LockpathLog @logParameters
                 }
             }
 
             #! Here is the web call
             [Microsoft.PowerShell.Commands.WebResponseObject] $result = Invoke-WebRequest @params
 
-            if ($Login && $result.Content -eq 'true') {
+            if ($Login -and ($result.Content -eq 'true')) {
                 Export-LockpathAuthenticationCookie -CookieCollection $webSession.Cookies.GetCookies($uri)
             }
 

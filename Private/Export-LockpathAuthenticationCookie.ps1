@@ -42,9 +42,6 @@ function Export-LockpathAuthenticationCookie {
     [OutputType([System.Void])]
 
     param(
-        [Parameter(
-            Mandatory = $true
-        )]
         [System.Net.CookieCollection] $CookieCollection
     )
 
@@ -62,11 +59,12 @@ function Export-LockpathAuthenticationCookie {
 
     Write-LockpathInvocationLog @logParameters -RedactParameter 'CookieCollection'
 
-    # TODO check to see if this section can be deleted
-    $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
-        'Domain' = $CookieCollection.Domain
-        'Name'   = $CookieCollection.Name
-        'Value'  = $CookieCollection.Value
+    if ($CookieCollection) {
+        $Script:LockpathConfig.authenticationCookie = [Hashtable] @{
+            'Domain' = $CookieCollection.Domain
+            'Name'   = $CookieCollection.Name
+            'Value'  = $CookieCollection.Value
+        }
     }
 
     $shouldProcessTarget = 'Exporting Authentication Cookie'

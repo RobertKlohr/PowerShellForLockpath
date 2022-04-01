@@ -48,12 +48,17 @@ function Get-LockpathUsers {
         Returns the first 100 users in the system.
 
     .EXAMPLE
+        Get-LockpathUsers -PageIndex 0 -PageSize 100 Filter @(@{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'})
+
+        Returns the first 100 inactive users that are have the status of inactive in the system.
+
+    .EXAMPLE
         Get-LockpathUsers -Filter @{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='10002'; 'Value'='1|2'}
 
         Returns a set of users with the account type of Vendor or Full User with the -PageIndex and -PageSize defaulting to the values in the module configuration.
 
     .EXAMPLE
-        Get-LockpathUsers -PageIndex 1 -PageSize 100 -Filter @(@{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='5'; 'Value'='2'},@{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'})
+        Get-LockpathUsers -PageIndex 0 -PageSize 100 -Filter @(@{'Field'= @{'ShortName'='AccountType'}; 'FilterType'='5'; 'Value'='2'},@{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'})
 
         Returns the first 100 users with the account type of vendor and status of Inactive.
 
