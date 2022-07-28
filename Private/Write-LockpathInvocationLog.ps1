@@ -73,7 +73,7 @@ function Write-LockpathInvocationLog {
 
         [String] $FunctionName = ($PSCmdlet.CommandRuntime.ToString()),
 
-        [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 1 -ValueOnly),
+        [Management.Automation.InvocationInfo] $Invocation = (Get-Variable -Name MyInvocation -Scope 0 -ValueOnly),
 
         [String] $level = 'Debug',
 

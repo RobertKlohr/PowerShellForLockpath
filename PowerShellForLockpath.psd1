@@ -82,7 +82,7 @@
         'Get-LockpathUser',
         'Get-LockpathUserCount',
         'Get-LockpathUsers',
-        'Get-LockpathUsersDetails',
+        'Get-LockpathUsersDetail',
         'Get-LockpathWorkflow',
         'Get-LockpathWorkflows',
         'Import-LockpathConfiguration',

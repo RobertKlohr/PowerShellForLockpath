@@ -48,7 +48,7 @@ function Get-LockpathUsers {
         Returns the first 100 users in the system.
 
     .EXAMPLE
-        Get-LockpathUsers -PageIndex 0 -PageSize 100 Filter @(@{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'})
+        Get-LockpathUsers -PageIndex 0 -PageSize 100 -Filter @{'Field'= @{'ShortName'='Active'}; 'FilterType'='5'; 'Value'='false'}
 
         Returns the first 100 inactive users that are have the status of inactive in the system.
 
@@ -142,7 +142,7 @@ function Get-LockpathUsers {
         $Body = [ordered]@{
             'pageIndex' = $PageIndex
             'pageSize'  = $PageSize
-            'filters'   = $Filter
+            'filters'   = @($Filter)
         }
 
         $restParameters = [ordered]@{

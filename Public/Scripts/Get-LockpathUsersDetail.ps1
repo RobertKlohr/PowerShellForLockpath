@@ -1,7 +1,7 @@
 ﻿# Copyright (c) Robert Klohr. All rights reserved.
 # Licensed under the MIT License.
 
-function Get-LockpathUsersDetails {
+function Get-LockpathUsersDetail {
     <#
     .SYNOPSIS
         Returns all user details for selected users based on the applied filter.
@@ -47,55 +47,66 @@ function Get-LockpathUsersDetails {
     [OutputType([System.String])]
 
     param(
-        # FIXME decide if there will be parameters on this call and how they will work
-        # [Parameter(
-        #     Mandatory = $true,
-        #     ParameterSetName = 'All')]
-        # [Switch] $All,
+        [Parameter(
+            ParameterSetName = 'All',
+            Mandatory = $false
+        )]
+        [Switch] $All,
 
-        # [Parameter(
-        #     Mandatory = $true,
-        #     ParameterSetName = 'Filter')]
-        # [Array] $Filter,
+        [Parameter(
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
+        [ValidateRange('NonNegative')]
+        [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
 
-        # [Parameter(
-        #     Mandatory = $false)]
-        # [UInt32] $PageIndex = $Script:LockpathConfig.pageIndex,
+        [Parameter(
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
+        [ValidateRange('Positive')]
+        [UInt32] $PageSize = $Script:LockpathConfig.pageSize,
 
-        # [Parameter(
-        #     Mandatory = $false)]
-        # [UInt32] $PageSize = $Script:LockpathConfig.pageSize
+        [Parameter(
+            ParameterSetName = 'Default',
+            Mandatory = $false
+        )]
+        [Array] $Filter = @()
     )
 
     $level = 'Information'
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     $service = 'SecurityService'
 
-    if ($Script:LockpathConfig.loggingLevel -eq 'Debug') {
-        Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName -Level $level -Service $service
+    $logParameters = [ordered]@{
+        'FunctionName' = $functionName
+        'Level'        = $level
+        'Message'      = "Executing cmdlet: $functionName"
+        'Service'      = $service
+        'Result'       = "Executing cmdlet: $functionName"
     }
+
+    Write-LockpathInvocationLog @logParameters
 
     if ($PSCmdlet.ShouldProcess("Getting users with body:  $($restParameters.Body)", $($restParameters.Body), 'Getting groups with body:')) {
 
-        # TODO not sure where to test for valid session yet
-        # Test-LockpathAuthentication
-
-        # Get-LockpathUsers -All will return vendor contacts without login account that we filter out
-        $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
-
-        # TODO add paramters and logic to filter users after we get all users above
-
+        if ($All) {
+            $users = Get-LockpathUsers -All | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
+        } else {
+            $users = Get-LockpathUsers -PageIndex $PageIndex -PageSize $PageSize -Filter @Filter | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable | Where-Object -Property AccountType -NE $null
+        }
         $userProgress = $users.count
         $result = @()
-        $i = 1
+        $i = 0
+        Clear-Host
         foreach ($user In $users) {
             try {
-                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth -AsHashtable
+                $userDetails = Get-LockpathUser -UserId $user.Id | ConvertFrom-Json -Depth $Script:LockpathConfig.conversionDepth
                 $result += $userDetails
             } catch {
                 Write-LockpathLog -Confirm:$false -WhatIf:$false -Message "There was a problem retriving details user Id: $($user.Id)." -Level $level -ErrorRecord $ev[0] -Service $service
             }
-            Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -CurrentOperation "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
+            Write-Progress -Id 0 -Activity "Get details for $userProgress users:" -Status "Getting details for user: $i $($user.Fullname)" -PercentComplete ($i / $userProgress * 100)
             $i += 1
         }
         return $result
