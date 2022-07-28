@@ -29,7 +29,7 @@ function RemoveInactiveUsersFromEmployeesGroup {
     $activeEmployees = Compare-Object $employeesInGroup $employeesToKeep -ExcludeDifferent -PassThru
 
     #update the employees group with the list of active employees
-    Set-LockpathGroup -Id 41 -Users $activeEmployees
+    $null = Set-LockpathGroup -Id 41 -Users $activeEmployees
 
     "Removed $($employeesInGroup.Count - $activeEmployees.Count) inactive employees from the Employees group."
 
