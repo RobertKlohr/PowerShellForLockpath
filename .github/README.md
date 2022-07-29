@@ -44,10 +44,12 @@ Review [examples](USAGE.md#examples) to see how the module can be used to accomp
 ## API Documentation
 
 There is an [Insomnia](https://insomnia.rest/) v4 collection configuration
-file in [docs/api/insomnia](docs/api/insomnia/).
+file in [docs/api/insomnia](/docs/api/insomnia/).
 
 There is also an set of HTML files that provides an interactive version of the Insomnia collection that requires a web server to
-view in [docs/api/wwww](docs/api/www/).
+view in [docs/api/wwww](/docs/api/www/).
+
+----------
 
 ## Installation
 
