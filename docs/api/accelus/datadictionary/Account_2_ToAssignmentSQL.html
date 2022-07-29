@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<TITLE>Data Dictionary</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./web/theme/datadictionary.css" />
+</HEAD>
+<BODY>
+<p>
+	<div class="brand"><img alt="Thomson Reuters Logo" src="./web/image/tr_logo_50.jpg" /></div><div class="title"><a class="hiddenlink" href="index.html">Data Dictionary</a></div><br />
+	<div class="subtitle">Generated on: April 14, 2022</div><br />
+	<div class="subtitle-menu">
+		<a class="headerlink" href="./index.html">DOCUMENT TYPES</a>&nbsp;|&nbsp;
+		<a class="headerlink" href="./indexProperty.html">PROPERTY TYPES</a>&nbsp;|&nbsp;
+		<a class="headerlink" href="./indexChoice.html">CHOICE TYPES</a>
+	</div>
+</p>
+<p class="spacer">
+	&nbsp;
+</p><p><br /></p><div class="subheading">SQL Example for: Assignments, Rules</div><div class="table-container"><div class="sql-content">SELECT Account_2.DocumentID,Assignment.DocumentID <br />FROM <br />Account_2<br /> JOIN Account_2_ToAssignment ON Account_2.DocumentID = Account_2_ToAssignment.DocumentID <br /> JOIN Assignment ON Assignment.DocumentID = Account_2_ToAssignment.ToAssignment<br /></div></div><p>
+	<br />
+</p>
+<div class="footer-stamp">&copy; 2011 Thomson Reuters. All rights reserved. Version_4-5-01_18</div>
+</BODY>
+</HTML>

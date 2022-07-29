@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<TITLE>Data Dictionary</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="./web/theme/datadictionary.css" />
+</HEAD>
+<BODY>
+<p>
+	<div class="brand"><img alt="Thomson Reuters Logo" src="./web/image/tr_logo_50.jpg" /></div><div class="title"><a class="hiddenlink" href="index.html">Data Dictionary</a></div><br />
+	<div class="subtitle">Generated on: April 14, 2022</div><br />
+	<div class="subtitle-menu">
+		<a class="headerlink" href="./index.html">DOCUMENT TYPES</a>&nbsp;|&nbsp;
+		<a class="headerlink" href="./indexProperty.html">PROPERTY TYPES</a>&nbsp;|&nbsp;
+		<a class="headerlink" href="./indexChoice.html">CHOICE TYPES</a>
+	</div>
+</p>
+<p class="spacer">
+	&nbsp;
+</p><p><br /></p><div class="subheading">SQL Example for: Event, Event Details</div><div class="table-container"><div class="sql-content">SELECT Event.DocumentID,EventDetails.DocumentID <br />FROM <br />Event<br /> JOIN Event_ToEventDetails ON Event.DocumentID = Event_ToEventDetails.DocumentID <br /> JOIN EventDetails ON EventDetails.DocumentID = Event_ToEventDetails.ToEventDetails<br /></div></div><p>
+	<br />
+</p>
+<div class="footer-stamp">&copy; 2011 Thomson Reuters. All rights reserved. Version_4-5-01_18</div>
+</BODY>
+</HTML>
