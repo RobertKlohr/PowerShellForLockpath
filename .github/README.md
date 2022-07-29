@@ -41,6 +41,14 @@ Review [examples](USAGE.md#examples) to see how the module can be used to accomp
 
 ----------
 
+## API Documentation
+
+There is an [Insomnia](https://insomnia.rest/) v4 collection configuration
+file in [docs/api/insomnia](docs/api/insomnia/).
+
+There is also an set of HTML files that provides an interactive version of the Insomnia collection that requires a web server to
+view in [docs/api/wwww](docs/api/www/).
+
 ## Installation
 
 You can get latest release of the PowerShellForLockpath on the [PowerShell Gallery](https://www.powershellgallery.com/packages/PowerShellForLockpath)
@@ -150,5 +158,9 @@ PowerShellForLockpath is licensed under the [MIT license](LICENSE).
 
 ## Acknowledgements
 
-[Oliver Lachlan](https://github.com/olivierlacan) - For creating the [Keep a Changelog](https://github.com/olivierlacan/keep-a-changelog) format.\
-[Tom Preston-Werner](https://github.com/mojombo) - For authoring the [Semantic Versioning Specification](https://github.com/semver/semver).
+[Gregory Schier](https://schier.co/) - For creating the [Insomnia](https://insomnia.rest) [Open
+Source](https://github.com/Kong/insomnia) API Client.\
+[Oliver Lachlan](https://github.com/olivierlacan) - For creating the [Keep a
+Changelog](https://github.com/olivierlacan/keep-a-changelog) format.\
+[Tom Preston-Werner](https://github.com/mojombo) - For authoring the [Semantic Versioning
+Specification](https://github.com/semver/semver).s
