@@ -165,4 +165,4 @@ Source](https://github.com/Kong/insomnia) API Client.\
 [Oliver Lachlan](https://github.com/olivierlacan) - For creating the [Keep a
 Changelog](https://github.com/olivierlacan/keep-a-changelog) format.\
 [Tom Preston-Werner](https://github.com/mojombo) - For authoring the [Semantic Versioning
-Specification](https://github.com/semver/semver).s
+Specification](https://github.com/semver/semver).

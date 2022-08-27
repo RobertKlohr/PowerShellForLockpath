@@ -35,7 +35,7 @@ function Write-LockpathInvocationLog {
         The response message from the API call.
 
     .PARAMETER Service
-        Either the API service being called a helper service.
+        Either the API service being called or a helper service.
 
     .EXAMPLE
         Write-LockpathInvocationLog -Confirm:$false -WhatIf:$false -FunctionName $functionName  -Level $level -Message $message -Results $result -Service $service
