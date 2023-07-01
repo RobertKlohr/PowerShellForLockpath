@@ -67,4 +67,4 @@ assets
 build
 output
 temp
-cov.xml
+tests
