@@ -1,0 +1,30 @@
+CEF:0|Lockpath|Keylight|5.3.042.8|Jobs Log|Keylight Jobs Log Entry|Unknown|externalId=103475 cs1=Completed cs1Label=Status cs2= cs2Label=Parent Job suser=System, Keylight rt=Jan 29 20 07:00:45 start=Jan 29 20 07:00:46 end=Jan 29 20 07:02:08 deviceCustomDate1= deviceCustomDate1Label=Paused deviceCustomDate2= deviceCustomDate2Label=Resumed cn1=300 cn1Label=Priority cn2=300 cn2Label=Calculated Priority cs3= cs3Label=Table cn3= cn3Label=Record msg= CEF:0|Lockpath|Keylight|5.3.042.8|Jobs Log|Keylight Jobs Log Entry|Unknown|externalId=103477 cs1=Completed cs1Label=Status cs2=103475 cs2Label=Parent Job suser=System, Keylight rt=Jan 29 20 07:02:08 start=Jan 29 20 07:02:48 end=Jan 29 20 07:03:00 deviceCustomDate1= deviceCustomDate1Label=Paused deviceCustomDate2= deviceCustomDate2Label=Resumed cn1=200 cn1Label=Priority cn2=200 cn2Label=Calculated Priority cs3=File References cs3Label=Table cn3=336 cn3Label=Record msg=
+
+
+externalId=103475 cs1=Completed cs1Label=Status cs2= cs2Label=Parent Job suser=System, Keylight rt=Jan 29 20 07:00:45 start=Jan 29 20 07:00:46 end=Jan 29 20 07:02:08 deviceCustomDate1= deviceCustomDate1Label=Paused deviceCustomDate2= deviceCustomDate2Label=Resumed cn1=300 cn1Label=Priority cn2=300 cn2Label=Calculated Priority cs3= cs3Label=Table cn3= cn3Label=Record msg=
+externalId=103477 cs1=Completed cs1Label=Status cs2=103475 cs2Label=Parent Job suser=System, Keylight rt=Jan 29 20 07:02:08 start=Jan 29 20 07:02:48 end=Jan 29 20 07:03:00 deviceCustomDate1= deviceCustomDate1Label=Paused deviceCustomDate2= deviceCustomDate2Label=Resumed cn1=200 cn1Label=Priority cn2=200 cn2Label=Calculated Priority cs3=File References cs3Label=Table cn3=336 cn3Label=Record msg=
+
+
+Extension Field Keys
+externalId
+cs1
+cs1Label
+cs2
+cs2Label
+cs3
+cs3Label
+suser
+rt
+start
+end
+deviceCustomDate1
+deviceCustomDate1Label
+deviceCustomDate2
+deviceCustomDate2Label
+cn1
+cn1Label
+cn2
+cn2Label
+cn3
+cn3Label
+msg

@@ -1,0 +1,15 @@
+// See http://go.microsoft.com/fwlink/?LinkId=827846 for the documentation about the extensions.json format
+{
+    "recommendations": [
+        "ms-vscode.powershell",
+        "DavidAnson.vscode-markdownlint",
+        "stkb.rewrap",
+        "streetsidesoftware.code-spell-checker",
+        "gruntfuggly.todo-tree",
+        "aaron-bond.better-comments",
+        "bokuweb.vscode-ripgrep",
+        "eamodio.gitlens",
+        "GitLab.gitlab-workflow",
+        "Oracle.oracledevtools"
+    ]
+}
