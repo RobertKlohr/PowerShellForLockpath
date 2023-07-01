@@ -37,7 +37,7 @@ function Set-LockpathUser {
         Clears all non-required properties on the user account.
 
     .EXAMPLE
-        Set-LockpathUser -Id 6 -FirstName
+        Set-LockpathUser -Id 6 -FirstName Bob
 
         Allows providing one or more attributes to change.
 

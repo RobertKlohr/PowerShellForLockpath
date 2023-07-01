@@ -50,6 +50,7 @@ function Initialize-LockpathConfiguration {
         'Result'       = "Executing cmdlet: $functionName"
     }
 
+    $moduleName = (Get-Command $MyInvocation.InvocationName).ModuleName
     try {
         # Create a configuration object with all the default configuration and session values.
         if ($null -eq $Script:LockpathConfig) {
@@ -81,7 +82,7 @@ function Initialize-LockpathConfiguration {
                 # The module version is not present until after the module is loaded therefore we
                 # need to manually parse the manifest and extract the module version number to use
                 # it in logging before the module is fully loaded.
-                'productVersion'               = [String] (Select-String -Path "$PSScriptRoot\..\PowerShellForLockpath.psd1" -Pattern moduleversion -List -Raw -SimpleMatch).Split("'")[1]
+                'productVersion'               = [String] (Get-Module -FullyQualifiedName .\$moduleName.psd1 -ListAvailable).Version.ToString()
                 'runAsSystem'                  = [Boolean] $true
                 'systemFields'                 = [Hashtable] @{
                     'Begin Date'         = 'BeginDate'
@@ -102,7 +103,7 @@ function Initialize-LockpathConfiguration {
             }
         }
 
-        # Load the persistant configuration file if it exists and overwrite any default values set
+        # Load the persistent configuration file if it exists and overwrite any default values set
         # in this function.
         Import-LockpathConfiguration
         # Normally Write-LockpathInvocationLog is run first in a cmdlet but we need to import the

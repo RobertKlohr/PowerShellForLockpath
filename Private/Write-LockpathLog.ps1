@@ -304,7 +304,7 @@ function Write-LockpathLog {
         # Write CEF log entry to file.
         try {
             if ([String]::IsNullOrWhiteSpace($FilePath)) {
-                Write-Warning 'No path has been specified for the log file.  Use "Set-Configuration -LogPath" to set the log path.'
+                Write-Warning 'No path has been specified for the log file.  Use "Set-LockpathConfiguration -LogPath" to set the log path.'
             } else {
                 if (-not (Test-Path $FilePath)) {
                     $null = New-Item -Path $FilePath -ItemType File -Force

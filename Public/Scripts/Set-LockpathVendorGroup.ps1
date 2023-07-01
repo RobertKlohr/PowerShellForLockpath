@@ -192,6 +192,9 @@ function Set-LockpathVendorGroup {
                 }
                 foreach ($vendor in $vendors) {
                     $vendorIds += $vendor.Id
+                    # The next line is to set all vendor accounts to active.
+                    # This was needed when the vendor broke the resend credentials funcion.
+                    Set-LockpathUser -Id $vendor.Id -Active $true -Confirm:$False
                 }
                 Set-LockpathGroup -GroupId $GroupId -Users $vendorIds
                 $logParameters.Message = 'success'

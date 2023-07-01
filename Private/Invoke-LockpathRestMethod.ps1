@@ -141,13 +141,13 @@ function Invoke-LockpathRestMethod {
     $functionName = ($PSCmdlet.CommandRuntime.ToString())
     # In most cmdlets the $service is set here but in this module it is used for building the API
     # $uri and so needs to be set below.
-    $logParameters.service = 'PrivateHelper'
+    # $logParameters.service = 'PrivateHelper'
 
     $logParameters = [ordered]@{
         'FunctionName' = $functionName
         'Level'        = $level
         'Message'      = "Executing cmdlet: $functionName"
-        'Service'      = $service
+        'Service'      = $Service
         'Result'       = "Executing cmdlet: $functionName"
     }
 
