@@ -89,7 +89,7 @@ function Get-LockpathUserCount {
         # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
         # To compensate for this bug we need to edit the JSON in $restParameters.body so that
         # it does not use the filters key. When the bug is fixed we can delete the next line.
-        $restParameters.Body = $Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
+        $restParameters.Body = "[$($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth)]"
 
         $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 
