@@ -54,7 +54,49 @@ function Get-LockpathUserCount {
     [OutputType([System.Int32])]
 
     param(
-        [Array] $Filter = @()
+        #TODO add switches for common queries i.e., Deleted, Active, Vendor, AccountType
+
+        [Parameter(
+            ParameterSetName = 'Active',
+            Mandatory = $false
+        )]
+        [Parameter(
+            ParameterSetName = 'Deleted',
+            Mandatory = $false
+        )]
+        [Parameter(
+            ParameterSetName = 'AccountType',
+            Mandatory = $true
+        )]
+        [ValidateSet('Awareness', 'Full', 'Vendor')]
+        [String] $AccountType,
+
+        [Parameter(
+            ParameterSetName = 'Active',
+            Mandatory = $true
+        )]
+        [ValidateSet($true, $false)]
+        [String] $Active,
+
+        [Parameter(
+            ParameterSetName = 'Deleted',
+            Mandatory = $true
+        )]
+        [ValidateSet($true, $false)]
+        [String] $Deleted,
+
+        [Parameter(
+            ParameterSetName = 'Filter',
+            Mandatory = $true
+        )]
+        [Array] $Filter,
+
+        [Parameter(
+            ParameterSetName = 'Vendor',
+            Mandatory = $true
+        )]
+        [ValidateRange('Positive')]
+        [UInt32] $Vendor
     )
 
     begin {
@@ -74,13 +116,51 @@ function Get-LockpathUserCount {
     process {
         Write-LockpathInvocationLog @logParameters
 
+        foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
+
+            switch ($($parameter.key)) {
+                'Active' {
+                    $Filter = $Filter + @(@{'Field' = @{'ShortName' = "$($parameter.Key)" }; 'FilterType' = '5'; 'Value' = "$($parameter.Value)" })
+                    break
+                }
+                'Deleted' {
+                    $Filter = $Filter + @(@{'Field' = @{'ShortName' = "$($parameter.Key)" }; 'FilterType' = '5'; 'Value' = "$($parameter.Value)" })
+                    break
+                }
+                'AccountType' {
+                    switch ($($parameter.Value)) {
+                        'Awareness' {
+                            $AccountTypeValue = 4
+                        }
+                        'Full' {
+                            $AccountTypeValue = 1
+                        }
+                        'Vendor' {
+                            $AccountTypeValue = 2
+                        }
+                    }
+                    $Filter = $Filter + @(@{'Field' = @{'ShortName' = "$($parameter.Key)" }; 'FilterType' = '5'; 'Value' = "$AccountTypeValue" })
+                    break
+                }
+                'Vendor' {
+                    $Filter = $Filter + @(@{'Field' = @{'ShortName' = "$($parameter.Key)" }; 'FilterType' = '5'; 'Value' = "$($parameter.Value)" })
+                    break
+                }
+            }
+        }
+
         If ($Filter.Count -gt 0) {
             $Body = [ordered]@{}
             $Body.Add('filters', $Filter)
         }
 
+        #TODO remove next line
+        $Script:LockpathConfig = [PSCustomObject]@{
+            'conversionDepth' = [UInt32] 100
+        }
+
         $restParameters = [ordered]@{
-            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -AsArray
+            'Body'        = $Body | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth
             'Description' = 'Getting User Count'
             'Method'      = 'POST'
             'Service'     = $service
@@ -89,7 +169,7 @@ function Get-LockpathUserCount {
         # TODO There is a bug in the GetUserCount API request (NAVEX Global ticket 01817531)
         # To compensate for this bug we need to edit the JSON in $restParameters.body so that
         # it does not use the filters key. When the bug is fixed we can delete the next line.
-        $restParameters.Body = "[$($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth)]"
+        $restParameters.Body = "$($Filter | ConvertTo-Json -Compress -Depth $Script:LockpathConfig.conversionDepth -AsArray)"
 
         $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 
