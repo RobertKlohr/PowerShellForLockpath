@@ -4,17 +4,18 @@
 function Import-LockpathConfiguration {
     <#
     .SYNOPSIS
-        Loads in the configuration file from the local file system and then updates the configuration in memory with
-        values that may exist in the file.
+        Loads in the configuration file from the local file system and then updates the configuration in memory with values that may exist in the file.
 
     .DESCRIPTION
-        Loads in the configuration file from the local file system and then updates the configuration in memory with
-        values that may exist in the file.
+        Loads in the configuration file from the local file system and then updates the configuration in memory with values that may exist in the file.
 
         The Git repo for this module can be found here: https://git.io/powershellforlockpath
 
     .PARAMETER FilePath
         The file containing a JSON serialized version of the configuration values for this module.
+
+    .PARAMETER Show
+        Returns the configuration loaded from the file in addition to setting the session configuration object.
 
     .EXAMPLE
         Import-LockpathConfiguration -Path 'c:\temp\config.json'
@@ -43,6 +44,8 @@ function Import-LockpathConfiguration {
     [OutputType([System.Void])]
 
     param(
+        [Switch] $Show,
+
         [System.IO.FileInfo] $FilePath = $Script:LockpathConfig.configurationFilePath
     )
 
@@ -82,6 +85,9 @@ function Import-LockpathConfiguration {
             Import-LockpathAuthenticationCookie
             Import-LockpathCredential
             $logParameters.Message = 'Success: ' + $shouldProcessTarget
+            if ($Show) {
+                return $savedLockpathConfig
+            }
         } catch {
             $logParameters.Level = 'Error'
             $logParameters.Message = 'Failed: ' + $shouldProcessTarget + 'Current configuration is using all default values and will not work until you at least call Set-LockpathConfiguration -InstaneName "instancename".'
