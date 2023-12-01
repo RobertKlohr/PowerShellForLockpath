@@ -1,8 +1,8 @@
 ﻿# Assumes the build script has the same name basename as the module
 $moduleName = ($myInvocation.MyCommand.Name).Split('.')[0]
 
-# Get public functions assumed structure is .\src\public
-$publicFunctions = Get-ChildItem -Path .\src\public\ | ForEach-Object -Process { [System.IO.Path]::GetFileNameWithoutExtension($_) }
+# Get public functions based on file names under .\src\public
+$publicFunctions = Get-ChildItem -Path .\src\public\ -Recurse | ForEach-Object -Process { if (!($_.PSIsContainer)) { [System.IO.Path]::GetFileNameWithoutExtension($_) } }
 
 $version = '1.0.0'
 # $prerelease = 'RC2'

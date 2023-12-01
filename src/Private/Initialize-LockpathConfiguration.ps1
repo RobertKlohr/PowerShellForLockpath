@@ -82,7 +82,7 @@ function Initialize-LockpathConfiguration {
                 # The module version is not present until after the module is loaded therefore we
                 # need to manually parse the manifest and extract the module version number to use
                 # it in logging before the module is fully loaded.
-                'productVersion'               = [String] (Get-Module -FullyQualifiedName .\$moduleName.psd1 -ListAvailable).Version.ToString()
+                'productVersion'               = [String] (Get-Module -Name $moduleName -ListAvailable).Version.ToString()
                 'runAsSystem'                  = [Boolean] $true
                 'systemFields'                 = [Hashtable] @{
                     'Begin Date'         = 'BeginDate'

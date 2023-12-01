@@ -71,8 +71,8 @@ function Show-LockpathConfiguration {
     #TODO add try catch
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         if ($Saved) {
-            Import-LockpathConfiguration -FilePath $FilePath
-
+            $savedConfiguration = Import-LockpathConfiguration -FilePath $FilePath
+            return $savedConfiguration
         } else {
             return $Script:LockpathConfig
         }

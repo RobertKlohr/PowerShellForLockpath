@@ -286,12 +286,12 @@ function Set-LockpathUser {
         Write-LockpathInvocationLog @logParameters
 
         $Body = [ordered]@{}
-        $Ids = @()
 
         foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
             if ($parameter.Value -isnot [Switch]) {
                 switch ($parameter.Key) {
                     { $_ -in 'FunctionalRoles', 'Groups', 'SecurityRoles' } {
+                        $Ids = @()
                         foreach ($value in $parameter.Value) {
                             $Ids += @{'Id' = $value }
                         }
@@ -309,6 +309,11 @@ function Set-LockpathUser {
                     }
                 }
             }
+        }
+
+        # this check is separate from the foreach loop as it must be the last key in the body
+        if ($CommitNullProperties) {
+            $Body.Add('CommitNullProperties', 'true')
         }
 
         $restParameters = [ordered]@{
