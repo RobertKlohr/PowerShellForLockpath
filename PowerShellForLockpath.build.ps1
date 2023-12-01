@@ -2,7 +2,9 @@
 $moduleName = ($myInvocation.MyCommand.Name).Split('.')[0]
 
 # Get public functions based on file names under .\src\public
-$publicFunctions = Get-ChildItem -Path .\src\public\ -Recurse | ForEach-Object -Process { if (!($_.PSIsContainer)) { [System.IO.Path]::GetFileNameWithoutExtension($_) } }
+# $publicFunctions = Get-ChildItem -Path .\src\public\ -Recurse | ForEach-Object -Process { if (!($_.PSIsContainer)) { [System.IO.Path]::GetFileNameWithoutExtension($_) } }
+
+$publicFunctions = Get-ChildItem -Path .\src\ -Recurse | ForEach-Object -Process { if (!($_.PSIsContainer)) { [System.IO.Path]::GetFileNameWithoutExtension($_) } }
 
 $version = '1.0.0'
 # $prerelease = 'RC2'
