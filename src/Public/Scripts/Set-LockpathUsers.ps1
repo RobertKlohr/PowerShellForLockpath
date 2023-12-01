@@ -80,7 +80,7 @@ function Set-LockpathUsers {
     if ($PSCmdlet.ShouldProcess("Updating users with:  $($restParameters.Body)", $($restParameters.Body), 'Updating users with:')) {
 
         [string] $userCount = Get-LockpathUserCount
-        #FIXME The ConvertFrom-Json is throughing an error
+        #FIXME The ConvertFrom-Json is throwing an error
         # ConvertFrom-Json: C:\Users\r634204\Documents\GitHub\PowerShellForLockpath\src\Public\Scripts\Set-LockpathUsers.ps1:80:88
 
         [string] $returned = Get-LockpathUsers -Filter $Filter -PageIndex 0 -PageSize $userCount
