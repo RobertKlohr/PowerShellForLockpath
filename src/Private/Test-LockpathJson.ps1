@@ -53,7 +53,7 @@ function Test-LockpathJson {
         PositionalBinding = $false
     )]
 
-    [OutputType([System.Boolen])]
+    [OutputType([System.Boolean])]
 
     param(
         [Parameter(

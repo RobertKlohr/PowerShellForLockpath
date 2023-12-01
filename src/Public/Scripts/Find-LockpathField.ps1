@@ -22,7 +22,7 @@ function Find-LockpathField {
     .PARAMETER ComponentIds
         Specifies an array of component Id numbers.
 
-        This can be used to limit the components used in retrieving the field details thereby increaseing performance.
+        This can be used to limit the components used in retrieving the field details thereby increasing performance.
 
     .EXAMPLE
         Find-LockpathField

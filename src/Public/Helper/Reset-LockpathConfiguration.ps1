@@ -66,13 +66,13 @@ function Reset-LockpathConfiguration {
 
     Write-LockpathInvocationLog @logParameters
 
-    $shouldProcessTarget = 'Reseting configuration in memory. This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.'
+    $shouldProcessTarget = 'Resetting configuration in memory. This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that.'
 
     if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
         Initialize-LockpathConfiguration
         $logParameters.Message = 'Success: ' + $shouldProcessTarget
         if (-not $SessionOnly) {
-            $shouldProcessTarget = "Reseting configuration in memory and configuration file at $($Script:LockpathConfig.configurationFilePath). This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that."
+            $shouldProcessTarget = "Resetting configuration in memory and configuration file at $($Script:LockpathConfig.configurationFilePath). This has not cleared your API credential.  Call Remove-LockpathCredential to accomplish that."
             try {
                 $null = Remove-Item -Path $Script:LockpathConfig.configurationFilePath -Force -ErrorAction SilentlyContinue -ErrorVariable ev
                 $null = New-Item -Path $Script:LockpathConfig.configurationFilePath -Force
