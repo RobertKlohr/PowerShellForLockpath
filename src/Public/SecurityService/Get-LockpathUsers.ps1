@@ -153,7 +153,7 @@ function Get-LockpathUsers {
             'UriFragment' = 'GetUsers'
         }
 
-        $shouldProcessTarget = "$($restParameters.Description) with Filter = ($restParameters.Body)"
+        $shouldProcessTarget = "$($restParameters.Description) with Filter = $($restParameters.Body)"
 
         if ($PSCmdlet.ShouldProcess($shouldProcessTarget)) {
             try {
